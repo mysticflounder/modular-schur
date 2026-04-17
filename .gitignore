@@ -1,0 +1,27 @@
+# Lean
+/lean/.lake/
+/lean/build/
+
+# LaTeX aux files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# SAT artifacts (regenerate with scripts/schur_mod.py)
+artifacts/
+tmp/
+*.cnf
+*.drat
+*.sol
+
+# OS
+.DS_Store
