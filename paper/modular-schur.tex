@@ -27,24 +27,24 @@
 \maketitle
 
 \begin{abstract}
-The modular Schur number $S_m(k,\ell)$ of D'orville--Sim--Wong--Ho~\cite{DSWH2025} is the greatest $N$ such that $[1,N]$ admits a $k$-partition into classes that are $\ell$-sum-free modulo~$m$. We prove that
+The modular Schur number $S_m(k,\ell)$ of Chappelon--Marchena--Dom\'\i nguez~\cite{CMD2013} is the greatest $N$ such that $[1,N]$ admits a $k$-partition into classes that are $\ell$-sum-free modulo~$m$. We prove that
 \[
 S_m(k,\ell) \;=\; \frac{m}{\gcd(m,\ell-1)} - 1
 \]
-for every $m\ge 2$, $\ell\ge 2$, and $k\ge m/\gcd(m,\ell-1) - 1$. The proof is two paragraphs of modular arithmetic. It recovers the per-modulus tables of~\cite{DSWH2025} at $m\le 7$ and extends them to all $m$. The main theorem is formalized in Lean~4 with axiom dependencies only \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}. We also give a sharp $k_0$ for prime moduli and record a small composite counterexample ($C=\{1,5\}\subseteq\Zm[12]$) that refutes the natural ``only singletons are safe'' conjecture.
+for every $m\ge 2$, $\ell\ge 2$, and $k\ge m/\gcd(m,\ell-1) - 1$. The proof is two paragraphs of modular arithmetic. It subsumes the per-modulus tables computed in~\cite{CMD2013} ($m\in\{1,2,3\}$) and~\cite{DSWH2025} ($m\in\{4,5,6,7\}$), and extends them to all $m$. The main theorem is formalized in Lean~4 with axiom dependencies only \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}. We also give a sharp $k_0$ for prime moduli and record a small composite counterexample ($C=\{1,5\}\subseteq\Zm[12]$) that refutes the natural ``only singletons are safe'' conjecture.
 \end{abstract}
 
 \section{Introduction}
 
-The classical Schur number $S(k)$ is the largest $N$ such that $\{1,\ldots,N\}$ admits a $k$-partition into sum-free sets. Values are known only through $S(5) = 160\,537$~\cite{Heule2017}; $S(6)$ is the content of Erd\H{o}s problem~483 and remains open.
+The classical Schur number $S(k)$ is the largest $N$ such that $\{1,\ldots,N\}$ admits a $k$-partition into sum-free sets. Values are known only through $S(5) = 160\,537$~\cite{Heule2017}; $S(6)$ is the content of Erd\H{o}s problem~483 and remains open. Generalizations to longer equations were studied by Beutelspacher and Brestovansky~\cite{BB1982} and are now textbook material~\cite{LR2014}.
 
-D'orville, Sim, Wong, and Ho~\cite{DSWH2025} recently introduced the modular generalization.
+Chappelon, Marchena, and Dom\'\i nguez~\cite{CMD2013} introduced the modular version of the generalized Schur number.
 
 \begin{definition}
 A set $S\subseteq\mathbb{Z}$ is \emph{$\ell$-sum-free modulo~$m$} if no $x_1,\ldots,x_\ell\in S$ (repetitions allowed) and $y\in S$ satisfy $x_1+\cdots+x_\ell \equiv y\pmod m$. The \emph{modular Schur number} $S_m(k,\ell)$ is the greatest $N\ge 0$ such that $[1,N]$ admits a $k$-partition into $\ell$-sum-free sets modulo~$m$.
 \end{definition}
 
-In~\cite{DSWH2025} complete formulas are given for $m\in\{1,\ldots,7\}$ by residue-by-residue case analysis on $\ell\bmod m$. The pattern visible across those seven tables---once $k$ is large enough, $S_m(k,\ell)$ is a function of $\gcd(m,\ell-1)$ alone---was conjectural for general~$m$.
+Chappelon et al.~\cite{CMD2013} closed $m\in\{1,2,3\}$ and observed that the determination of $S_m(k,\ell)$ ``seems to be much more difficult for moduli $m\ge 4$''~(\cite[\S6]{CMD2013}). D'orville, Sim, Wong, and Ho~\cite{DSWH2025} subsequently closed $m\in\{4,5,6,7\}$ via residue-by-residue case analysis on $\ell\bmod m$, leaving $m\ge 8$ as their open problem 1.5. The pattern visible across all ten tables---once $k$ is large enough, $S_m(k,\ell)$ is a function of $\gcd(m,\ell-1)$ alone---was not formulated as a unified statement.
 
 Writing $d:=\gcd(m,\ell-1)$ and $n:=m/d$, the following theorem makes that pattern explicit, with no hypothesis on~$m$ and no case split on $\ell\bmod m$.
 
@@ -81,11 +81,11 @@ If $N\le m-1$, the integers $1,2,\ldots,N$ have pairwise distinct nonzero residu
 All elements of $[1,N]$ lie in $[1,m-1]$, and the map $[1,m-1]\to\Zm$ is injective onto $\{1,\ldots,m-1\}$. Sum-freeness is preserved under this identification.
 \end{proof}
 
-\begin{lemma}[Universal upper bound]\label{lem:univ-upper}
+\begin{lemma}[Universal upper bound, \cite{CMD2013}]\label{lem:univ-upper}
 For every $\ell\ge 1$ and every $k\ge 1$, $\Sm \le m - 1$.
 \end{lemma}
 \begin{proof}
-If $N\ge m$, then $m\in[1,N]$ lies in some class $C$. The tuple $(m,\ldots,m;m)\in C^{\ell+1}$ satisfies $m\cdot\ell\equiv 0\equiv m\pmod m$, violating $\ell$-sum-freeness.
+If $N\ge m$, then $m\in[1,N]$ lies in some class $C$. The tuple $(m,\ldots,m;m)\in C^{\ell+1}$ satisfies $m\cdot\ell\equiv 0\equiv m\pmod m$, violating $\ell$-sum-freeness. (This is~\cite[Eq.~(2)]{CMD2013}.)
 \end{proof}
 
 \begin{lemma}[Singleton safety]\label{lem:singleton}
@@ -223,6 +223,16 @@ This paper was written collaboratively with Claude (Anthropic), and the Lean~4 p
 
 \begin{thebibliography}{9}
 
+\bibitem{BB1982}
+A.~Beutelspacher and W.~Brestovansky,
+\emph{Generalized Schur numbers},
+Lecture Notes in Mathematics \textbf{969} (1982), 30--38.
+
+\bibitem{CMD2013}
+J.~Chappelon, M.~P.~Revuelta Marchena, and M.~I.~Sanz Dom\'\i nguez,
+\emph{Modular Schur numbers},
+Electron. J. Combin. \textbf{20}(2) (2013), \#P61. \texttt{arXiv:1306.5635}.
+
 \bibitem{DSWH2025}
 R.~D'orville, C.~Sim, E.~Wong, and T.-K.~L.~Ho,
 \emph{Modular generalizations of Schur numbers},
@@ -233,6 +243,11 @@ Integers \textbf{25} (2025), \#A62.
 M.~J.~H.~Heule,
 \emph{Schur number five},
 AAAI 2018, 6598--6606. \texttt{arXiv:1711.08076}.
+
+\bibitem{LR2014}
+B.~M.~Landman and A.~Robertson,
+\emph{Ramsey Theory on the Integers}, 2nd ed.,
+Student Mathematical Library \textbf{73}, AMS, 2014.
 
 \bibitem{aristotle}
 T.~Achim \emph{et al.},
