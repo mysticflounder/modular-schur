@@ -20,7 +20,7 @@
 
 \title{The stabilized value of modular Schur numbers $S_m(k,\ell)$}
 
-\author{Adam McKenna\thanks{With automated assistance from Claude (Anthropic) and Aristotle (Harmonic). The Lean~4 proofs of Theorems~\ref{thm:main},~\ref{thm:unified-upper}, and~\ref{thm:unified-lower} were machine-verified by Aristotle \cite{aristotle}. Correspondence: \texttt{flound1129@gmail.com}.}}
+\author{Adam McKenna\thanks{With automated assistance from Claude (Anthropic) and Aristotle (Harmonic). The Lean~4 proofs of Theorems~\ref{thm:main},~\ref{thm:unified-upper}, and~\ref{thm:unified-lower} were machine-verified by Aristotle \cite{aristotle}. Correspondence: \texttt{adam@mysticflounder.ai}.}}
 \date{\today}
 
 \begin{document}
@@ -62,7 +62,7 @@ theorem schurModResidue_eq (m k l : N) (hm : 2 <= m) (hl : 2 <= l)
     (hk : m / Nat.gcd m (l - 1) - 1 <= k) :
     schurModResidue m k l = m / Nat.gcd m (l - 1) - 1
 \end{verbatim}
-compiles in Lean~4 with axiom dependency only \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}. Source files are available at \url{https://github.com/flound1129/erdos/tree/master/5/lean}.
+compiles in Lean~4 with axiom dependency only \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}. Source files are available at \url{https://github.com/mysticflounder/modular-schur/tree/main/lean}.
 
 \subsection{Organization}
 \S\ref{sec:prelim} establishes base lemmas. \S\ref{sec:upper} proves the upper bound $\Sm\le n-1$. \S\ref{sec:lower} proves the matching lower bound. \S\ref{sec:threshold} analyzes the threshold $k_0(m,\ell)$ and records tight prime-modulus results. \S\ref{sec:corollaries} lists corollaries for specific $m$. \S\ref{sec:open} poses open questions on tight $k_0$ for composite $m$.
