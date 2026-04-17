@@ -57,6 +57,8 @@ S_m(k,\ell) \;=\; n - 1 \;=\; \frac{m}{\gcd(m,\ell-1)} - 1.
 
 The proof is elementary: both bounds reduce to the observation that $n$ itself is a singleton that fails $\ell$-sum-freeness. We give it in~\S\ref{sec:upper}--\S\ref{sec:lower}.
 
+The formula looks natural in retrospect, but the prior case-by-case framework obscures it: the proofs in~\cite{CMD2013,DSWH2025} fix a residue class $\ell\bmod m$ and chase a witness partition residue by residue, which hides the single observation that ``the element $n=m/\gcd(m,\ell-1)$ is unsafe as a singleton.'' The argument in \S\ref{sec:upper} is one paragraph because it stops at that observation. The actual combinatorial content is the threshold $k_0$: \S\ref{sec:threshold} gives it tightly for prime $m$ and shows (via the explicit witness $\{1,5\}\subseteq\Zm[12]$) that the prime case does not generalize naively.
+
 \subsection*{Formalization}
 
 The proof is short but has a form that is easy to misstate (an earlier draft confused the role of $n$ versus $m$ in the forbidden tuple). I formalized Theorem~\ref{thm:main} in Lean~4 to remove any doubt; the proof was completed by Aristotle~\cite{aristotle}. The Lean statement
@@ -173,6 +175,10 @@ $(\supseteq)$ Pick $a_1\in C$ with $\langle a_1-a_0\rangle = H$ (such $a_1$ exis
 The safety criterion follows: since $C\subseteq a_0+H$, we have $\ell C\cap C\ne\emptyset$ iff $\ell a_0+H = a_0+H$ iff $(\ell-1)a_0\in H$ iff $g\mid(\ell-1)a_0$.
 \end{proof}
 
+\begin{remark}
+The $(\supseteq)$ direction is a cyclic-group version of Cauchy--Davenport (cf.\ Nathanson~\cite{Nathanson1996}, Ch.~2): over $\Zm[p]$ prime, $\ell$-fold sumsets of any non-degenerate $C$ saturate $\Zm[p]$ once $\ell\ge p-1$. Theorem~\ref{thm:coset} is the saturation statement inside an arbitrary cyclic subgroup $H\le\Zm$, with the explicit $\ell\ge|H|-1$ threshold.
+\end{remark}
+
 \begin{corollary}[Sharp $k_0$ for prime moduli]\label{cor:prime-sharp}
 Let $p$ be prime. For every $\ell\ge p-1$ with $\ell\not\equiv 1\pmod p$,
 \[
@@ -248,6 +254,11 @@ AAAI 2018, 6598--6606. \texttt{arXiv:1711.08076}.
 B.~M.~Landman and A.~Robertson,
 \emph{Ramsey Theory on the Integers}, 2nd ed.,
 Student Mathematical Library \textbf{73}, AMS, 2014.
+
+\bibitem{Nathanson1996}
+M.~B.~Nathanson,
+\emph{Additive Number Theory: Inverse Problems and the Geometry of Sumsets},
+Graduate Texts in Mathematics \textbf{165}, Springer, 1996.
 
 \bibitem{aristotle}
 T.~Achim \emph{et al.},
