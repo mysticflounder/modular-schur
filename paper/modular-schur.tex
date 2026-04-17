@@ -20,52 +20,55 @@
 
 \title{A uniform closed form for modular Schur numbers $S_m(k,\ell)$}
 
-\author{Adam McKenna\thanks{With automated assistance from Claude (Anthropic) and Aristotle (Harmonic). The Lean~4 proofs of Theorems~\ref{thm:main},~\ref{thm:unified-upper}, and~\ref{thm:unified-lower} were machine-verified by Aristotle \cite{aristotle}. Correspondence: \texttt{adam@mysticflounder.ai}.}}
+\author{Adam McKenna\thanks{\texttt{adam@mysticflounder.ai} \,\textperiodcentered\, \url{https://linkedin.com/in/admckenna} \,\textperiodcentered\, \url{https://mysticflounder.ai}. The Lean~4 proofs of Theorems~\ref{thm:main},~\ref{thm:unified-upper}, and~\ref{thm:unified-lower} were written with Claude (Anthropic) and machine-verified by Aristotle (Harmonic)~\cite{aristotle}.}}
 \date{\today}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-For integers $m\ge 2$, $\ell\ge 2$, and $k\ge 1$, the \emph{modular Schur number} $S_m(k,\ell)$ of D'orville--Sim--Wong--Ho \cite{DSWH2025} is the greatest $N$ such that $[1,N]$ admits a $k$-partition into classes that are $\ell$-sum-free modulo $m$. We prove the closed form
+The modular Schur number $S_m(k,\ell)$ of D'orville--Sim--Wong--Ho~\cite{DSWH2025} is the greatest $N$ such that $[1,N]$ admits a $k$-partition into classes that are $\ell$-sum-free modulo~$m$. We prove that
 \[
 S_m(k,\ell) \;=\; \frac{m}{\gcd(m,\ell-1)} - 1
 \]
-for all $m\ge 2$, $\ell\ge 2$, and $k \ge m/\gcd(m,\ell-1) - 1$. This identifies the stabilized value of $S_m(k,\ell)$ for every modulus and settles the plateau phenomenon observed empirically in \cite{DSWH2025} for $m\le 7$. The main theorem has been formalized and machine-verified in Lean~4. We also record a sharp threshold result for prime moduli ($k_0(p,\ell) = p - 1$ for $\ell\ge p-1$, $\ell\not\equiv 1\pmod p$) and refute a natural singletons-only conjecture in the composite case via the explicit witness $\{1,5\}\subseteq\mathbb{Z}/12$.
+for every $m\ge 2$, $\ell\ge 2$, and $k\ge m/\gcd(m,\ell-1) - 1$. The proof is two paragraphs of modular arithmetic. It recovers the per-modulus tables of~\cite{DSWH2025} at $m\le 7$ and extends them to all $m$. The main theorem is formalized in Lean~4 with axiom dependencies only \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}. We also give a sharp $k_0$ for prime moduli and record a small composite counterexample ($C=\{1,5\}\subseteq\Zm[12]$) that refutes the natural ``only singletons are safe'' conjecture.
 \end{abstract}
 
 \section{Introduction}
 
-\subsection{Background}
-The classical Schur number $S(k)$ is the largest integer $N$ such that $\{1,\ldots,N\}$ admits a $k$-partition into sum-free sets. Values are known only through $S(5) = 160\,537$ (Heule, 2017); computing $S(6)$ is the content of Erd\H{o}s problem~483 and remains open. D'orville, Sim, Wong, and Ho \cite{DSWH2025} introduced the natural modular generalization:
+The classical Schur number $S(k)$ is the largest $N$ such that $\{1,\ldots,N\}$ admits a $k$-partition into sum-free sets. Values are known only through $S(5) = 160\,537$~\cite{Heule2017}; $S(6)$ is the content of Erd\H{o}s problem~483 and remains open.
+
+D'orville, Sim, Wong, and Ho~\cite{DSWH2025} recently introduced the modular generalization.
+
 \begin{definition}
-A set $S\subseteq\mathbb{Z}$ is \emph{$\ell$-sum-free modulo $m$} if no $x_1,\ldots,x_\ell\in S$ (not necessarily distinct) satisfy $x_1+\cdots+x_\ell \equiv y \pmod m$ for any $y\in S$. The \emph{modular Schur number} $S_m(k,\ell)$ is the greatest $N\ge 0$ such that $[1,N]$ admits a $k$-partition into $\ell$-sum-free sets modulo $m$.
+A set $S\subseteq\mathbb{Z}$ is \emph{$\ell$-sum-free modulo~$m$} if no $x_1,\ldots,x_\ell\in S$ (repetitions allowed) and $y\in S$ satisfy $x_1+\cdots+x_\ell \equiv y\pmod m$. The \emph{modular Schur number} $S_m(k,\ell)$ is the greatest $N\ge 0$ such that $[1,N]$ admits a $k$-partition into $\ell$-sum-free sets modulo~$m$.
 \end{definition}
-In \cite{DSWH2025} complete formulas are given for $m\in\{1,2,3,4,5,6,7\}$ via explicit residue-by-residue case analysis. The phenomenon visible in those formulas---once $k$ is large enough, $S_m(k,\ell)$ is a function of $\gcd(m,\ell-1)$ only---was conjectural for general $m$.
 
-\subsection{Main result}
-Let $d := \gcd(m,\ell-1)$ and $n := m/d$. Our main theorem makes the plateau explicit and dispenses with any hypothesis on $m$.
+In~\cite{DSWH2025} complete formulas are given for $m\in\{1,\ldots,7\}$ by residue-by-residue case analysis on $\ell\bmod m$. The pattern visible across those seven tables---once $k$ is large enough, $S_m(k,\ell)$ is a function of $\gcd(m,\ell-1)$ alone---was conjectural for general~$m$.
 
-\begin{theorem}[Unified Stabilized Law]\label{thm:main}
-For all integers $m\ge 2$, $\ell\ge 2$, and $k\ge n-1$,
+Writing $d:=\gcd(m,\ell-1)$ and $n:=m/d$, the following theorem makes that pattern explicit, with no hypothesis on~$m$ and no case split on $\ell\bmod m$.
+
+\begin{theorem}\label{thm:main}
+For every $m\ge 2$, $\ell\ge 2$, and $k\ge n-1$,
 \[
 S_m(k,\ell) \;=\; n - 1 \;=\; \frac{m}{\gcd(m,\ell-1)} - 1.
 \]
 \end{theorem}
 
-This recovers the stabilized portions of the $m\le 7$ tables of \cite{DSWH2025} as corollaries (\S\ref{sec:corollaries}), extends them to all $m$, and resolves the plateau conjecture.
+The proof is elementary: both bounds reduce to the observation that $n$ itself is a singleton that fails $\ell$-sum-freeness. We give it in~\S\ref{sec:upper}--\S\ref{sec:lower}.
 
-\subsection{Formalization}
-The proof is short and elementary, but the authors have found its unified form easy to misstate (earlier drafts confused the role of $n$ versus $m$ in the forbidden tuple). To eliminate doubt, Theorem~\ref{thm:main} has been formalized in Lean~4 and machine-verified by Aristotle \cite{aristotle}. The theorem statement
+\subsection*{Formalization}
+
+The proof is short but has a form that is easy to misstate (an earlier draft confused the role of $n$ versus $m$ in the forbidden tuple). I formalized Theorem~\ref{thm:main} in Lean~4 to remove any doubt; the proof was completed by Aristotle~\cite{aristotle}. The Lean statement
 \begin{verbatim}
 theorem schurModResidue_eq (m k l : N) (hm : 2 <= m) (hl : 2 <= l)
     (hk : m / Nat.gcd m (l - 1) - 1 <= k) :
     schurModResidue m k l = m / Nat.gcd m (l - 1) - 1
 \end{verbatim}
-compiles in Lean~4 with axiom dependency only \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}. Source files are available at \url{https://github.com/mysticflounder/modular-schur/tree/main/lean}.
+compiles with axiom dependencies only \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}. Source is at \url{https://github.com/mysticflounder/modular-schur}.
 
-\subsection{Organization}
-\S\ref{sec:prelim} establishes base lemmas. \S\ref{sec:upper} proves the upper bound $\Sm\le n-1$. \S\ref{sec:lower} proves the matching lower bound. \S\ref{sec:threshold} analyzes the threshold $k_0(m,\ell)$ and records tight prime-modulus results. \S\ref{sec:corollaries} lists corollaries for specific $m$. \S\ref{sec:open} poses open questions on tight $k_0$ for composite $m$.
+\subsection*{Organization}
+\S\ref{sec:prelim} collects base lemmas. \S\ref{sec:upper} and \S\ref{sec:lower} prove Theorem~\ref{thm:main}. \S\ref{sec:threshold} handles the threshold $k_0(m,\ell)$, including the sharp prime-modulus case and a composite counterexample. \S\ref{sec:corollaries} specializes to $m\in\{8,9,11,p^e\}$. \S\ref{sec:open} lists what stays open.
 
 \section{Preliminaries}\label{sec:prelim}
 
@@ -116,7 +119,7 @@ Hence $\ell n \equiv n \pmod m$. The tuple $(n,\ldots,n;n)\in C^{\ell+1}$ thus w
 \end{proof}
 
 \begin{remark}
-The argument unifies two apparently distinct obstructions: the ``$N\ge m$ is blocked by $m$ itself'' lemma (Lemma~\ref{lem:univ-upper}, the $d=1$ case where $n=m$) and the ``$r=m/d$ is an unsafe singleton'' lemma (Lemma~\ref{lem:singleton} at $r=n$). In both cases the obstruction is the single element $n\in[1,N]$ being $\ell$-sum-free-unsafe as a singleton; once $N\ge n$, this element lands in \emph{some} class, killing the partition.
+The two obstructions in prior arguments---``$N\ge m$ is blocked by $m$'' (Lemma~\ref{lem:univ-upper}, the $d=1$ case $n=m$) and ``$r=m/d$ is an unsafe singleton'' (Lemma~\ref{lem:singleton} at $r=n$)---are the same obstruction. Both reduce to: the single element $n$ is unsafe as a singleton, so any class containing it is unsafe. Once $N\ge n$, some class contains $n$.
 \end{remark}
 
 \section{Lower bound}\label{sec:lower}
@@ -180,9 +183,9 @@ k_0(p,\ell) \;=\; p - 1.
 For any $|C|\ge 2$ in $\Zm[p]$, the subgroup $\langle C-C\rangle$ is either $0$ (ruled out) or $\Zm[p]$ (since $\Zm[p]$ has no nontrivial subgroups). By Theorem~\ref{thm:coset} with $g=1$, $\ell C = \Zm[p]$, so $C$ is not $\ell$-sum-free. Hence $\sigma(p,\ell) = 1$, and Theorem~\ref{thm:k0-lower-cov} gives $k_0\ge n-1 = p-1$; Theorem~\ref{thm:k0-upper} supplies the match.
 \end{proof}
 
-\subsection{Composite moduli: refuting a natural conjecture}
+\subsection{Composite moduli: a counterexample to the natural conjecture}
 
-One might conjecture that for every $m$ and all sufficiently large $\ell$ with $\gcd(m,\ell-1)<m$, only singletons are $\ell$-sum-free, so $k_0(m,\ell) = n-1$. This is false in the composite case.
+Corollary~\ref{cor:prime-sharp} might suggest: for every $m$ and every large $\ell$ with $\gcd(m,\ell-1)<m$, only singletons are $\ell$-sum-free, so $k_0(m,\ell) = n-1$. This is false once $m$ is composite.
 
 \begin{proposition}\label{prop:refute-A}
 For $m=12$ and every $\ell\equiv 11\pmod{12}$ (so $d=2$, $n=6$), the set $C = \{1,5\}\subseteq\{1,\ldots,5\}$ is $\ell$-sum-free modulo $12$. Consequently $\sigma(12,\ell)\ge 2$ and $k_0(12,\ell)\le 3 < n-1$.
@@ -206,13 +209,17 @@ Specializing Theorem~\ref{thm:main}:
 \end{itemize}
 All of these stabilized rows are consistent with (and for $m=4,5,6,7$ recover) the tables of \cite[\S 2--3]{DSWH2025}.
 
-\section{Open problems}\label{sec:open}
+\section{What stays open}\label{sec:open}
 
 \begin{enumerate}[leftmargin=2em,label=(\arabic*)]
-  \item \emph{Tight $k_0$ for composite $m$.} Theorem~\ref{thm:k0-upper} gives $k_0\le n-1$ and Theorem~\ref{thm:k0-lower-cov} gives $k_0\ge\lceil(n-1)/\sigma(m,\ell)\rceil$. These match in the prime case (Corollary~\ref{cor:prime-sharp}) but not generally: for $m=8$ with $\ell$ even, $\sigma(8,\ell)=4$ (witness $\{1,3,5,7\}$), giving only $k_0\ge 2$, whereas the true value is $k_0=3$. A closed form for $k_0(m,\ell)$ when $m$ is composite remains open.
-  \item \emph{Boundary regime.} For $1\le k < n-1$, $\Sm$ is not controlled by Theorem~\ref{thm:main}; empirical data through $m\le 13$ suggest the values are eventually periodic in $\ell\bmod m$ for each fixed $k$, but no closed form is known.
-  \item \emph{Asymptotics as $m\to\infty$.} What is $\max_{\ell\ge 2} S_m(k,\ell)$ as a function of $m$ for fixed $k$? The unified law gives the pointwise value; the optimization over $\ell$ is a divisor-counting problem.
+  \item \emph{Tight $k_0$ for composite $m$.} The covering bound (Theorem~\ref{thm:k0-lower-cov}) matches the easy upper bound $n-1$ for primes but not in general. For $m=8$, $\ell$ even: $\sigma(8,\ell)=4$ (witness $\{1,3,5,7\}$), so the covering bound gives only $k_0\ge 2$, while the true value is $k_0=3$. A closed form for $k_0(m,\ell)$ at composite $m$ is open.
+  \item \emph{Boundary $k < n-1$.} Theorem~\ref{thm:main} only governs $k\ge n-1$. The smaller-$k$ regime---where classes must be large and $\ell$-sum-free---is empirically eventually periodic in $\ell\bmod m$ for fixed $k$ (verified through $m\le 13$), but I have no formula.
+  \item \emph{Optimizing over $\ell$.} For fixed $k$ and $m\to\infty$, what is $\max_\ell S_m(k,\ell)$? The pointwise value is Theorem~\ref{thm:main}; the sup over $\ell$ becomes a divisor-counting problem on $m$.
 \end{enumerate}
+
+\subsection*{Acknowledgments}
+
+This paper was written collaboratively with Claude (Anthropic), and the Lean~4 proofs were machine-verified by Aristotle (Harmonic)~\cite{aristotle}. The informal proofs, formalization, and draft were iterated together over the course of several sessions. All mathematical errors are mine.
 
 \begin{thebibliography}{9}
 
