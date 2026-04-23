@@ -394,9 +394,8 @@ class SchurModSolver:
         self._write_dimacs(cnf_path, num_vars, clauses)
 
         command = [
-            "timeout",
-            str(self.timeout_seconds),
             self.cadical_bin,
+            "-t", str(self.timeout_seconds),
             "--seed=0",
             "-q",
             "-w",
@@ -441,7 +440,7 @@ class SchurModSolver:
                 proof_verified=proof_verified,
                 exit_code=proc.returncode,
             )
-        elif proc.returncode == 124:
+        elif proc.returncode in (0, 124):
             outcome = SolveOutcome(
                 status=TIMEOUT,
                 coloring=None,

@@ -5,3 +5,4 @@ import ModularSchur.UnifiedTheorem
 import ModularSchur.SigmaInfty
 import ModularSchur.StableRange
 import ModularSchur.Partition
+import ModularSchur.IntegerBridge

@@ -46,4 +46,4 @@ Draft preprint forthcoming. The Lean formalization was produced with [Aristotle]
 
 ## License
 
-MIT (code) / CC-BY-4.0 (paper + docs). See `LICENSE` and `LICENSE-docs`.
+MIT. See `LICENSE`.
