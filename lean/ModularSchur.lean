@@ -6,3 +6,4 @@ import ModularSchur.SigmaInfty
 import ModularSchur.StableRange
 import ModularSchur.Partition
 import ModularSchur.IntegerBridge
+import ModularSchur.K1Theorem
