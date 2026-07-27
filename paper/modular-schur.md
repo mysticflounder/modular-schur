@@ -35,7 +35,7 @@ header-includes:
 
 # Introduction
 
-The classical Schur number $S(k)$ is the largest $N$ such that $\{1,\ldots,N\}$ admits a $k$-partition into sum-free sets. Values are known only through $S(5) = 160$ \cite{Heule2017}; $S(6)$ is the content of Erdős problem 483 and remains open. Generalizations to longer equations were studied by Beutelspacher and Brestovansky \cite{BB1982} and are now textbook material \cite{LR2014}.
+The classical Schur number $S(k)$ is the largest $N$ such that $\{1,\ldots,N\}$ admits a $k$-partition into sum-free sets. Values are known only through $S(5) = 160$ \cite{Heule2017}; $S(6)$ remains open, and the growth of the Schur numbers is Erdős problem 483. Generalizations to longer equations were studied by Beutelspacher and Brestovansky \cite{BB1982} and are now textbook material \cite{LR2014}.
 
 Chappelon, Marchena, and Domínguez \cite{CMD2013} introduced the modular version of the generalized Schur number.
 
