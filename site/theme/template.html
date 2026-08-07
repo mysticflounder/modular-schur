@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>$title$</title>
+  <link rel="stylesheet" href="assets/style.css">
+$math$
+</head>
+<body>
+
+<header class="page-header">
+  <h1>$title$</h1>
+$if(subtitle)$
+  <p class="subtitle">$subtitle$</p>
+$endif$
+$if(updated)$
+  <p class="updated">Status as of $updated$</p>
+$endif$
+</header>
+
+$if(toc)$
+<nav class="toc" aria-label="Contents">
+  <h2>Contents</h2>
+$toc$
+</nav>
+$endif$
+
+<main class="content">
+$body$
+</main>
+
+<footer class="page-footer">
+$if(repo)$
+  <p>Source: <a href="$repo$">$repo$</a></p>
+$endif$
+</footer>
+
+</body>
+</html>

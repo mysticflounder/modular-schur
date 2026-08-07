@@ -1,0 +1,78 @@
+/* PLACEHOLDER STYLESHEET — replace wholesale with the Claude Design output.
+ *
+ * Deliberately minimal: enough to read the page and verify the build pipeline,
+ * not a design. The class and element hooks the template and pandoc emit are
+ * listed at the bottom so the replacement knows what it needs to cover. */
+
+:root {
+  --fg: #1a1a1a;
+  --fg-muted: #5a5a5a;
+  --bg: #fdfdfc;
+  --rule: #d8d8d4;
+  --accent: #1f5c8b;
+  --measure: 46rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #e8e8e6;
+    --fg-muted: #a0a09c;
+    --bg: #16181a;
+    --rule: #33363a;
+    --accent: #7db3d8;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 6rem;
+  max-width: var(--measure);
+  font: 1rem/1.65 ui-serif, Georgia, "Times New Roman", serif;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+.page-header { border-bottom: 1px solid var(--rule); padding-bottom: 1.25rem; margin-bottom: 2rem; }
+.page-header h1 { font-size: 1.6rem; line-height: 1.25; margin: 0 0 .5rem; }
+.subtitle, .updated { margin: .25rem 0; color: var(--fg-muted); font-size: .9rem; }
+
+.toc { border: 1px solid var(--rule); border-radius: 4px; padding: 1rem 1.25rem; margin-bottom: 2.5rem; }
+.toc h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 .5rem; color: var(--fg-muted); }
+.toc ul { margin: 0; padding-left: 1.1rem; }
+.toc a { color: var(--fg); }
+
+h2 { font-size: 1.25rem; margin: 2.75rem 0 .75rem; padding-bottom: .3rem; border-bottom: 1px solid var(--rule); }
+h3 { font-size: 1.05rem; margin: 1.75rem 0 .5rem; }
+a { color: var(--accent); }
+
+code, pre { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .875em; }
+pre {
+  background: color-mix(in srgb, var(--fg) 5%, var(--bg));
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: .85rem 1rem;
+  overflow-x: auto;
+}
+pre code { background: none; padding: 0; }
+code { background: color-mix(in srgb, var(--fg) 7%, var(--bg)); padding: .1em .35em; border-radius: 3px; }
+
+/* Tables carry the scan-coverage and theorem-status matrices; they get wide. */
+.table-wrap, table { display: block; overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; font-size: .9rem; margin: 1.25rem 0; }
+th, td { border: 1px solid var(--rule); padding: .4rem .7rem; text-align: left; vertical-align: top; }
+th { background: color-mix(in srgb, var(--fg) 5%, var(--bg)); font-weight: 600; }
+
+blockquote { margin: 1.25rem 0; padding-left: 1rem; border-left: 3px solid var(--rule); color: var(--fg-muted); }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+.page-footer { margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: .85rem; color: var(--fg-muted); }
+
+.katex-display { overflow-x: auto; overflow-y: hidden; padding: .25rem 0; }
+
+/* Hooks a replacement stylesheet must cover:
+ *   template:  .page-header  .subtitle  .updated  .toc  .content  .page-footer
+ *   pandoc:    section.level1/.level2  table/th/td  pre/code  blockquote
+ *   katex:     .katex  .katex-display   (keep .katex-display scrollable)
+ * Status labels in the content are plain <strong> inside list items, so a
+ * design wanting badges should target .content li > strong:first-child. */
