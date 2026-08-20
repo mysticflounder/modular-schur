@@ -13,7 +13,7 @@ whenever `x₁,…,x_ℓ ∈ S` (repetitions allowed) and `y ∈ S`, we have
 `x₁ + ⋯ + x_ℓ ≢ y (mod m)`. `S_m(k,ℓ)` is the greatest `N` such that
 `[1,N]` admits a `k`-partition into `ℓ`-sum-free sets.
 
-In this formalization we work residue-by-residue in `ZMod m` — Lemma 1.1
+In this formalization we work residue-by-residue in `ZMod m` — Lemma 2.1
 (residue reduction) shows the partition problem on `[1,N]` for `N ≤ m-1`
 reduces to the same problem on residues `{1,…,N} ⊆ ZMod m`.
 -/

@@ -2,7 +2,7 @@ import ModularSchur.Basic
 import ModularSchur.SingletonSafety
 
 /-!
-# Lemma 1.2: universal upper bound
+# Lemma 2.2: universal upper bound
 
 Any class containing `0 : ZMod m` fails to be `ℓ`-sum-free (for `ℓ ≥ 1`),
 since `ℓ · 0 = 0`. Equivalently, integers ≥ m cannot appear in any class.

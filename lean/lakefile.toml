@@ -8,3 +8,20 @@ rev = "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
 
 [[lean_lib]]
 name = "ModularSchur"
+
+# ── Comparator auditability gate (Zulip submission standard) ─────────────────
+# Two out-of-tree modules under comparator/ (not in defaultTargets, so the normal
+# `lake build` is unaffected). Build them explicitly:
+#   lake build Challenge Solution
+# Challenge imports Mathlib only and states the 12 structural headline results as
+# `sorry` stubs; Solution imports the project and discharges them under identical
+# top-level (`Headline.`) names. The leanprover/comparator run checks statement
+# identity and axiom cleanliness across the two exports.
+
+[[lean_lib]]
+name = "Challenge"
+srcDir = "comparator"
+
+[[lean_lib]]
+name = "Solution"
+srcDir = "comparator"

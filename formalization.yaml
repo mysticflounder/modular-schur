@@ -1,0 +1,207 @@
+# formalization.yaml (v0.3): repo-root metadata for formalization projects.
+# Requiredness/conformance:
+#   - Fields marked [required] should be present and filled.
+#   - Fields not marked [required] are examples/recommended metadata only; they may be omitted.
+#   - Projects may add extra YAML keys at any level. Readers should tolerate unknown keys.
+# This is a lightweight reporting schema, not a closed validation schema.
+#
+# Cost and token totals were not logged during the work and are recorded as
+# "not recorded" rather than estimated.
+
+version: "v0.3"
+
+# project - the formalization itself (not the source).
+project:
+  name: "schur-numbers"                              # [required]
+  authors: ["Adam McKenna"]                          # [required]
+  license: "Apache-2.0"                              # [required]
+  repo: "https://github.com/mysticflounder/modular-schur"   # [required] canonical PUBLIC repo, and the Palomar submission target
+  private_repo: "https://github.com/flound1129/schur-numbers"  # the working repo; the public tree is a curated export of it
+
+  # Palomar Registry submission fields.
+  # NOTE: the arXiv category and MSC2020 codes below are proposed, not confirmed
+  # by the author. Confirm them before submitting.
+  arxiv_categories: ["math.CO", "math.NT"]           # [required] 1-2 categories
+  msc2020: ["05D10", "11B13", "11B75", "68V20"]      # [required] 1-8 codes
+  originality: "original"        # [required] original result, not a formalization of a third-party paper
+  development_kind: "substantive"  # [required] substantive development, not a thin wrapper
+  comparator_config_path: "lean/comparator/config.json"  # non-default name; conventionally comparator.json
+  project_path: "lean"           # non-default layout: the Lake project is in lean/, not at the repo root
+
+# sources - what was formalized / extended.
+sources:                                             # [required]
+  - title: "A uniform closed form for modular Schur numbers S_m(k,ℓ)"
+    authors: ["Adam McKenna"]
+    id: "McKenna 2026 (this project's paper; paper/modular-schur.pdf)"
+    type: "preprint"
+    note: >
+      The project's own writeup. Theorem 1.2 (the uniform closed form
+      S_m(k,ℓ) = m/gcd(m,ℓ-1) - 1 for k ≥ n-1) is the headline machine-verified
+      result; it subsumes and extends the two prior per-modulus sources below.
+  - title: "Modular Schur numbers"
+    authors: ["Jonathan Chappelon", "Manuel P. Revuelta Marchena", "María I. Sanz Domínguez"]
+    id: "Electron. J. Combin. 20(2) (2013) #P61; arXiv:1306.5635"
+    type: "article"
+    note: >
+      Introduced S_m(k,ℓ); closed m ∈ {1,2,3}. Universal upper bound
+      S_m(k,ℓ) ≤ m-1 (Lemma 2.2 here). Partially verified: the arXiv ID resolves
+      to a paper with this title, but no local copy exists, so the author list,
+      the journal reference, and these three content claims are unchecked
+      against the source. See docs/references/.
+  - title: "Modular generalizations of Schur numbers"
+    authors: ["J. D'orville", "K. A. Sim", "K. B. Wong", "C. K. Ho"]
+    id: "Integers 25 (2025) #A62"
+    type: "article"
+    note: >
+      Closed m ∈ {4,5,6,7} by residue case analysis; posed the m ≥ 8 case as
+      Problem 1.5. Their Problem 1.3 (the k=1 value) is resolved here as
+      schurModResidue_k1 = min(ℓ-1, ⌊m/ℓ⌋) for 2 ≤ m, 2 ≤ ℓ ≤ m. Metadata unverified against the
+      source: no local copy exists, and the open-problem numbering rests on
+      project records of correspondence with the first author rather than on a
+      reading of the paper. See docs/references/.
+
+# project status
+status:
+  scope: >
+    Structural theory of the modular Schur number S_m(k,ℓ) plus computational
+    scans. The STRUCTURAL closed-form proof (the paper) is mathlib-only, sorry-free,
+    and kernel-axiom-clean (no project axioms, no native_decide): 12 headline
+    theorems are packaged for the leanprover/comparator gate (see lean/comparator/).
+    A separate, EARLIER computational scan tree (lean/ModularSchur/Generated/ and the
+    residue-axis / deficit-growth / scanner-bridge machinery) verifies per-modulus
+    tables via native_decide; it is subsumed by the structural proof and is NOT part
+    of the comparator gate (its axiom closure includes Lean.ofReduceBool). See
+    lean/comparator/README.md "audit boundary".
+  sorry_count: 0                # structural modules imported by Solution.lean are sorry-free; Challenge.lean's 12 stubs are intentional (discharged by Solution.lean)
+  sorry_in_definitions: 0
+  axioms: ["propext", "Classical.choice", "Quot.sound"]   # verified axiom closure of all 12 comparator headline results
+  axioms_note: >
+    Verified via `#print axioms` on each of the 12 Headline theorems
+    (lean/comparator/axiom-audit.lean): closure is exactly {propext,
+    Classical.choice, Quot.sound} — no sorryAx, no custom axioms, no
+    Lean.ofReduceBool. native_decide appears ONLY in the excluded scan tree.
+    First measured 2026-06-20; re-checked on every CI run since, and
+    independently confirmed against permitted_axioms by the comparator itself
+    in run 30218964742 (2026-07-26).
+  main_results:
+  - declaration: "lean/comparator/config.json theorem_names (12 mathlib-only structural headline claims)"
+    file: "lean/comparator/Solution.lean"
+    sorry_count: 0
+    axioms: ["propext", "Classical.choice", "Quot.sound"]
+    comparator_config: "lean/comparator/config.json"
+  - declaration: "ModularSchur.schurMod_eq"
+    file: "lean/ModularSchur/IntegerBridge.lean"
+    sorry_count: 0
+    axioms: ["propext", "Classical.choice", "Quot.sound"]
+    comparator_config: "lean/comparator/config.json"
+    note: "Theorem 1.2: S_m(k,ℓ) = m/gcd(m,ℓ-1) - 1 for k ≥ n-1, integer (Definition 1.1) form."
+  - declaration: "ModularSchur.schurModResidue_k1"
+    file: "lean/ModularSchur/K1Theorem.lean"
+    sorry_count: 0
+    axioms: ["propext", "Classical.choice", "Quot.sound"]
+    comparator_config: "lean/comparator/config.json"
+    literature_dependencies: ["D'orville–Sim–Wong–Ho, Integers 25 (2025) #A62, Problem 1.3"]
+
+# how it was produced.
+# The token counts and spend below were never logged and are recorded as "not
+# recorded". The paper's acknowledgments state
+# the work was done collaboratively with Claude (Anthropic), with the Lean 4
+# proofs machine-verified by Aristotle (Harmonic) [Achim et al. 2025]. Fill the
+# cost/token fields from the actual logs before posting.
+automation:                                          # [required]
+  methods:
+    - method: "agent"                                # AI agents under human direction
+      models: ["claude-opus-4-8"]                   # principal model; the exact set across all sessions was not logged
+      framework: "Claude Code"
+      tool_setup: >
+        Claude Code CLI with project skills/hooks (persistent memory, Lean build
+        wrapper with memory/priority caps, doc-check hook). The informal proofs,
+        formalization, and paper draft were iterated together over several sessions.
+      cost:
+        wall_time: "not recorded"
+        spend_usd: "not recorded"
+        hardware: "API-only / local laptop (no GPU)"
+        tokens: "not recorded"
+      prompting_notes: >
+        Math-proofs working style: hardest sub-obstruction first; neutral obstruction
+        names; axiom hygiene gated at every checkpoint.
+    - method: "automated_theorem_prover"
+      models: ["Aristotle (Harmonic)"]              # per the paper acknowledgments [Achim et al. 2025, arXiv:2510.01346]
+      framework: "Aristotle / Harmonic"
+      tool_setup: "Lean 4 proofs machine-verified by Aristotle."
+      cost:
+        wall_time: "not recorded"
+        spend_usd: "not recorded"
+        tokens: "not recorded"
+  spend_usd: "not recorded"
+  notes: >
+    Human-directed AI autoformalization. The structural closed-form proof is the
+    paper's machine-verified content; the comparator packaging (this gate) was the
+    final auditability step. Token/spend totals are not yet reconstructed.
+
+# fidelity
+fidelity:
+  divergences: >
+    The comparator gate covers the 12 mathlib-statable, kernel-axiom-clean
+    STRUCTURAL results. To state them with mathlib definitions alone, the project's
+    validity-partition structures (IsValidPartition / IsValidPartitionNat) are
+    unbundled into their four fields, and schurMod / schurModResidue are spelled out
+    as the full Nat.findGreatest expression (see lean/comparator/Challenge.lean and
+    the two bridge lemmas in Solution.lean). The earlier native_decide-backed
+    per-modulus scan tree (lean/ModularSchur/Generated/, etc.) is deliberately left
+    out of the gate — it is subsumed by the structural proof and is not
+    kernel-axiom-clean. See lean/comparator/README.md "audit boundary".
+
+# review status
+review:
+  status: "self-assessed"                            # [required] comparator gate green on a runner; no external human peer review yet
+  reviewers: []
+  notes: >
+    Self-audit: lean/comparator/check-conformance.sh builds Challenge + Solution and
+    checks no Headline theorem depends on sorryAx or native_decide (Lean.ofReduce*).
+    It is a blocklist, not a whitelist — a project-defined axiom would pass it.
+    lean/comparator/axiom-audit.lean prints the #print axioms closure for all 12
+    without asserting anything about it. The authoritative external check is a
+    leanprover/comparator run that verifies statement identity and axiom compliance and
+    re-runs the nanoda + Lean default kernels (CI:
+    .github/workflows/comparator.yml). That run is now GREEN on a runner: CI run
+    30218964742 (2026-07-26) ended in "Your solution is okay!", covering statement
+    identity for all 12, axiom-closure compliance, and replay through both kernels. The
+    job is blocking. Still "self-assessed" because no external human peer review has
+    taken place — the comparator is a tool, not a reviewer.
+
+# alignment - source statements ↦ formal declarations.
+alignment:
+  namespace: "ModularSchur (project); Headline (comparator restatements)"
+  statements:
+    - source: "Theorem 1.2: S_m(k,ℓ) = m/gcd(m,ℓ-1) - 1 for m≥2, ℓ≥2, k ≥ n-1"
+      lean: "ModularSchur.schurMod_eq"
+      module: "ModularSchur.IntegerBridge"
+      status: "proved"
+    - source: "Lemma 2.1: residue reduction (integer S_m = residue S_m for N ≤ m-1)"
+      lean: "ModularSchur.schurMod_eq_schurModResidue"
+      module: "ModularSchur.IntegerBridge"
+      status: "proved"
+    - source: "Lemma 2.2: universal upper bound S_m(k,ℓ) ≤ m-1"
+      lean: "ModularSchur.no_valid_partition_of_ge_m"
+      module: "ModularSchur.IntegerBridge"
+      status: "proved"
+    - source: "Lemma 2.3: singleton {r} is ℓ-sum-free iff (ℓ-1)·r ≠ 0"
+      lean: "ModularSchur.singleton_sumFree_iff"
+      module: "ModularSchur.SingletonSafety"
+      status: "proved"
+    - source: "Theorem 3.1 (upper) and Theorem 4.1 (lower), residue form"
+      lean: "ModularSchur.schurModResidue_le / ModularSchur.le_schurModResidue / ModularSchur.schurModResidue_eq"
+      module: "ModularSchur.Partition"
+      status: "proved"
+    - source: "D'orville–Sim–Wong–Ho Problem 1.3 (k=1): S_m(1,ℓ) = min(ℓ-1, ⌊m/ℓ⌋) for 2 ≤ m, 2 ≤ ℓ ≤ m"
+      lean: "ModularSchur.schurModResidue_k1"
+      module: "ModularSchur.K1Theorem"
+      status: "proved"
+
+# acknowledgements
+acknowledgements: >
+  Built on mathlib4 (leanprover-community) and Lean 4. The paper was written
+  collaboratively with Claude (Anthropic); the Lean 4 proofs were machine-verified
+  by Aristotle (Harmonic) [Achim et al. 2025]. Auditability packaging follows the
+  leanprover/comparator gate and the mathlib-initiative/formalization.yaml standard.

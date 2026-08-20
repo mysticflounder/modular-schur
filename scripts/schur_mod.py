@@ -440,7 +440,7 @@ class SchurModSolver:
                 proof_verified=proof_verified,
                 exit_code=proc.returncode,
             )
-        elif proc.returncode in (0, 124):
+        elif proc.returncode == 0 or proc.returncode == 124:
             outcome = SolveOutcome(
                 status=TIMEOUT,
                 coloring=None,

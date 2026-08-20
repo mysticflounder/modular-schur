@@ -1,0 +1,24 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "enable_nanoda": true,
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "theorem_names": [
+    "Headline.schurMod_eq",
+    "Headline.schurMod_is_greatest",
+    "Headline.no_valid_partition_of_ge_m",
+    "Headline.schurMod_eq_schurModResidue",
+    "Headline.schurModResidue_eq",
+    "Headline.schurModResidue_le",
+    "Headline.le_schurModResidue",
+    "Headline.singleton_sumFree_iff",
+    "Headline.unsafe_witness_residue",
+    "Headline.not_sumFree_of_mem_zero",
+    "Headline.schurModResidue_k1",
+    "Headline.sigmaInfty_le"
+  ]
+}

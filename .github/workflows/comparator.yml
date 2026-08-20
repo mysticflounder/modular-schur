@@ -1,0 +1,138 @@
+name: comparator
+
+# Zulip auditability gate for the AI-authored modular-Schur headline results.
+#
+# The Lean package lives in lean/ (lean/lakefile.toml registers the Challenge and
+# Solution comparator libraries with srcDir = comparator).
+#
+# Two jobs:
+#   conformance — VALIDATED locally. Builds the structural project modules + the
+#                 two comparator modules (Challenge, Solution) and runs
+#                 lean/comparator/check-conformance.sh: both build, and no
+#                 Solution theorem depends on sorryAx or native_decide
+#                 (Lean.ofReduce*). That script is a blocklist, not a whitelist —
+#                 a project-defined axiom would pass it. Statement identity AND
+#                 the permitted_axioms subset are enforced by the comparator job.
+#   comparator  — the authoritative leanprover/comparator run: statement identity
+#                 + axiom compliance + nanoda and Lean default-kernel re-check,
+#                 ending in "Your solution is okay!". The comparator is checked
+#                 out at the TAG matching lean/lean-toolchain, so its bundled
+#                 lean4export is built against the same Lean as the project.
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - 'lean/comparator/**'
+      - 'lean/ModularSchur/**'
+      - 'lean/ModularSchur.lean'
+      - 'lean/lakefile.toml'
+      - 'lean/lean-toolchain'
+      - 'scripts/lake-build.sh'
+      - '.github/workflows/comparator.yml'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  conformance:
+    name: conformance + axiom audit (validated)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan (Lean toolchain manager)
+        run: |
+          curl -sSfL https://github.com/leanprover/elan/releases/latest/download/elan-x86_64-unknown-linux-gnu.tar.gz \
+            | tar xz
+          ./elan-init -y --default-toolchain "$(cat lean/lean-toolchain)"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch mathlib build cache
+        working-directory: lean
+        run: lake exe cache get
+
+      - name: Build structural project + comparator modules, run axiom audit
+        # check-conformance.sh builds Challenge/Solution via scripts/lake-build.sh
+        # (which builds only the structural modules they import — not the
+        # native_decide scan tree) and checks each Solution theorem is axiom-clean.
+        run: lean/comparator/check-conformance.sh
+
+  comparator:
+    name: leanprover/comparator (nanoda + default kernel)
+    runs-on: ubuntu-latest
+    # Tag-pinned to the project's lean-toolchain. Blocking: this job was held
+    # non-blocking only until a first green CI run confirmed the real-landrun
+    # sandbox and the nanoda + Lean default kernel legs on a runner, which
+    # 30218964742 (2026-07-26) did, ending in "Your solution is okay!".
+    # A failure here is either a real regression in the 12 gated theorems or
+    # drift in one of the pinned tool revisions below — both worth stopping for.
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl -sSfL https://github.com/leanprover/elan/releases/latest/download/elan-x86_64-unknown-linux-gnu.tar.gz \
+            | tar xz
+          ./elan-init -y --default-toolchain "$(cat lean/lean-toolchain)"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch mathlib build cache
+        working-directory: lean
+        run: lake exe cache get
+
+      - name: Pre-build structural project + comparator modules
+        # A pre-built .lake means the comparator does not rebuild Solution.lean,
+        # so its guarantee no longer rests on landrun's sandbox.
+        run: ./scripts/lake-build.sh Challenge Solution
+
+      - name: Install Rust (for nanoda)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build landrun, comparator (+ matched lean4export), and nanoda
+        run: |
+          set -euo pipefail
+          # This comparator tag (= lean-toolchain) invokes `landrun`,
+          # `lean4export`, and `nanoda_bin` by NAME from PATH — it has no
+          # COMPARATOR_LANDRUN / COMPARATOR_LEAN4EXPORT / COMPARATOR_NANODA
+          # overrides. So each built binary's directory goes on $GITHUB_PATH.
+          # Clone tools under RUNNER_TEMP so the clone does not collide with this
+          # repo's own lean/comparator/ directory.
+          # landrun keeps no Go files at its root and several packages under
+          # ./..., so `-o <file>` is only legal against the main package path.
+          # Pinned, do not float to main: landrun moved to urfave/cli v3 on
+          # 2026-07-22, whose parser eats the bare `--` that comparator puts
+          # between the module and the constant list (its Main.lean:127).
+          # lean4export then reads the constants as modules and dies on
+          # `unknown module prefix 'Nat'`. 5ed4a3d is the last urfave/cli v2
+          # tree, and the one comparator's own CI was last green against.
+          git clone https://github.com/Zouuup/landrun "$RUNNER_TEMP/landrun"
+          git -C "$RUNNER_TEMP/landrun" checkout 5ed4a3db3a4ad930d577215c6b9abaa19df7f99f
+          ( cd "$RUNNER_TEMP/landrun" && go build -o landrun ./cmd/landrun )
+          echo "$RUNNER_TEMP/landrun" >> "$GITHUB_PATH"
+          # comparator AT THE TAG matching this repo's lean-toolchain, so its
+          # bundled lean4export builds against the SAME Lean as the project.
+          TC="$(cut -d: -f2 lean/lean-toolchain)"
+          git clone --branch "$TC" https://github.com/leanprover/comparator "$RUNNER_TEMP/cmp"
+          ( cd "$RUNNER_TEMP/cmp" && lake build && lake build lean4export )
+          echo "COMPARATOR_BIN=$RUNNER_TEMP/cmp/.lake/build/bin/comparator" >> "$GITHUB_ENV"
+          echo "$RUNNER_TEMP/cmp/.lake/packages/lean4export/.lake/build/bin" >> "$GITHUB_PATH"
+          # nanoda kernel (optional second kernel; config enable_nanoda = true).
+          # The v4.28.0 README tells you to build nanoda's `debug` branch. That
+          # instruction is wrong, and upstream deleted it four days after the
+          # tag (comparator fa8fd6d, shipped in v4.29.0-rc6). `debug` has not
+          # moved since 2025-10-26 and still parses the pre-ndjson 2.0.0 export
+          # format, while the lean4export this tag pins emits 3.1.0 — so it
+          # fails on line 1 with "invalid digit found in string". Use master,
+          # pinned; its parser accepts 3.1.0 <= v < 3.2.0.
+          git clone https://github.com/ammkrn/nanoda_lib "$RUNNER_TEMP/nanoda"
+          git -C "$RUNNER_TEMP/nanoda" checkout f58f2f6d535e189a40fcb02ede8eb95f97a92d37
+          ( cd "$RUNNER_TEMP/nanoda" && cargo build --release )
+          echo "$RUNNER_TEMP/nanoda/target/release" >> "$GITHUB_PATH"
+
+      - name: Run comparator on the 12 headline theorems
+        working-directory: lean
+        run: |
+          set -euo pipefail
+          # Invoked from lean/ so `lake env` resolves Challenge/Solution.
+          lake env "$COMPARATOR_BIN" comparator/config.json
+          # Success ends with "Your solution is okay!".

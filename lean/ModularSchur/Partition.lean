@@ -37,7 +37,7 @@ def stableResidues (m N : ℕ) : Finset (ZMod m) :=
 
 open Classical in
 /-- `schurModResidue m k ℓ` = greatest `N` such that `stableResidues m N` admits
-    a valid `k`-partition, bounded above by `m - 1` per Lemma 1.2. -/
+    a valid `k`-partition, bounded above by `m - 1` per Lemma 2.2. -/
 noncomputable def schurModResidue (m k ℓ : ℕ) : ℕ :=
   Nat.findGreatest
     (fun N => ∃ P : Fin k → Finset (ZMod m),

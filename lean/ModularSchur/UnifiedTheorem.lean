@@ -13,7 +13,7 @@ viewed as a residue in `ZMod m`, is an unsafe singleton — this forces any
 class containing it to fail the ℓ-sum-free condition.
 
 The partition-level upper bound follows from this residue-level statement
-via Lemma 1.1 (residue reduction).
+via Lemma 2.1 (residue reduction).
 -/
 
 namespace ModularSchur

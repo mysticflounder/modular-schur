@@ -29,10 +29,9 @@ variable {m : ℕ}
     pairwise differences (as `ℕ` via `.val`) are all divisible by some
     `g | m` with `g ≥ 2` has `|C| ≤ m/g`.
 
-    Proof idea: the function `a ↦ a.val / g` maps `C` into `Fin (m/g)`
-    (via divisibility), and is injective on `C` modulo `g`. Since all
-    pairs in `C` have `g`-divisible differences, they occupy distinct
-    residues mod `g` — which contradicts unless `|C| ≤ m/g`.
+    Proof idea: since every pair in `C` has a `g`-divisible difference, all
+    of `C` lies in a *single* residue class mod `g`. That class has at most
+    `⌊(m-1)/g⌋ + 1 = m/g` members below `m`, so `|C| ≤ m/g`.
 -/
 theorem card_le_of_pairwise_dvd (m : ℕ) (hm : 2 ≤ m)
     (C : Finset (ZMod m)) (g : ℕ) (hg : g ∣ m) (hg2 : 2 ≤ g)
