@@ -170,6 +170,127 @@ review:
     job is blocking. Still "self-assessed" because no external human peer review has
     taken place — the comparator is a tool, not a reviewer.
 
+# editorial_review - material for Palomar Registry editorial review.
+editorial_review:
+
+  # A plain-language account of each of the 12 theorems the comparator checks.
+  # Throughout, n := m/gcd(m, l-1), and a class is "l-sum-free mod m" when no l
+  # of its elements (repeats allowed) sum to an element of that same class mod m.
+  compared_theorems:
+    - name: "Headline.schurMod_eq"
+      plain: >
+        The main result, stated over the natural numbers. Once you have at least
+        n-1 colours, the largest N whose colouring can succeed is exactly n-1.
+        One formula covers every modulus and every length.
+    - name: "Headline.schurMod_is_greatest"
+      plain: >
+        A soundness check on the formal definition rather than a mathematical
+        step. Any N that admits a valid partition is at most the value the
+        definition computes. With the m-1 bound below, this shows the capped
+        search really does compute the unbounded "greatest N" of the paper's
+        definition, and not some weaker capped quantity.
+    - name: "Headline.no_valid_partition_of_ge_m"
+      plain: >
+        Nothing survives at or beyond N = m. Whichever class contains m fails
+        immediately, because l copies of m sum to 0, which is m itself modulo m.
+        This is what makes the capped search lossless.
+    - name: "Headline.schurMod_eq_schurModResidue"
+      plain: >
+        Working with integers and working with residues give the same number.
+        This licences the rest of the development to argue inside Z/m.
+    - name: "Headline.schurModResidue_eq"
+      plain: >
+        The main result again, stated over residues. It is the conjunction of the
+        upper and lower bounds that follow.
+    - name: "Headline.schurModResidue_le"
+      plain: >
+        The upper bound. The value is at most n-1, because the residue n cannot
+        sit safely even by itself, so once N reaches n the class holding n fails.
+    - name: "Headline.le_schurModResidue"
+      plain: >
+        The lower bound. When you have at least n-1 colours, n-1 is reachable.
+        The witness is the simplest possible one: give each of 1 through n-1 its
+        own colour.
+    - name: "Headline.singleton_sumFree_iff"
+      plain: >
+        The criterion that drives both bounds. A one-element class {r} is
+        l-sum-free exactly when (l-1)*r is nonzero modulo m.
+    - name: "Headline.unsafe_witness_residue"
+      plain: >
+        The arithmetic heart of the paper. The residue n satisfies
+        (l-1)*n = 0 modulo m, so l copies of n sum back to n. This is the single
+        self-defeating value that forces the upper bound.
+    - name: "Headline.not_sumFree_of_mem_zero"
+      plain: >
+        Zero is never safe: l copies of 0 sum to 0. This is why the count runs
+        over 1 through N and not from 0.
+    - name: "Headline.schurModResidue_k1"
+      plain: >
+        The one-colour case in closed form: the answer is the smaller of l-1 and
+        the floor of m/l. This settles Problem 1.3 of D'orville, Sim, Wong, and
+        Ho.
+    - name: "Headline.sigmaInfty_le"
+      plain: >
+        A counting bound used in the threshold theory. If every pairwise
+        difference within a set lies in a proper subgroup, the set has at most
+        m/minFac(m) elements.
+
+  originality: >
+    The uniform closed form S_m(k,l) = m/gcd(m,l-1) - 1 for k >= n-1 is original
+    to this work. It extends the coprime case (Corollary 5 of D'orville, Sim,
+    Wong, and Ho) to every gcd, and settles the large-k regime of their Problem
+    1, part 5. The k=1 closed form resolves their Problem 1.3.
+
+    Not original, and not claimed as such: the quantity S_m(k,l) itself is due to
+    Chappelon, Revuelta Marchena, and Sanz Dominguez (2013), and the universal
+    bound S_m(k,l) <= m-1 is theirs. Both are restated and reproved here so the
+    formal development is self-contained.
+
+    The formalization is original. It does not wrap or re-export an existing Lean
+    development, and no prior Mathlib or community formalization of modular Schur
+    numbers is known to the author.
+
+  review_roles:
+    human: >
+      The author set the research direction, chose which obstruction to attack at
+      each step, and accepted or rejected each result. The author did not hand-write
+      the Lean proofs.
+    ai: >
+      The informal proofs, the Lean formalization, and the paper draft were produced
+      by AI agents (Claude, via Claude Code) under human direction over several
+      sessions. The Lean proofs were machine-verified by Aristotle (Harmonic).
+    external: >
+      None. No external human has peer-reviewed this work. The comparator is an
+      automated gate, not a reviewer, and a green run is not a referee report.
+
+  limitations: >
+    Scope of the gate. The 12 theorems above are the whole of the machine-checked
+    claim. The project also contains an earlier computational route, a generated
+    tree of roughly 7,500 Lean files that decides per-modulus tables with
+    native_decide. That tree is excluded from the gate, is not exported to the
+    public repository, and is not part of any verification claim here: its axiom
+    closure carries Lean.ofReduceBool, which trusts the compiler rather than the
+    kernel.
+
+    Statement shape. To state the results using Mathlib definitions alone, the
+    project's bundled partition structures are unbundled into their four fields,
+    and the Schur numbers are spelled out as explicit Nat.findGreatest
+    expressions. Two private bridge lemmas in Solution.lean reconcile the two
+    spellings. They are the only load-bearing glue between the audited statements
+    and the project development, and a reviewer should read them first.
+
+    What is not proved. The threshold k_0(m,l) is not settled in general. Two
+    natural conjectures about it are refuted, one at m=12 for every l congruent
+    to 11 mod 12, and one at m=16. The computational frontier programme
+    establishes k_0 row by row out to m <= 5500 without yielding a closed form
+    for gcd(m,l-1) > 1. Those frontier results rest on solver certificates and
+    have not been run through the axiom audit.
+
+    Metadata. Two cited sources are recorded from secondary notes rather than
+    from a reading of the originals; no local copies exist. Cost, wall time, and
+    token totals were not logged during the work and are recorded as
+    "not recorded" rather than estimated.
+
 # alignment - source statements ↦ formal declarations.
 alignment:
   namespace: "ModularSchur (project); Headline (comparator restatements)"
