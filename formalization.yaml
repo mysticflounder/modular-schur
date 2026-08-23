@@ -78,7 +78,7 @@ status:
   axioms_note: >
     Verified via `#print axioms` on each of the 12 Headline theorems
     (lean/comparator/axiom-audit.lean): closure is exactly {propext,
-    Classical.choice, Quot.sound} — no sorryAx, no custom axioms, no
+    Classical.choice, Quot.sound}: no sorryAx, no custom axioms, no
     Lean.ofReduceBool. native_decide appears ONLY in the excluded scan tree.
     First measured 2026-06-20; re-checked on every CI run since, and
     independently confirmed against permitted_axioms by the comparator itself
@@ -157,7 +157,7 @@ fidelity:
     as the full Nat.findGreatest expression (see lean/comparator/Challenge.lean and
     the two bridge lemmas in Solution.lean). The earlier native_decide-backed
     per-modulus scan tree (lean/ModularSchur/Generated/, etc.) is deliberately left
-    out of the gate — it is subsumed by the structural proof and is not
+    out of the gate; it is subsumed by the structural proof and is not
     kernel-axiom-clean. See lean/comparator/README.md "audit boundary".
 
 # review status
@@ -167,7 +167,7 @@ review:
   notes: >
     Self-audit: lean/comparator/check-conformance.sh builds Challenge + Solution and
     checks no Headline theorem depends on sorryAx or native_decide (Lean.ofReduce*).
-    It is a blocklist, not a whitelist — a project-defined axiom would pass it.
+    It is a blocklist, not a whitelist; a project-defined axiom would pass it.
     lean/comparator/axiom-audit.lean prints the #print axioms closure for all 12
     without asserting anything about it. The authoritative external check is a
     leanprover/comparator run that verifies statement identity and axiom compliance and
@@ -176,7 +176,7 @@ review:
     30218964742 (2026-07-26) ended in "Your solution is okay!", covering statement
     identity for all 12, axiom-closure compliance, and replay through both kernels. The
     job is blocking. Still "self-assessed" because no external human peer review has
-    taken place — the comparator is a tool, not a reviewer.
+    taken place; the comparator is a tool, not a reviewer.
 
 # editorial_review - material for Palomar Registry editorial review.
 editorial_review:

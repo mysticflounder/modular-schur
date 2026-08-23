@@ -75,7 +75,7 @@ class="stx st-empirical">Empirical</span> means a solver established it
 for specific parameters and nothing more. <span
 class="stx st-conj">Conjecture</span> means it is believed but unproven.
 <span class="stx st-refuted">Refuted</span> means it was believed and is
-now disproven — those are kept on the page deliberately.</p>
+now disproven. Those are kept on the page deliberately.</p>
 <section id="the-main-theorem" class="level2">
 <h2>The main theorem</h2>
 <p>For a modulus <span class="math inline">m</span>, write <span
@@ -153,8 +153,8 @@ So the unsafe residues are a subgroup
 <p class="fig-note">
 <span class="math inline">d = \gcd(12,4) = 4</span>, so <span
 class="math inline">n = 12/d = 3</span> and the annihilated residues are
-<span class="math inline">\langle 3\rangle = \{0,3,6,9\}</span> —
-hatched above.
+<span class="math inline">\langle 3\rangle = \{0,3,6,9\}</span>, hatched
+above.
 </p>
 </div>
 </div>
@@ -183,7 +183,7 @@ with the proof left as <code>sorry</code>, and once in
 project’s development. The two signatures are byte-identical, so the
 Lean statement cannot quietly drift toward the project’s own convenient
 definitions. The <code>sorry</code>s in <code>Challenge.lean</code> are
-the design — they are the twelve holes the gate fills.</p>
+the design: they are the twelve holes the gate fills.</p>
 <p><span class="st st-proven">Verified</span> The gate passes on the
 current commit. It fails the build on any of: a <code>sorryAx</code> in
 the closure, an axiom outside
@@ -485,7 +485,7 @@ Axiom closure
 <figcaption>
 The two routes reach some of the same results. Only the left one is
 claimed. The structural proof subsumes the computational one, so nothing
-is lost by drawing the line here — but the line has to be drawn, and
+is lost by drawing the line here, but the line has to be drawn, and
 stated.
 </figcaption>
 </figure>
@@ -506,7 +506,7 @@ class="math inline">k \le 12</span> and <span class="math inline">\ell
 25</span>. The encoder was validated first against the published values
 of D’orville et al. for <span class="math inline">m \in
 \{4,5,6,7\}</span>, <span class="math inline">k \le 6</span>, <span
-class="math inline">\ell \le 8</span> — 168 cases, zero mismatches — and
+class="math inline">\ell \le 8</span> (168 cases, zero mismatches) and
 against brute force on 540+ small instances.</p>
 <p>The full run produced 10,712 CNF/proof/solution triples spanning
 <span class="math inline">m \le 18</span>, <span class="math inline">k
@@ -541,7 +541,7 @@ computationally reproduced to <span class="math inline">t \le
 500</span>.</p>
 <p><span class="st st-proven">Proven</span> <strong>By explicit
 certificate.</strong> The rows those families do not cover are handled
-individually — 40 packing-gap rows for <span class="math inline">8 \le m
+individually: 40 packing-gap rows for <span class="math inline">8 \le m
 \le 60</span>, then residual covers at successive frontiers.</p>
 <blockquote>
 <p><strong>The <span class="math inline">m \le 5500</span> frontier is
@@ -569,9 +569,9 @@ not on a kernel-checked Lean proof.</p>
 <h3>The threshold <span class="math inline">k_0(m,\ell)</span></h3>
 <p>The main theorem says what <span
 class="math inline">S_m(k,\ell)</span> equals once <span
-class="math inline">k</span> is large enough. The threshold — the least
-<span class="math inline">k</span> at which the stable value is reached
-— is the open half of the problem.</p>
+class="math inline">k</span> is large enough. The threshold, the least
+<span class="math inline">k</span> at which the stable value is reached,
+is the open half of the problem.</p>
 <p>Write <span class="math inline">n = m/\gcd(m,\ell-1)</span> and let
 <span class="math inline">\sigma(m,\ell)</span> be the largest size of a
 safe subset. <strong>Proven:</strong> <span class="math inline">k_0 \le
@@ -678,7 +678,7 @@ divisor; the correct replacement is coset-theoretic rather than
 singleton-based.</p>
 <p>A second natural guess, <span class="math inline">k_0^\infty = \lceil
 (n-1)/\sigma^\infty \rceil</span> for <span class="math inline">d &gt;
-1</span>, is also <strong>refuted</strong> — first at <span
+1</span>, is also <strong>refuted</strong>, first at <span
 class="math inline">m = 16</span>, where <span
 class="math inline">\sigma^\infty = 2</span> gives a bound of 4 but the
 true value is 5.</p>
@@ -702,17 +702,17 @@ supported by the tables for <span class="math inline">8 \le m \le
 13</span>.</li>
 <li><span class="math inline">\sigma(m,\ell) = \max\{\lvert H\rvert : H
 &lt; \mathbb{Z}/m</span> proper, <span class="math inline">\ell H \cap H
-= \varnothing\}</span> — <strong>conjecture</strong>.</li>
+= \varnothing\}</span>. <strong>Conjecture</strong>.</li>
 <li>A universal closed form for <span class="math inline">\tau</span>,
-the residual minimum set cover — <strong>open</strong>, and the
+the residual minimum set cover. <strong>Open</strong>, and the
 anchored-transversal route to it is the one refuted above.</li>
 </ul>
 </section>
 <section id="erdős-problem-483" class="level3">
 <h3>Erdős problem 483</h3>
 <p><strong>This project does not address Erdős problem 483.</strong> The
-problem asks for the growth rate of the Schur numbers — whether <span
-class="math inline">f(k) &lt; c^k</span> — which no finite computation
+problem asks for the growth rate of the Schur numbers, whether <span
+class="math inline">f(k) &lt; c^k</span>, which no finite computation
 resolves. It is not the determination of <span
 class="math inline">S(6)</span>.</p>
 <p><span class="math inline">S(6)</span> itself is unknown, with <span
@@ -730,9 +730,9 @@ material that exists is a landscape memo, not a result.</p>
 <section id="dorville-et-al.-problems" class="level3">
 <h3>D’orville et al. problems</h3>
 <p>Of the three problems posed in the originating paper, <strong>problem
-3</strong> — the values of <span class="math inline">S_m(1,\ell)</span>
+3</strong>, the values of <span class="math inline">S_m(1,\ell)</span>
 for <span class="math inline">2 &lt; \ell &lt; (m+1)/2</span>, <span
-class="math inline">m \ge 8</span> — is <strong>closed</strong> by this
+class="math inline">m \ge 8</span>, is <strong>closed</strong> by this
 work as <span class="math inline">S_m(1,\ell) = \min(\ell-1, \lfloor
 m/\ell \rfloor)</span>, formalized as <code>schurModResidue_k1</code>.
 Problems 1 and 2 remain open.</p>
@@ -749,7 +749,7 @@ cost of a dead end is paid twice if it is not recorded.</p>
 and <span class="math inline">\theta</span> for the axis cover of a
 fiber’s conflict structure. The <strong>anchored exact
 transversal</strong> hypothesis (AET) asserted <span
-class="math inline">\theta = \nu</span> — that the cover is always
+class="math inline">\theta = \nu</span>: that the cover is always
 tight.</p>
 <p><span class="st st-refuted">Refuted</span> On 2026-04-26, and
 independently re-certified on 2026-06-20, eight non-dyadic
@@ -766,16 +766,16 @@ across every case scanned. That restriction is also
 class="math inline">\theta = 50</span>. The fiber is dyadic (<span
 class="math inline">880 = 55\cdot 2^4</span>, no power of three
 anywhere), singleton-atom, PID-failing, and sub-saturating. The bounds
-are certified by cvc5 — maximum packing <span class="math inline">\ge
+are certified by cvc5 (maximum packing <span class="math inline">\ge
 49</span> UNSAT, cover <span class="math inline">\le 49</span> UNSAT,
-cover of size 50 SAT — cross-checked against Z3 and CaDiCaL, with the
+cover of size 50 SAT), cross-checked against Z3 and CaDiCaL, with the
 encoding smoke-tested against the known <span class="math inline">n =
 1716</span> and <span class="math inline">n = 330</span> results
 first.</p>
 <p><strong>What survives.</strong> The implication <em>certificate shape
 <span class="math inline">\Rightarrow</span> exactness</em> is untouched
 and remains fully proved in Lean. What the counterexample removes is the
-claim that the shape disjunction is universal — that every PID-failing
+claim that the shape disjunction is universal: that every PID-failing
 fiber has one of those shapes. Each individual shape still forces <span
 class="math inline">\theta = \nu</span>. These are different statements
 and the second is not in question.</p>
@@ -809,7 +809,7 @@ class="math inline">n=880</span></td>
 <tr>
 <td>An arithmetic invariant on <span class="math inline">(n, d_0,
 P)</span> separating AET-holds from AET-fails</td>
-<td>no such invariant exists at that granularity — the same <span
+<td>no such invariant exists at that granularity; the same <span
 class="math inline">(d_0, P)</span> holds at <span class="math inline">n
 = 1760</span> and fails at <span class="math inline">n = 880</span></td>
 </tr>
@@ -834,7 +834,7 @@ census</td>
 <tr>
 <td>Growing-minor lower bound along the <span
 class="math inline">(121,125,256)</span> family</td>
-<td>an artifact of labeling — the four incidence graphs at <span
+<td>an artifact of labeling; the four incidence graphs at <span
 class="math inline">n = 7040, 14080, 28160, 56320</span> are isomorphic
 under <span class="math inline">x \mapsto 2x</span></td>
 </tr>
@@ -843,8 +843,8 @@ under <span class="math inline">x \mapsto 2x</span></td>
 </section>
 <section id="retracted-for-solver-error" class="level3">
 <h3>Retracted for solver error</h3>
-<p>Two reported dyadic AET failures — at <span class="math inline">n =
-1760</span> and <span class="math inline">n = 3520</span> — were
+<p>Two reported dyadic AET failures, at <span class="math inline">n =
+1760</span> and <span class="math inline">n = 3520</span>, were
 <strong>false positives</strong>, caused by a maximum-independent-set
 routine that under-counted. AET in fact holds at both (<span
 class="math inline">\nu = \theta = 16</span>). Six of fourteen reported

@@ -1,4 +1,4 @@
-/* Modular Schur — letterpress journal.
+/* Modular Schur: letterpress journal.
  *
  * Layout: a two-column book grid. Column 1 (132px) is the margin, and carries
  * the contents list, the roman section numerals, and the status labels. Column
@@ -155,7 +155,7 @@ strong { font-weight: 600; }
 /* ── The book grid ─────────────────────────────────────────────────────── */
 
 /* Three columns: margin, prose, and the breakout field. The third column is
- * deliberately empty — figures and wide tables run into it, prose never does. */
+ * deliberately empty; figures and wide tables run into it, prose never does. */
 .body-grid {
   display: grid;
   grid-template-columns: var(--margin-w) minmax(0, var(--measure)) minmax(0, 1fr);
@@ -235,8 +235,8 @@ strong { font-weight: 600; }
 
 /* ── Status labels ─────────────────────────────────────────────────────── */
 
-/* .st  — pulled into the margin, one per claim.
- * .stx — stays inline, for the legend and for mentions in running text. */
+/* .st  is pulled into the margin, one per claim.
+ * .stx stays inline, for the legend and for mentions in running text. */
 .st, .stx {
   font-variant-caps: all-small-caps;
   letter-spacing: 0.105em;
@@ -350,7 +350,7 @@ figure .lbl-sm  { font-size: 12.5px; text-anchor: middle; letter-spacing: 1.1px;
   margin: 0;
 }
 
-/* Figure 2 — the gate. Paired boxes with connector rules between them. */
+/* Figure 2: the gate. Paired boxes with connector rules between them. */
 .fig-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .fig-box { border: 1px solid var(--ink); padding: 13px 15px; background: var(--paper); }
 .fig-box h4 {
@@ -377,7 +377,7 @@ figure .lbl-sm  { font-size: 12.5px; text-anchor: middle; letter-spacing: 1.1px;
                font-size: 0.85rem; line-height: 1.5; }
 .fail-grid p::before { content: "\00d7"; color: var(--accent); flex: none; }
 
-/* Figure 3 — the audit boundary. Two columns split by a solid rule. */
+/* Figure 3: the audit boundary. Two columns split by a solid rule. */
 .bnd { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 26px; }
 .bnd-rule { background: var(--ink); }
 .bnd-col { display: flex; flex-direction: column; gap: 11px; }
