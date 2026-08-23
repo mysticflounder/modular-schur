@@ -86,9 +86,13 @@ DRAT certificates replayed by `drat-trim`. The full certificate tree is about
 ## Citing
 
 A. McKenna, *A uniform closed form for modular Schur numbers $S_m(k,\ell)$*
-(2026). The Lean formalization was produced with
-[Aristotle](https://harmonic.fun) (Achim et al., 2025,
-[arXiv:2510.01346](https://arxiv.org/abs/2510.01346)).
+(2026). The Lean development was written by Claude (Anthropic) through Claude
+Code, which produced the definitions, the statements, the `IntegerBridge` and
+`K1Theorem` modules and the comparator layer; [Aristotle](https://harmonic.fun)
+(Achim et al., 2025, [arXiv:2510.01346](https://arxiv.org/abs/2510.01346))
+filled the proof bodies of 10 lemmas in the residue-side modules. See the
+`Provenance` section of the [status page](https://mysticflounder.github.io/modular-schur/)
+for the per-theorem split.
 
 ## Licence
 

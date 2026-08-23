@@ -104,10 +104,13 @@ status:
 
 # how it was produced.
 # The token counts and spend below were never logged and are recorded as "not
-# recorded". The paper's acknowledgments state
-# the work was done collaboratively with Claude (Anthropic), with the Lean 4
-# proofs machine-verified by Aristotle (Harmonic) [Achim et al. 2025]. Fill the
-# cost/token fields from the actual logs before posting.
+# recorded". Two AI systems worked on the Lean tree, and the split is recorded
+# from the Git trailers: Claude (Anthropic), driven through Claude Code, wrote
+# every definition, every theorem statement, the IntegerBridge and K1Theorem
+# modules and the whole comparator layer; Aristotle (Harmonic)
+# [Achim et al. 2025] filled the proof bodies of 10 lemmas in seven modules on
+# 2026-04-16 (commits e07bf41 and 7c56323, the only two that carry an Aristotle
+# trailer). Fill the cost/token fields from the actual logs before posting.
 automation:                                          # [required]
   methods:
     - method: "agent"                                # AI agents under human direction
@@ -128,7 +131,12 @@ automation:                                          # [required]
     - method: "automated_theorem_prover"
       models: ["Aristotle (Harmonic)"]              # per the paper acknowledgments [Achim et al. 2025, arXiv:2510.01346]
       framework: "Aristotle / Harmonic"
-      tool_setup: "Lean 4 proofs machine-verified by Aristotle."
+      tool_setup: >
+        Aristotle filled the proof bodies of 10 lemmas whose statements were
+        already written, across ModularSchur.SingletonSafety, UniversalBound,
+        UnifiedValue, UnifiedTheorem, Partition, SigmaInfty and StableRange.
+        It did not write the definitions, the statements, the IntegerBridge or
+        K1Theorem modules, or the comparator layer.
       cost:
         wall_time: "not recorded"
         spend_usd: "not recorded"
@@ -257,8 +265,19 @@ editorial_review:
       the Lean proofs.
     ai: >
       The informal proofs, the Lean formalization, and the paper draft were produced
-      by AI agents (Claude, via Claude Code) under human direction over several
-      sessions. The Lean proofs were machine-verified by Aristotle (Harmonic).
+      by AI agents under human direction over several sessions. Two systems worked
+      on the Lean tree. Claude (Anthropic), driven through Claude Code, wrote every
+      definition and every theorem statement, the IntegerBridge and K1Theorem
+      modules, and the comparator layer that restates the results with Mathlib
+      definitions alone. Aristotle (Harmonic) filled the proof bodies of 10 lemmas
+      in seven modules. Of the 12 theorems in the gate, Aristotle supplied the
+      proofs behind seven (schurModResidue_eq, schurModResidue_le,
+      le_schurModResidue, singleton_sumFree_iff, unsafe_witness_residue,
+      not_sumFree_of_mem_zero, sigmaInfty_le); the remaining five (schurMod_eq,
+      schurMod_is_greatest, no_valid_partition_of_ge_m,
+      schurMod_eq_schurModResidue, schurModResidue_k1) were proved in
+      Claude-written modules. Every proof, from either system, is checked by the
+      Lean 4 kernel and replayed by the comparator.
     external: >
       None. No external human has peer-reviewed this work. The comparator is an
       automated gate, not a reviewer, and a green run is not a referee report.
@@ -322,7 +341,8 @@ alignment:
 
 # acknowledgements
 acknowledgements: >
-  Built on mathlib4 (leanprover-community) and Lean 4. The paper was written
-  collaboratively with Claude (Anthropic); the Lean 4 proofs were machine-verified
-  by Aristotle (Harmonic) [Achim et al. 2025]. Auditability packaging follows the
-  leanprover/comparator gate and the mathlib-initiative/formalization.yaml standard.
+  Built on mathlib4 (leanprover-community) and Lean 4. The paper and the Lean
+  development were written collaboratively with Claude (Anthropic); Aristotle
+  (Harmonic) [Achim et al. 2025] filled the proof bodies of 10 lemmas in the
+  residue-side modules. Auditability packaging follows the leanprover/comparator
+  gate and the mathlib-initiative/formalization.yaml standard.

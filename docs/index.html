@@ -26,7 +26,7 @@
 
 <header class="page-header">
   <h1>Modular Schur numbers S_m(k,l): research status</h1>
-  <p class="updated">Status as of 2026-08-06</p>
+  <p class="updated">Status as of 2026-08-22</p>
 </header>
 
 <nav class="toc" aria-label="Contents">
@@ -519,11 +519,23 @@ scan report.</p>
 introduced by Chappelon et al. (2013). The three problems this work
 engages with are posed by D’orville, Sim, Wong, and Ho,
 <em>Integers</em> 25 #A62.</p>
-<p>The Lean formalization was produced with <a
+<p>The Lean development was written by two AI systems under human
+direction. Claude (Anthropic), driven through Claude Code, wrote every
+definition, every theorem statement, the <code>IntegerBridge</code> and
+<code>K1Theorem</code> modules, and the comparator layer that restates
+the results with Mathlib definitions alone. <a
 href="https://harmonic.fun">Aristotle</a> (Achim et al., 2025, <a
-href="https://arxiv.org/abs/2510.01346">arXiv:2510.01346</a>) and
-checked as described under <a href="#formalization-status">Formalization
-status</a>.</p>
+href="https://arxiv.org/abs/2510.01346">arXiv:2510.01346</a>) filled the
+proof bodies of 10 lemmas in the residue-side modules. Of the 12
+theorems in the gate, Aristotle supplied the proofs behind seven; the
+integer-form theorems <code>schurMod_eq</code>,
+<code>schurMod_is_greatest</code>,
+<code>no_valid_partition_of_ge_m</code>,
+<code>schurMod_eq_schurModResidue</code> and the <span
+class="math inline">k = 1</span> theorem <code>schurModResidue_k1</code>
+were proved in Claude-written modules. Every proof, whichever system
+produced it, is checked as described under <a
+href="#formalization-status">Formalization status</a>.</p>
 <p>Author: A. McKenna, 2026.</p>
 </section>
 </main>
