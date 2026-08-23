@@ -33,16 +33,17 @@ abstract: |
   question. A uniform "$K + \tau$" schema collapses each family of pairs
   sharing the same $n$ to finitely many *cells*. On them we prove a
   *Coordinate-Union Edge Rule* (each cell's conflict graph is a union of
-  coordinate cliques) and a *whole-axis projection-injective* (WAP)
-  criterion (whenever one axis separates a fiber's atoms, it pins down the
-  exact cover). WAP is automatic for single-axis fibers and holds
-  computationally for about $90\%$ of fibers on the family
-  $n = 55 \cdot 2^a$. The remaining WAP-failing fibers we leave open: a
+  coordinate cliques) and a *separated-fiber* criterion
+  (whenever every axis separates a fiber's atoms, the fiber pins down its
+  exact cover). Separation is automatic for single-axis fibers and holds
+  computationally for $60$--$74\%$ of fibers on the family
+  $n = 55 \cdot 2^a$. The remaining fibers we leave open: a
   uniform closed form for the residual-cover number $\tau$ would require
   that each still admits a matching cover-and-packing witness, which holds
-  on every dyadic case we computed but already fails for other moduli (a
-  $3^3$ axis forces a counterexample at $n \in \{330, 660\}$) and is
-  unproven in general, so $\tau$ at composite $m$ stays conjectural.
+  on almost every case we computed but fails on certified fibers both
+  dyadic ($n = 880$: packing $48$, cover $50$) and not (a $3^3$ axis
+  forces counterexamples at $n \in \{330, 660\}$), so $\tau$ at
+  composite $m$ stays conjectural.
 header-includes:
   - \usepackage{amsmath,amssymb,amsthm}
   - \usepackage{hyperref}
@@ -319,7 +320,7 @@ Theorem \ref{thm:main}, the $k = 1$ case (Theorem \ref{thm:k1}), and the structu
 
 ## Organization
 
-The paper is organized as follows. Section \ref{sec:prelim} collects four short lemmas that the proofs of the main theorem will use. Section \ref{sec:upper} proves the upper bound $S_m(k,\ell) \leq n - 1$, the heart of the argument. Section \ref{sec:lower} proves the matching lower bound, showing the upper bound is always achieved. Section \ref{sec:threshold} asks a finer question: how large must $k$ be before the formula kicks in? It records a tight answer for prime moduli and a counterexample showing composite moduli behave differently. Section \ref{sec:k1} handles the single-class case $k = 1$ in a separate closed form. Section \ref{sec:corollaries} spells out the formula for several specific moduli. Section \ref{sec:structural} records the structural machinery developed toward the composite-modulus threshold: the $K+\tau$ schema, the Coordinate-Union Edge Rule, and the whole-axis projection-injective (WAP) and anchored exact transversal (AET) criteria, together with the computational frontier. Section \ref{sec:open} states what remains open.
+The paper is organized as follows. Section \ref{sec:prelim} collects four short lemmas that the proofs of the main theorem will use. Section \ref{sec:upper} proves the upper bound $S_m(k,\ell) \leq n - 1$, the heart of the argument. Section \ref{sec:lower} proves the matching lower bound, showing the upper bound is always achieved. Section \ref{sec:threshold} asks a finer question: how large must $k$ be before the formula kicks in? It records a tight answer for prime moduli and a counterexample showing composite moduli behave differently. Section \ref{sec:k1} handles the single-class case $k = 1$ in a separate closed form. Section \ref{sec:corollaries} spells out the formula for several specific moduli. Section \ref{sec:structural} records the structural machinery developed toward the composite-modulus threshold: the $K+\tau$ schema, the Coordinate-Union Edge Rule, and the separated-fiber and anchored exact transversal (AET) criteria, together with the computational frontier. Section \ref{sec:open} states what remains open.
 
 # Preliminaries {#sec:prelim}
 
@@ -944,7 +945,7 @@ This is the engine behind every certified cell below (formalized in `ResidueAxis
 A fiber $X_P$ is \emph{whole-axis projection-injective} (WAP) if $\rho_g$ is injective on $X_P$ for some $g \in P$; such an $X_P$ is a \emph{whole-axis projection-injective fiber}.
 \end{definition}
 
-In other words: a fiber is WAP when its atoms all have distinct coordinates along some single axis $g$. In that case, no two atoms share a coordinate in the $g$-direction, so the coordinate-cliques along $g$ are all singletons; they form both a minimum cover and a maximum packing automatically (Figure \ref{fig:wap}).
+In other words: a fiber is WAP when its atoms all have distinct coordinates along some single axis $g$. The coordinate-cliques along that axis are then singletons, but that alone does not certify the cover number: a cover may draw cliques from every axis of $P$, and two atoms that differ on $g$ can still share a coordinate on another axis. Call a fiber \emph{separated} when $\rho_g$ is injective on $X_P$ for *every* $g \in P$; by the edge rule this says exactly that $G_{\mathrm{atom}}[X_P]$ has no edges (Figure \ref{fig:wap}).
 
 \begin{figure}[t]
 \centering
@@ -952,73 +953,72 @@ In other words: a fiber is WAP when its atoms all have distinct coordinates alon
 \begin{tikzpicture}[figcard, x=1.05cm, y=0.95cm,
    atom/.style={circle, draw=ink, fill=lin2!20, minimum size=6.5mm, inner sep=0pt, font=\small},
    good/.style={-{Stealth[length=2mm]}, addX, thick},
-   bad/.style={-{Stealth[length=2mm]}, sumX, thick},
    ax/.style={mut}
 ]
-  % ---- left: WAP (one axis injective) ----
-  \node[font=\small\bfseries, addX] at (2.5,3.1) {WAP via the column axis};
+  % ---- left: separated (every axis injective) ----
+  \node[font=\small\bfseries, addX] at (2,3.9) {separated};
   \node[font=\scriptsize, anchor=east, text=mut] at (0.55,1) {$r_1$};
   \node[font=\scriptsize, anchor=east, text=mut] at (0.55,2) {$r_2$};
-  \draw[ax] (0.6,0) -- (4.55,0);
-  \foreach \c in {1,2,3,4} {
+  \node[font=\scriptsize, anchor=east, text=mut] at (0.55,3) {$r_3$};
+  \draw[ax] (0.6,0) -- (3.55,0);
+  \foreach \c in {1,2,3} {
     \draw[ax] (\c,0) -- (\c,-0.12);
     \node[font=\scriptsize, anchor=north, text=mut] at (\c,-0.14) {$c_{\c}$};
   }
   \node[atom] (LA) at (1,1) {$A$};
-  \node[atom] (LB) at (2,2) {$B$};
-  \node[atom] (LC) at (3,1) {$C$};
-  \node[atom] (LD) at (4,2) {$D$};
+  \node[atom] (LB) at (2,3) {$B$};
+  \node[atom] (LC) at (3,2) {$C$};
   \draw[good] (LA) -- (1,0.16);
   \draw[good] (LB) -- (2,0.16);
   \draw[good] (LC) -- (3,0.16);
-  \draw[good] (LD) -- (4,0.16);
-  \foreach \c in {1,2,3,4} { \fill[addX] (\c,0) circle (1.7pt); }
-  \node[font=\scriptsize, addX, align=center] at (2.5,-1.02)
-    {4 atoms $\to$ 4 distinct columns:\\ $\rho_{g_1}$ injective};
-  % ---- right: not WAP (every axis collides) ----
-  \node[font=\small\bfseries, sumX] at (7.5,3.1) {not WAP};
+  \foreach \c in {1,2,3} { \fill[addX] (\c,0) circle (1.7pt); }
+  \node[font=\scriptsize, addX, align=center] at (2,-1.02)
+    {3 distinct columns, 3 distinct rows:\\ every $\rho_g$ injective};
+  % ---- right: WAP but not separated ----
+  \node[font=\small\bfseries, sumX] at (8,3.9) {WAP but not separated};
   \node[font=\scriptsize, anchor=east, text=mut] at (6.55,1) {$r_1$};
   \node[font=\scriptsize, anchor=east, text=mut] at (6.55,2) {$r_2$};
-  \draw[ax] (6.6,0) -- (8.55,0);
-  \foreach \c/\lab in {7/1, 8/2} {
+  \draw[ax] (6.6,0) -- (9.55,0);
+  \foreach \c/\lab in {7/1, 8/2, 9/3} {
     \draw[ax] (\c,0) -- (\c,-0.12);
     \node[font=\scriptsize, anchor=north, text=mut] at (\c,-0.14) {$c_{\lab}$};
   }
   \node[atom] (RA) at (7,1) {$A$};
-  \node[atom] (RB) at (7,2) {$B$};
-  \node[atom] (RC) at (8,1) {$C$};
+  \node[atom] (RB) at (8,2) {$B$};
+  \node[atom] (RC) at (9,1) {$C$};
   \draw[sumX, thick] (RA) -- (RC);
-  \draw[bad] (RA) -- (6.92,0.14);
-  \draw[bad] (RB) to[bend left=42] (7.08,0.14);
-  \draw[good] (RC) -- (8,0.16);
-  \fill[sumX] (7,0) circle (2.1pt);
-  \fill[addX] (8,0) circle (1.7pt);
-  \node[font=\scriptsize, sumX, align=center] at (7.5,-1.02)
-    {$A,B$ share $c_1$, $A,C$ share $r_1$:\\ no axis injective};
+  \draw[good] (RA) -- (7,0.16);
+  \draw[good] (RB) -- (8,0.16);
+  \draw[good] (RC) -- (9,0.16);
+  \foreach \c in {7,8,9} { \fill[addX] (\c,0) circle (1.7pt); }
+  \node[font=\scriptsize, sumX, align=center] at (8,-1.02)
+    {columns all distinct, but $A,C$ share $r_1$:\\ an edge survives};
 \end{tikzpicture}
 \end{lrbox}%
 \usebox{\figbox}\par\smallskip
 \begin{minipage}{\wd\figbox}%
-\caption{Whole-axis projection-injectivity (WAP), the property of
-Definition \ref{def:wap}. \emph{Left:} projecting the four atoms onto the
-$\rho_{g_1}$ axis sends them to four distinct residues, so $\rho_{g_1}$ is
-injective on the fiber and that one axis separates every atom (the rows
-repeat, but a single good axis suffices). The coordinate-cliques along $g_1$
-are then singletons, at once a minimum cover and a maximum packing, so the
-residual-cover number is exact (Theorem \ref{thm:pid}). \emph{Right:} a fiber
-on which no axis is injective: $A,B$ share the column residue $c_1$ and $A,C$
-share the row residue $r_1$, so neither projection separates the atoms. These
-WAP-failing fibers are where the cover/packing deficit can appear
-(Section \ref{sec:open}).}
+\caption{Separation versus whole-axis projection-injectivity
+(Definition \ref{def:wap}). \emph{Left:} a separated fiber: the three atoms
+occupy three distinct columns and three distinct rows, so $\rho_{g_1}$ and
+$\rho_{g_2}$ are both injective and, by the Coordinate-Union Edge Rule,
+$G_{\mathrm{atom}}[X_P]$ has no edges. The singleton coordinate-cliques along
+either axis are a minimum cover and the whole fiber is a maximum packing, so
+the residual-cover number is exact (Theorem \ref{thm:pid}). \emph{Right:} a
+fiber that is WAP via the column axis but not separated: the columns are all
+distinct, yet $A$ and $C$ share the row residue $r_1$, so the edge $A$--$C$
+survives and the fiber is not a packing. One injective axis therefore does
+not certify the cover number; here the cover may use the row clique
+$\{A, C\}$ and beat the column count. Non-separated fibers are where the
+cover/packing deficit can appear (Section \ref{sec:open}).}
 \label{fig:wap}
 \end{minipage}
 \end{figure}
 
-\begin{theorem}[WAP sufficiency]\label{thm:pid}
-If $X_P$ is WAP via the axis $g$, then choosing one atom per occupied residue of $\rho_g$ is at once a cover and a packing, so $\mathrm{axis\_cover}(X_P) = |\rho_g(X_P)|$ is exact. Moreover every $|P| = 1$ fiber is WAP.
+\begin{theorem}[Separated-fiber sufficiency]\label{thm:pid}
+If $X_P$ is separated, then for any $g \in P$ the singleton coordinate-cliques along $g$ form a cover and the whole fiber is a packing, so $\mathrm{axis\_cover}(X_P) = |X_P|$ is exact. Moreover every $|P| = 1$ fiber is separated.
 \end{theorem}
 
-Both parts are proved per cell (the $|P| = 1$ case routed through NF2) and formalized in `WholeAxisPID.lean`. Computationally, WAP holds for $100\%$ of $|P| = 1$ fibers and for about $90\%$ of all fibers on the dyadic family $n = 55 \cdot 2^a$ (the levels $n = 220, 440, 880$ give $93.8\%, 89.5\%, 89.1\%$). The WAP-failing fibers are precisely the difficult cases in which the cover--packing gap (the *deficit*) grows: WAP does not eliminate the obstruction, it locates exactly the cells in which the obstruction lives.
+Both parts are proved per cell (the $|P| = 1$ case routed through NF2) and formalized in `WholeAxisPID.lean`. An earlier version of this theorem drew the same conclusion from WAP alone. That is false for $|P| \geq 2$: two atoms can differ on the injective axis and still share a coordinate on another axis of $P$, so the fiber need not be a packing. The failure is not rare. At $n = 220$, $d_0 = 110$, $P = (8, 25)$ the fiber has $12$ atoms with $\rho_{25}$ injective, yet all $12$ share their $\rho_8$ coordinate, so a single $8$-axis clique covers everything and the true cover number is $1$, not $12$. Computationally, separation holds for $100\%$ of $|P| = 1$ fibers and for $74.1\%, 60.2\%, 61.3\%$ of all fibers at the levels $n = 220, 440, 880$ of the dyadic family $n = 55 \cdot 2^a$; WAP alone, which certifies only the single-axis subfamily, holds for $93.8\%, 89.5\%, 89.1\%$. The non-separated fibers are the cases in which the cover--packing gap (the *deficit*) can appear: separation does not eliminate the obstruction, it locates the cells in which the obstruction can live.
 
 For those cells, where no axis sorts the atoms one per bucket, the duality engine still mops up, through a weaker witness.
 
@@ -1026,7 +1026,7 @@ For those cells, where no axis sorts the atoms one per bucket, the duality engin
 An \textbf{anchored exact transversal} (AET) of $X_P$ is a family of coordinate-cliques covering $X_P$ together with a system of distinct representatives that is independent in $G_{\mathrm{atom}}[X_P]$. If $X_P$ admits an AET, then $\mathrm{axis\_cover}(X_P) = \mathrm{maxPacking}(X_P)$.
 \end{proposition}
 
-In other words: an AET is a cover-and-packing witness that does not require a single axis to separate all atoms (as WAP does), but instead allows different parts of the fiber to be handled by different axes, provided the chosen representatives are independent. WAP is the special case of a single-axis AET. The proposition is formalized in `AnchoredExactTransversal.lean`. Whether every WAP-failing fiber admits an AET is the residual obstruction taken up in Section \ref{sec:open}.
+In other words: an AET is a cover-and-packing witness that does not require the atoms to be pairwise separated on every axis, but instead allows different parts of the fiber to be handled by different axes, provided the chosen representatives are independent. A separated fiber admits the trivial single-axis AET, in which every clique of the cover is a singleton and the fiber represents itself; a fiber that is merely WAP does not, since its atoms need not be independent. The proposition is formalized in `AnchoredExactTransversal.lean`. Whether every non-separated fiber admits an AET is the residual obstruction taken up in Section \ref{sec:open}.
 
 ## Computational frontier and verification basis
 
@@ -1040,7 +1040,7 @@ An earlier approach bounded $\tau(d_0)$ by a nice-tree-decomposition DP on $G_{\
 
 The paper closes three questions from the prior literature and opens several new ones. This section states clearly what the current techniques do not yet resolve.
 
-1. *AET existence and a closed form for $\tau(d_0)$.* The reductions of Section \ref{sec:structural} reduce the composite-$m$ threshold problem to a single obstruction: does every WAP-failing fiber on the dyadic family $n = 55 \cdot 2^a$ admit an anchored exact transversal (Proposition \ref{prop:aet})? Empirically the answer is yes on every WAP-failing fiber tested (around $30$ such fibers, including difficult cases with large prime-power components ($11^2$ and $5^3$; $5^4$ and $11^3$), for $n$ up to $14080$), but there is no proof: the two-axis case is conditional on a König/parallel-edge argument and the three-axis case has no structural argument at all. The *universal* form (all $m$) is moreover false: at $n \in \{330, 660\}$ a $27 = 3^3$ coordinate axis produces an AET-failing WAP-failing fiber (cover $14$, packing $13$), so any theorem must isolate the $\{2, 5, 11\}$-arithmetic of the dyadic family. Granting dyadic AET, the closed-form $\tau(d_0)$ question reduces to bounding a coordinate-clique independence number uniformly; the deficit across four dyadic levels grew $5 \to 7 \to 11 \to 14$ with no convergent trajectory, and every simple scalar predictor of $\tau$ (dyadic level, support exponent, maximal class size, class counts, projection size) has been ruled out by the data, leaving the shape of the covering certificate as the only surviving predictor. A uniform closed form for $\tau(d_0)$ at composite $m$ thus remains conjectural.
+1. *AET existence and a closed form for $\tau(d_0)$.* The reductions of Section \ref{sec:structural} reduce the composite-$m$ threshold problem to a single obstruction: does every non-separated fiber admit an anchored exact transversal (Proposition \ref{prop:aet})? The answer is no, and not only for other moduli: beyond the $27 = 3^3$ coordinate axis that produces AET-failing fibers at $n \in \{330, 660\}$ (cover $14$, packing $13$), a certified failure exists on the dyadic family itself, at $n = 880$, $d_0 = 35200$, $P = (121, 125, 256)$, with packing $48$ and cover $50$. Empirically the failures are isolated: an AET exists on every other dyadic fiber tested, which covers around $30$ WAP-failing fibers, including difficult cases with large prime-power components ($11^2$ and $5^3$; $5^4$ and $11^3$), for $n$ up to $14080$, and all $75$ fibers at $n \in \{220, 440\}$ that are WAP but not separated, where the exact minimum cover equals the exact maximum packing throughout. No proof covers the passing region: the two-axis case is conditional on a König/parallel-edge argument and the three-axis case has no structural argument at all. A closed form for $\tau(d_0)$ therefore cannot lean on AET alone; it must either characterize where AET fails or bound the cover--packing deficit there directly. The deficit across four dyadic levels grew $5 \to 7 \to 11 \to 14$ with no convergent trajectory, and every simple scalar predictor of $\tau$ (dyadic level, support exponent, maximal class size, class counts, projection size) has been ruled out by the data, leaving the shape of the covering certificate as the only surviving predictor. A uniform closed form for $\tau(d_0)$ at composite $m$ thus remains conjectural.
 2. *Boundary $1 < k < n - 1$.* Theorem \ref{thm:main} governs the "many classes" regime $k \geq n - 1$, and Theorem \ref{thm:k1} settles the single-class case $k = 1$. The intermediate regime $1 < k < n - 1$, where classes must be simultaneously large and $\ell$-sum-free, is empirically eventually periodic in $\ell \bmod m$ for fixed $k$ (verified through $m \leq 13$), but there is no formula.
 3. *Optimizing over $\ell$.* For fixed $k$ and $m \to \infty$, what is $\max_\ell S_m(k, \ell)$? The pointwise value is Theorem \ref{thm:main}; taking the maximum over $\ell$ turns the question into a divisor-counting problem on $m$.
 

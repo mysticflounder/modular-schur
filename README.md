@@ -3,12 +3,14 @@
 Modular Schur numbers $S_m(k,\ell)$: a uniform closed form, its Lean 4
 formalization, and the computational program around it.
 
-**The research status page is the primary record**:
-<https://mysticflounder.github.io/modular-schur/>
+**The paper**: <https://mysticflounder.github.io/modular-schur/>
 
-It states what is proven, what is machine-verified, what has been computed,
-what has been refuted, and what is open. It is updated as the research state
-changes, so a claim's status there supersedes the PDF.
+**The research status record**:
+<https://mysticflounder.github.io/modular-schur/status.html>
+
+The status record states what is proven, what is machine-verified, what has
+been computed, what has been refuted, and what is open. It is updated as the
+research state changes, so a claim's status there supersedes the PDF.
 
 ## Main theorem
 
@@ -20,8 +22,8 @@ $$S_m(k,\ell) = \frac{m}{\gcd(m,\ell-1)} - 1.$$
 
 | Path | Contents |
 | --- | --- |
-| `docs/` | the research status page, served by GitHub Pages |
-| `paper/` | the paper, as Markdown source and as PDF |
+| `docs/` | the site GitHub Pages serves: the paper, and the status record |
+| `paper/` | the paper's canonical Markdown source, and the PDF built from it |
 | `lean/ModularSchur/` | the structural formalization, 10 modules |
 | `lean/comparator/` | the auditability gate: `Challenge.lean`, `Solution.lean`, config, audit |
 | `formalization.yaml` | project metadata |
@@ -70,11 +72,15 @@ To build the gate modules, which are not default targets:
 cd lean && lake build Challenge Solution
 ```
 
-**Paper.** The source is Markdown, not LaTeX. Build the PDF with pandoc:
+**Paper.** The source is Markdown, not LaTeX, and it is the canonical form: the
+PDF and the web page are both built from it. Build the PDF with pandoc:
 
 ```
 pandoc paper/modular-schur.md -o paper/modular-schur.pdf
 ```
+
+The web version is built in the source repository, which renders the same file
+to HTML and compiles its TikZ figures to SVG.
 
 ## Reproduction of the scans
 

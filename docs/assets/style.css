@@ -189,8 +189,11 @@ strong { font-weight: 600; }
 
 /* ── Sections and headings ─────────────────────────────────────────────── */
 
-.content { counter-reset: sect; }
-.content section.level2 { counter-increment: sect; }
+/* The status page's top level is h2, so its roman numerals hang off
+ * section.level2. The paper's top level is h1 and its level2 sections are
+ * ordinary subsections, so this counter must not reach them. */
+.page-status .content { counter-reset: sect; }
+.page-status .content section.level2 { counter-increment: sect; }
 
 .content h2 {
   position: relative;
@@ -203,7 +206,7 @@ strong { font-weight: 600; }
   padding-bottom: 0.32em;
   text-wrap: balance;
 }
-.content section.level2 > h2::before {
+.page-status .content section.level2 > h2::before {
   content: counter(sect, upper-roman);
   position: absolute;
   left: calc(-1 * var(--reach));
@@ -538,12 +541,19 @@ code, pre { font-family: var(--mono); }
   .toc ul { columns: 2; column-gap: 24px; }
 
   /* Margin items rejoin the flow. */
-  .content section.level2 > h2::before {
+  .page-status .content section.level2 > h2::before {
     position: static;
     display: block;
     width: auto;
     text-align: left;
     margin-bottom: 0.2em;
+  }
+  .page-paper .content h1 .header-section-number {
+    position: static;
+    display: block;
+    width: auto;
+    text-align: left;
+    margin-bottom: 0.15em;
   }
   .content p > .st:first-child {
     position: static;
@@ -555,6 +565,162 @@ code, pre { font-family: var(--mono); }
 
   figure .fig-body { display: block; }
   figure .fig-aside { margin-top: 20px; }
+}
+
+/* ══ The paper ═════════════════════════════════════════════════════════════
+ *
+ * index.html is paper/modular-schur.md rendered by site/theme/paper.lua. The
+ * paper's structure is LaTeX, so these rules dress what that filter emits:
+ * theorem-family blocks, proofs, float figures holding a compiled TikZ SVG,
+ * the bibliography, and the \ref and \cite links. Section headings here are
+ * h1, one level above the status page's.                                    */
+
+.page-header .byline {
+  margin: 0.7em 0 0;
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.abstract {
+  max-width: var(--measure);
+  margin: 2.1rem 0 0;
+  padding: 1.15rem 0 1.2rem;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.abstract .kicker { margin: 0 0 0.5em; }
+.abstract p { margin: 0 0 0.75em; font-size: 0.955rem; line-height: 1.62; }
+.abstract p:last-child { margin-bottom: 0; }
+
+/* ── Section headings ──────────────────────────────────────────────────── */
+
+.page-paper .content h1 {
+  position: relative;
+  margin: 3.2rem 0 0.75em;
+  font-size: 1.52rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.008em;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 0.32em;
+  text-wrap: balance;
+}
+.page-paper .content section.level1:first-of-type > h1 { margin-top: 1.8rem; }
+
+/* The section number hangs in the margin, as the roman numerals do opposite. */
+.page-paper .content h1 .header-section-number {
+  position: absolute;
+  left: calc(-1 * var(--reach));
+  width: var(--margin-w);
+  text-align: right;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
+  font-size: 0.92em;
+  color: var(--ink-faint);
+}
+.page-paper .content h2 { border-bottom: 0; font-size: 1.24rem; margin-top: 2.4rem; }
+.page-paper .content h2 .header-section-number { color: var(--ink-faint); }
+
+/* ── Theorem-family blocks ─────────────────────────────────────────────── */
+
+.thm { margin: 1.5rem 0; }
+.thm > p:last-child { margin-bottom: 0; }
+
+.thm-kind {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.075em;
+  font-weight: 600;
+  font-style: normal;
+}
+.thm-num { font-weight: 600; font-style: normal; }
+.thm-title { font-style: normal; color: var(--ink-soft); }
+.thm-dot { font-style: normal; }
+
+/* AMS convention: assertions italic, definitions and remarks upright. */
+.thm-theorem, .thm-lemma, .thm-proposition, .thm-corollary { font-style: italic; }
+.thm-definition, .thm-remark { font-style: normal; }
+.thm-definition, .thm-remark { color: var(--ink-soft); }
+.thm-definition .thm-kind, .thm-remark .thm-kind { color: var(--ink); }
+
+/* ── Proofs ────────────────────────────────────────────────────────────── */
+
+.proof {
+  margin: 1.3rem 0 1.6rem;
+  color: var(--ink-soft);
+}
+.proof > p:last-child { margin-bottom: 0; }
+.proof-head {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.075em;
+  font-style: italic;
+  color: var(--ink);
+}
+.qed { float: right; margin-left: 0.5em; color: var(--ink-faint); }
+.qed-line { text-align: right; }
+
+/* ── Figures compiled from the paper's TikZ ────────────────────────────── */
+
+figure.paper-fig {
+  margin: 2.2rem 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: center;
+}
+figure.paper-fig .fig-svg {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+figure.paper-fig figcaption { text-align: left; }
+.fig-label {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.075em;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* A bare TikZ callout, not a numbered float. */
+.paper-aside { margin: 2rem 0; text-align: center; }
+.paper-aside .fig-svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+
+/* ── Cross-references and citations ────────────────────────────────────── */
+
+a.xref, a.cite { border-bottom-color: var(--rule); font-variant-numeric: oldstyle-num; }
+.xref-missing { color: var(--accent); font-weight: 600; }
+
+/* ── Bibliography ──────────────────────────────────────────────────────── */
+
+.refs { list-style: none; margin: 0; padding: 0; }
+.refs li {
+  position: relative;
+  margin: 0 0 0.95em;
+  padding-left: 0;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+.refs li p { margin: 0; }
+.ref-sigil {
+  position: absolute;
+  left: calc(-1 * var(--reach));
+  width: var(--margin-w);
+  text-align: right;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 860px) {
+  .refs li { padding-left: 0; }
+  .ref-sigil {
+    position: static;
+    width: auto;
+    text-align: left;
+    display: inline;
+    margin-right: 0.45em;
+  }
 }
 
 /* Hooks this file depends on:
