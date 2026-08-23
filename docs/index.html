@@ -3,7 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Modular Schur numbers S_m(k,l): research status</title>
+  <title>Modular Schur numbers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="assets/style.css">
 <script defer="" src="assets/katex/katex.min.js"></script>
 <script>document.addEventListener("DOMContentLoaded", function () {
@@ -24,10 +27,21 @@
 </head>
 <body>
 
+<div class="sheet">
+
 <header class="page-header">
-  <h1>Modular Schur numbers S_m(k,l): research status</h1>
-  <p class="updated">Status as of 2026-08-22</p>
+  <div class="rule-double"></div>
+  <p class="kicker">A living research record &nbsp;·&nbsp; mysticflounder / modular-schur</p>
+  <h1>Modular Schur numbers</h1>
+  <p class="subtitle">What is proven, what the kernel checks, what a
+solver only saw, and what is still open</p>
+  <div class="dateline">
+    <p class="kicker">Status as of 2026-08-22</p>
+    <p class="kicker">Supersedes the PDF</p>
+  </div>
 </header>
+
+<div class="body-grid">
 
 <nav class="toc" aria-label="Contents">
   <h2>Contents</h2>
@@ -53,14 +67,15 @@ proven, what is machine-verified, what has been computed, what has been
 refuted, and what is open. It is updated as the research state changes
 rather than frozen at publication, so a claim’s status here supersedes
 any statement in the PDF.</p>
-<p>Every claim below carries a status label. <strong>Proven</strong>
-means a complete proof exists and has been audited.
-<strong>Verified</strong> means the Lean kernel checks it and the axiom
-closure has been inspected. <strong>Empirical</strong> means a solver
-established it for specific parameters and nothing more.
-<strong>Conjecture</strong> means it is believed but unproven.
-<strong>Refuted</strong> means it was believed and is now disproven —
-those are kept on the page deliberately.</p>
+<p>Every claim below carries a status label. <span
+class="stx st-proven">Proven</span> means a complete proof exists and
+has been audited. <span class="stx st-proven">Verified</span> means the
+Lean kernel checks it and the axiom closure has been inspected. <span
+class="stx st-empirical">Empirical</span> means a solver established it
+for specific parameters and nothing more. <span
+class="stx st-conj">Conjecture</span> means it is believed but unproven.
+<span class="stx st-refuted">Refuted</span> means it was believed and is
+now disproven — those are kept on the page deliberately.</p>
 <section id="the-main-theorem" class="level2">
 <h2>The main theorem</h2>
 <p>For a modulus <span class="math inline">m</span>, write <span
@@ -70,15 +85,89 @@ class="math inline">\{1,\ldots,N\}</span> admits a <span
 class="math inline">k</span>-partition into sets containing no solution
 to <span class="math inline">x_1 + \cdots + x_{\ell-1} \equiv x_\ell
 \pmod m</span>.</p>
-<p><strong>Proven.</strong> For all <span class="math inline">m \ge
-2</span>, <span class="math inline">\ell \ge 2</span>, and <span
-class="math inline">k \ge m/\gcd(m,\ell-1) - 1</span>,</p>
+<p><span class="st st-proven">Proven</span> For all <span
+class="math inline">m \ge 2</span>, <span class="math inline">\ell \ge
+2</span>, and <span class="math inline">k \ge m/\gcd(m,\ell-1) -
+1</span>,</p>
 <p><span class="math display">S_m(k,\ell) = \frac{m}{\gcd(m,\ell-1)} -
 1.</span></p>
-<p><strong>Verified.</strong> The Lean statement is
+<p><span class="st st-proven">Verified</span> The Lean statement is
 <code>schurModResidue_eq</code> in
 <code>lean/ModularSchur/Partition.lean</code>. The
 <code>ModularSchur</code> tree contains no <code>sorry</code>.</p>
+<figure>
+<div class="fig-head">
+<p class="kicker">
+Figure 1  ·  The residue collapse
+</p>
+<p class="kicker">
+<i>m</i> = 12, <i>ℓ</i> = 5
+</p>
+</div>
+<div class="fig-body">
+<svg viewBox="0 0 400 340" role="img" aria-label="The twelve residues of Z modulo 12 arranged on a circle. The four unsafe residues 0, 3, 6 and 9 are hatched and form an inscribed square.">
+<defs>
+<pattern id="f1hatch" width="5" height="5" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+<line class="s-acc" x1="0" y1="0" x2="0" y2="5" stroke-width="1.1"/>
+</pattern> </defs>
+<circle class="s-rule" cx="190" cy="170" r="132" stroke-width="1"/>
+<polygon class="s-acc" points="190,38 322,170 190,302 58,170" stroke-width="1.1" stroke-dasharray="4 3"/>
+<g class="s-ink" stroke-width="1.1">
+<circle cx="190" cy="38"  r="13" fill="url(#f1hatch)"/>
+<circle cx="322" cy="170" r="13" fill="url(#f1hatch)"/>
+<circle cx="190" cy="302" r="13" fill="url(#f1hatch)"/>
+<circle cx="58"  cy="170" r="13" fill="url(#f1hatch)"/>
+<circle class="f-paper" cx="256" cy="56"  r="13"/>
+<circle class="f-paper" cx="304" cy="104" r="13"/>
+<circle class="f-paper" cx="304" cy="236" r="13"/>
+<circle class="f-paper" cx="256" cy="284" r="13"/>
+<circle class="f-paper" cx="124" cy="284" r="13"/>
+<circle class="f-paper" cx="76"  cy="236" r="13"/>
+<circle class="f-paper" cx="76"  cy="104" r="13"/>
+<circle class="f-paper" cx="124" cy="56"  r="13"/> </g>
+<g class="f-ink lbl"> <text x="190" y="38">0</text>
+<text x="256" y="56">1</text> <text x="304" y="104">2</text>
+<text x="322" y="170">3</text> <text x="304" y="236">4</text>
+<text x="256" y="284">5</text> <text x="190" y="302">6</text>
+<text x="124" y="284">7</text> <text x="76"  y="236">8</text>
+<text x="58"  y="170">9</text> <text x="76"  y="104">10</text>
+<text x="124" y="56">11</text> </g>
+<line class="s-acc" x1="342" y1="170" x2="376" y2="170" stroke-width="1"/>
+<text class="f-acc" x="380" y="170" font-size="14" font-style="italic" dominant-baseline="central">n</text>
+</svg>
+<div class="fig-aside">
+<p class="kicker">
+The criterion
+</p>
+<p class="fig-note">
+A singleton <span class="math inline">\{r\}</span> is <span
+class="math inline">\ell</span>-sum-free exactly when
+</p>
+<p class="expr">
+<span class="math inline">(\ell - 1)\,r \not\equiv 0 \pmod m</span>
+</p>
+<hr class="rule-h">
+<p class="kicker">
+So the unsafe residues are a subgroup
+</p>
+<p class="fig-note">
+<span class="math inline">d = \gcd(12,4) = 4</span>, so <span
+class="math inline">n = 12/d = 3</span> and the annihilated residues are
+<span class="math inline">\langle 3\rangle = \{0,3,6,9\}</span> —
+hatched above.
+</p>
+</div>
+</div>
+<figcaption>
+The hatched residues are the ones <span class="math inline">\ell -
+1</span> annihilates. They form the subgroup of order <span
+class="math inline">d</span>, so the first obstruction sits at <span
+class="math inline">n</span>, and <span class="math inline">1, \ldots,
+n-1</span> are each safe alone. That is the whole theorem in one
+picture: put each of them in its own class, and <span
+class="math inline">n</span> can go nowhere.
+</figcaption>
+</figure>
 </section>
 <section id="formalization-status" class="level2">
 <h2>Formalization status</h2>
@@ -95,12 +184,108 @@ project’s development. The two signatures are byte-identical, so the
 Lean statement cannot quietly drift toward the project’s own convenient
 definitions. The <code>sorry</code>s in <code>Challenge.lean</code> are
 the design — they are the twelve holes the gate fills.</p>
-<p><strong>Verified.</strong> The gate passes on the current commit. It
-fails the build on any of: a <code>sorryAx</code> in the closure, an
-axiom outside <code>{propext, Classical.choice, Quot.sound}</code>, a
+<p><span class="st st-proven">Verified</span> The gate passes on the
+current commit. It fails the build on any of: a <code>sorryAx</code> in
+the closure, an axiom outside
+<code>{propext, Classical.choice, Quot.sound}</code>, a
 <code>Lean.ofReduceBool</code>, or a Challenge/Solution statement
 mismatch. A second job replays the proofs through the independent
 <code>nanoda</code> kernel.</p>
+<figure>
+<div class="fig-head">
+<p class="kicker">
+Figure 2  ·  The comparator gate
+</p>
+<p class="kicker">
+One theorem, stated twice
+</p>
+</div>
+<div class="fig-pair">
+<div class="fig-box">
+<h4>
+Challenge.lean
+</h4>
+<p>
+Mathlib definitions only.<br>Proof left as <code>sorry</code>.
+</p>
+</div>
+<div class="fig-box">
+<h4>
+Solution.lean
+</h4>
+<p>
+The same signature.<br>Proved from <code>ModularSchur</code>.
+</p>
+</div>
+</div>
+<svg class="fig-link" viewBox="0 0 680 34" preserveAspectRatio="none" aria-hidden="true">
+<g class="s-ink" stroke-width="1">
+<line x1="170" y1="0" x2="170" y2="17"/>
+<line x1="510" y1="0" x2="510" y2="17"/>
+<line x1="170" y1="17" x2="510" y2="17"/>
+<line x1="340" y1="17" x2="340" y2="29"/> </g>
+<polygon class="f-ink" points="340,34 335,26 345,26"/>
+</svg>
+<div class="fig-bar">
+<p>
+The two signatures are compared <em>byte for byte</em>
+</p>
+<p class="fig-note">
+so the Lean statement cannot drift toward the project’s own convenient
+definitions
+</p>
+</div>
+<svg class="fig-link" viewBox="0 0 680 34" preserveAspectRatio="none" aria-hidden="true">
+<g class="s-ink" stroke-width="1">
+<line x1="340" y1="0" x2="340" y2="14"/>
+<line x1="170" y1="14" x2="510" y2="14"/>
+<line x1="170" y1="14" x2="170" y2="29"/>
+<line x1="510" y1="14" x2="510" y2="29"/> </g>
+<polygon class="f-ink" points="170,34 165,26 175,26"/>
+<polygon class="f-ink" points="510,34 505,26 515,26"/>
+</svg>
+<div class="fig-pair">
+<div class="fig-box pass">
+<h4>
+Lean 4 kernel
+</h4>
+<p>
+Axiom closure inspected.
+</p>
+</div>
+<div class="fig-box pass">
+<h4>
+nanoda
+</h4>
+<p>
+An independent kernel replays every proof.
+</p>
+</div>
+</div>
+<hr class="rule-h">
+<p class="kicker">
+The gate fails the build on any one of these
+</p>
+<div class="fail-grid">
+<p>
+a <code>sorryAx</code> anywhere in the closure
+</p>
+<p>
+a <code>Lean.ofReduceBool</code>
+</p>
+<p>
+an axiom outside the permitted three
+</p>
+<p>
+a Challenge/Solution mismatch
+</p>
+</div>
+<figcaption>
+The gate exists to stop a formalization from proving something weaker
+than it appears to. Because the two signatures must match byte for byte,
+the Mathlib-only statement is the one that is actually proved.
+</figcaption>
+</figure>
 <table>
 <colgroup>
 <col style="width: 33%" />
@@ -199,8 +384,8 @@ generated tree of 7,478 Lean files (35 MB), of which 1,737 use
 gate</strong> and is not part of the verification claim above:
 <code>native_decide</code> trusts the compiler rather than the kernel,
 so its closure carries <code>Lean.ofReduceBool</code>.</p>
-<p><strong>Verified.</strong> The twelve theorems do not depend on that
-tree. <code>Solution.lean</code> imports only
+<p><span class="st st-proven">Verified</span> The twelve theorems do not
+depend on that tree. <code>Solution.lean</code> imports only
 <code>IntegerBridge</code>, <code>K1Theorem</code>, and
 <code>SigmaInfty</code>; the resulting import cone reaches
 <code>Basic</code>, <code>Partition</code>,
@@ -210,6 +395,100 @@ tree. <code>Solution.lean</code> imports only
 <code>native_decide</code>. The structural proof subsumes the
 computational one; the generated tree is retained as history, not as
 evidence.</p>
+<figure>
+<div class="fig-head">
+<p class="kicker">
+Figure 3  ·  The audit boundary
+</p>
+<p class="kicker">
+What the verification claim covers
+</p>
+</div>
+<div class="bnd">
+<div class="bnd-col">
+<div>
+<p class="kicker" style="color: var(--st-proven)">
+Inside the gate
+</p>
+<h4>
+The structural route
+</h4>
+<p class="fig-note">
+Kernel-checked. This is the verification claim.
+</p>
+</div>
+<div class="stack">
+<p class="mods">
+Basic   Partition   SingletonSafety<br> UniversalBound  
+UnifiedValue<br> UnifiedTheorem   StableRange<br> IntegerBridge  
+K1Theorem   SigmaInfty
+</p>
+</div>
+<div class="stack">
+<p class="kicker">
+Axiom closure
+</p>
+<p class="mods">
+<code>propext</code><br><code>Classical.choice</code><br><code>Quot.sound</code>
+</p>
+</div>
+<p class="bnd-verdict" style="color: var(--st-proven)">
+✓ <span>zero occurrences of <code>native_decide</code></span>
+</p>
+</div>
+<div class="bnd-rule">
+
+</div>
+<div class="bnd-col">
+<div>
+<p class="kicker" style="color: var(--accent)">
+Excluded
+</p>
+<h4>
+The generated tree
+</h4>
+<p class="fig-note">
+Retained as history, not as evidence.
+</p>
+</div>
+<div class="stack" style="display: flex; gap: 26px">
+<div>
+<p class="fig-count">
+7,478
+</p>
+<p class="kicker">
+Lean files
+</p>
+</div>
+<div>
+<p class="fig-count" style="color: var(--accent)">
+1,737
+</p>
+<p class="kicker">
+use native_decide
+</p>
+</div>
+</div>
+<div class="stack">
+<p class="kicker">
+Axiom closure
+</p>
+<p class="mods" style="color: var(--accent)">
+<code>Lean.ofReduceBool</code>
+</p>
+</div>
+<p class="bnd-verdict" style="color: var(--accent)">
+× <span>trusts the compiler, not the kernel</span>
+</p>
+</div>
+</div>
+<figcaption>
+The two routes reach some of the same results. Only the left one is
+claimed. The structural proof subsumes the computational one, so nothing
+is lost by drawing the line here — but the line has to be drawn, and
+stated.
+</figcaption>
+</figure>
 </section>
 </section>
 <section id="computational-coverage" class="level2">
@@ -220,8 +499,8 @@ evidence.</p>
 class="math inline">S_m(k,\ell)</span> as SAT and drives CaDiCaL,
 emitting a DRAT proof for each UNSAT boundary that
 <code>drat-trim</code> replays.</p>
-<p><strong>Empirical.</strong> Full grids computed for <span
-class="math inline">m = 8, 9, 10, 11, 12, 13</span> over <span
+<p><span class="st st-empirical">Empirical</span> Full grids computed
+for <span class="math inline">m = 8, 9, 10, 11, 12, 13</span> over <span
 class="math inline">k \le 12</span> and <span class="math inline">\ell
 \le 12</span>, with probes out to <span class="math inline">\ell =
 25</span>. The encoder was validated first against the published values
@@ -245,24 +524,25 @@ The method caps each prime exponent of <span
 class="math inline">d</span>, collapsing infinitely many moduli onto
 finitely many normalized cells, so an infinite family closes by a finite
 check.</p>
-<p><strong>Proven, by finite normalized-cell reduction.</strong> 56
-fixed-quotient lines (<span class="math inline">n = 36</span> through
-<span class="math inline">n = 345</span>), each with per-cell
-certificates, governed by three capstone theorems. Stable laws for the
-families <span class="math inline">m = 36t</span> (<span
-class="math inline">d=6</span>), <span class="math inline">72t</span>
-(<span class="math inline">d=12</span>), <span
-class="math inline">72t</span> (<span class="math inline">d=6t</span>),
-<span class="math inline">100t</span> (<span
-class="math inline">d=10</span>), <span class="math inline">144t</span>,
-<span class="math inline">196t</span>, <span
-class="math inline">216t</span>, <span class="math inline">252t</span>,
-<span class="math inline">360t</span>, computationally reproduced to
-<span class="math inline">t \le 500</span>.</p>
-<p><strong>Proven, by explicit certificate.</strong> The rows those
-families do not cover are handled individually — 40 packing-gap rows for
-<span class="math inline">8 \le m \le 60</span>, then residual covers at
-successive frontiers.</p>
+<p><span class="st st-proven">Proven</span> <strong>By finite
+normalized-cell reduction.</strong> 56 fixed-quotient lines (<span
+class="math inline">n = 36</span> through <span class="math inline">n =
+345</span>), each with per-cell certificates, governed by three capstone
+theorems. Stable laws for the families <span class="math inline">m =
+36t</span> (<span class="math inline">d=6</span>), <span
+class="math inline">72t</span> (<span class="math inline">d=12</span>),
+<span class="math inline">72t</span> (<span
+class="math inline">d=6t</span>), <span class="math inline">100t</span>
+(<span class="math inline">d=10</span>), <span
+class="math inline">144t</span>, <span class="math inline">196t</span>,
+<span class="math inline">216t</span>, <span
+class="math inline">252t</span>, <span class="math inline">360t</span>,
+computationally reproduced to <span class="math inline">t \le
+500</span>.</p>
+<p><span class="st st-proven">Proven</span> <strong>By explicit
+certificate.</strong> The rows those families do not cover are handled
+individually — 40 packing-gap rows for <span class="math inline">8 \le m
+\le 60</span>, then residual covers at successive frontiers.</p>
 <blockquote>
 <p><strong>The <span class="math inline">m \le 5500</span> frontier is
 closed</strong>: after the Phase 19–95 filters, zero residual rows
@@ -300,6 +580,81 @@ class="math inline">k_0 \ge \lceil (n-1)/\sigma \rceil</span>. For prime
 modulus the threshold is settled exactly: <span
 class="math inline">\sigma(p,\ell) = 1</span> and <span
 class="math inline">k_0 = p-1</span>.</p>
+<figure>
+<div class="fig-head">
+<p class="kicker">
+Figure 4  ·  The open threshold
+</p>
+<p class="kicker">
+<span class="math inline">k_0(m,\ell)</span>
+</p>
+</div>
+<svg viewBox="0 0 680 116" role="img" aria-label="A number line. A proven lower bound at the ceiling of n minus 1 over sigma, a proven upper bound at n minus 1, and the interval between them hatched as open.">
+<defs>
+<pattern id="f4gap" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+<line class="s-faint" x1="0" y1="0" x2="0" y2="6" stroke-width="1"/>
+</pattern> </defs>
+<rect x="230" y="46" width="300" height="22" fill="url(#f4gap)"/>
+<line class="s-rule" x1="40" y1="57" x2="640" y2="57" stroke-width="1"/>
+<line class="s-ink" x1="230" y1="57" x2="530" y2="57" stroke-width="1.4"/>
+<g class="s-pass" stroke-width="1.6">
+<line x1="230" y1="40" x2="230" y2="74"/>
+<line x1="230" y1="40" x2="243" y2="40"/>
+<line x1="230" y1="74" x2="243" y2="74"/>
+<line x1="530" y1="40" x2="530" y2="74"/>
+<line x1="530" y1="40" x2="517" y2="40"/>
+<line x1="530" y1="74" x2="517" y2="74"/> </g>
+<g class="f-pass" text-anchor="middle">
+<text x="230" y="26" font-size="15">⌈(<tspan font-style="italic">n</tspan>−1)/<tspan font-style="italic">σ</tspan>⌉</text>
+<text x="530" y="26" font-size="15"><tspan font-style="italic">n</tspan>
+− 1</text> <text class="lbl-sm" x="230" y="94">Proven</text>
+<text class="lbl-sm" x="530" y="94">Proven</text> </g>
+<text class="f-faint" x="380" y="94" font-size="14" font-style="italic" text-anchor="middle">open</text>
+</svg>
+<hr class="rule-h">
+<p class="kicker" style="color: var(--accent)">
+And the natural conjecture is false at composite moduli
+</p>
+<p class="fig-note">
+Take <span class="math inline">m = 12</span> and any <span
+class="math inline">\ell \equiv 11 \pmod{12}</span>, so <span
+class="math inline">d = 2</span> and <span class="math inline">n =
+6</span>. The pair <span class="math inline">C = \{1,5\}</span> is <span
+class="math inline">\ell</span>-safe, so <span
+class="math inline">\sigma \ge 2</span>. Such <span
+class="math inline">\ell</span> are arbitrarily large.
+</p>
+<svg viewBox="0 0 680 78" role="img" aria-label="For m equals 12, the threshold is at most 3, while n minus 1 equals 5 is crossed out.">
+<line class="s-rule" x1="60" y1="30" x2="620" y2="30" stroke-width="1"/>
+<g class="s-faint" stroke-width="1">
+<line x1="60"  y1="24" x2="60"  y2="36"/>
+<line x1="160" y1="24" x2="160" y2="36"/>
+<line x1="260" y1="24" x2="260" y2="36"/>
+<line x1="460" y1="24" x2="460" y2="36"/> </g>
+<g class="f-faint" text-anchor="middle" font-size="14">
+<text x="60"  y="54">0</text> <text x="160" y="54">1</text>
+<text x="260" y="54">2</text> <text x="460" y="54">4</text> </g>
+<circle class="f-acc" cx="360" cy="30" r="7"/>
+<text class="f-acc" x="360" y="16" font-size="14.5" text-anchor="middle"><tspan font-style="italic">k</tspan>₀
+≤ 3</text>
+<text class="f-acc" x="360" y="56" font-size="14" text-anchor="middle">3</text>
+<circle class="s-faint" cx="560" cy="30" r="7" stroke-width="1.2"/>
+<g class="s-faint" stroke-width="1.2">
+<line x1="553" y1="23" x2="567" y2="37"/>
+<line x1="567" y1="23" x2="553" y2="37"/> </g>
+<text class="f-faint" x="560" y="16" font-size="14.5" text-anchor="middle"><tspan font-style="italic">n</tspan>−1
+= 5</text>
+<text class="f-faint" x="560" y="56" font-size="14" text-anchor="middle">5</text>
+</svg>
+<figcaption>
+Both ends of the bracket are proven and nothing closes the interval
+between them. At <span class="math inline">m = 12</span> the upper end
+collapses to 3, so no <span class="math inline">L(12)</span> exists
+beyond which <span class="math inline">k_0 = n-1</span>. The replacement
+law is coset-theoretic rather than singleton-based, and finding it is
+the open half of the problem.
+</figcaption>
+</figure>
 <p><strong>The natural conjecture is false at composite moduli.</strong>
 One might expect that for each <span class="math inline">m</span> there
 is an <span class="math inline">L(m)</span> beyond which <span
@@ -327,10 +682,11 @@ singleton-based.</p>
 class="math inline">m = 16</span>, where <span
 class="math inline">\sigma^\infty = 2</span> gives a bound of 4 but the
 true value is 5.</p>
-<p><strong>Open.</strong> The general <span class="math inline">d &gt;
-1</span> law that replaces it. The frontier program above establishes it
-row by row out to <span class="math inline">m \le 5500</span> without
-yielding a closed form.</p>
+<p><span class="st st-conj">Open</span> The general <span
+class="math inline">d &gt; 1</span> law that replaces it. The frontier
+program above establishes it row by row out to <span
+class="math inline">m \le 5500</span> without yielding a closed
+form.</p>
 </section>
 <section id="also-open" class="level3">
 <h3>Also open</h3>
@@ -395,12 +751,12 @@ fiber’s conflict structure. The <strong>anchored exact
 transversal</strong> hypothesis (AET) asserted <span
 class="math inline">\theta = \nu</span> — that the cover is always
 tight.</p>
-<p><strong>Refuted</strong> (2026-04-26, independently re-certified
-2026-06-20) in its universal form, by eight non-dyadic counterexamples.
-The cornerstone cases are <span class="math inline">n = 330</span> and
-<span class="math inline">n = 660</span>, where <span
-class="math inline">\nu = 13</span> and <span class="math inline">\theta
-= 14</span>.</p>
+<p><span class="st st-refuted">Refuted</span> On 2026-04-26, and
+independently re-certified on 2026-06-20, eight non-dyadic
+counterexamples closed the universal form. The cornerstone cases are
+<span class="math inline">n = 330</span> and <span class="math inline">n
+= 660</span>, where <span class="math inline">\nu = 13</span> and <span
+class="math inline">\theta = 14</span>.</p>
 <p>The hypothesis was then narrowed to dyadic fibers, where it held
 across every case scanned. That restriction is also
 <strong>refuted</strong> (2026-06-21), by a single certified fiber:</p>
@@ -540,9 +896,14 @@ href="#formalization-status">Formalization status</a>.</p>
 </section>
 </main>
 
+</div>
+
 <footer class="page-footer">
-  <p>Source: <a href="https://github.com/mysticflounder/modular-schur">https://github.com/mysticflounder/modular-schur</a></p>
+  <p class="kicker">A. McKenna &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Apache-2.0</p>
+  <p class="kicker"><a href="https://github.com/mysticflounder/modular-schur">https://github.com/mysticflounder/modular-schur</a></p>
 </footer>
+
+</div>
 
 </body>
 </html>
