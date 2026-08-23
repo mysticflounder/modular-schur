@@ -13,7 +13,11 @@
   --paper-deep: oklch(0.957 0.013 82);
   --ink:        oklch(0.245 0.014 62);
   --ink-soft:   oklch(0.505 0.016 62);
-  --ink-faint:  oklch(0.660 0.014 66);
+  /* --ink-faint is used at 0.8rem (kickers, table headers, contents), so it
+   * has to clear 4.5:1 against --paper for normal text, not the 2.96:1 the
+   * 2026-08-22 audit measured. Small caps and letterspacing carry the
+   * hierarchy that the lighter value used to. */
+  --ink-faint:  oklch(0.520 0.016 66);
   --rule:       oklch(0.872 0.013 75);
   --rule-soft:  oklch(0.928 0.010 78);
   --accent:     oklch(0.515 0.132 28);
@@ -44,7 +48,7 @@
     --paper-deep: oklch(0.213 0.010 62);
     --ink:        oklch(0.918 0.011 82);
     --ink-soft:   oklch(0.735 0.013 76);
-    --ink-faint:  oklch(0.585 0.012 70);
+    --ink-faint:  oklch(0.665 0.012 70);   /* was 4.49:1; needs margin over 4.5 */
     --rule:       oklch(0.330 0.012 66);
     --rule-soft:  oklch(0.268 0.010 64);
     --accent:     oklch(0.700 0.115 32);

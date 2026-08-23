@@ -83,8 +83,12 @@ class="math inline">S_m(k,\ell)</span> for the largest <span
 class="math inline">N</span> such that <span
 class="math inline">\{1,\ldots,N\}</span> admits a <span
 class="math inline">k</span>-partition into sets containing no solution
-to <span class="math inline">x_1 + \cdots + x_{\ell-1} \equiv x_\ell
-\pmod m</span>.</p>
+to <span class="math inline">x_1 + \cdots + x_\ell \equiv y \pmod
+m</span>, where <span class="math inline">x_1,\ldots,x_\ell</span> and
+<span class="math inline">y</span> all lie in the same class and
+repetitions among the <span class="math inline">x_i</span> are allowed.
+This is the <code>IsEllSumFree</code> convention: <span
+class="math inline">\ell</span> addends and a separate target.</p>
 <p><span class="st st-proven">Proven</span> For all <span
 class="math inline">m \ge 2</span>, <span class="math inline">\ell \ge
 2</span>, and <span class="math inline">k \ge m/\gcd(m,\ell-1) -
@@ -180,10 +184,14 @@ appears to. Each theorem is stated twice: once in
 <code>comparator/Challenge.lean</code> using only Mathlib definitions,
 with the proof left as <code>sorry</code>, and once in
 <code>comparator/Solution.lean</code> where it is proved from this
-project’s development. The two signatures are byte-identical, so the
-Lean statement cannot quietly drift toward the project’s own convenient
-definitions. The <code>sorry</code>s in <code>Challenge.lean</code> are
-the design: they are the twelve holes the gate fills.</p>
+project’s development. The comparator checks that the two elaborated
+declarations carry the same statement, so the Lean statement cannot
+quietly drift toward the project’s own convenient definitions. It then
+checks the permitted declaration and axiom boundary and replays the
+proof exports through the configured kernels. The source files are not
+byte-identical, and nothing compares them as bytes. The
+<code>sorry</code>s in <code>Challenge.lean</code> are the design: they
+are the twelve holes the gate fills.</p>
 <p><span class="st st-proven">Verified</span> The gate passes on the
 current commit. It fails the build on any of: a <code>sorryAx</code> in
 the closure, an axiom outside
@@ -228,7 +236,7 @@ The same signature.<br>Proved from <code>ModularSchur</code>.
 </svg>
 <div class="fig-bar">
 <p>
-The two signatures are compared <em>byte for byte</em>
+The two elaborated declarations must carry the <em>same statement</em>
 </p>
 <p class="fig-note">
 so the Lean statement cannot drift toward the project’s own convenient
@@ -282,7 +290,7 @@ a Challenge/Solution mismatch
 </div>
 <figcaption>
 The gate exists to stop a formalization from proving something weaker
-than it appears to. Because the two signatures must match byte for byte,
+than it appears to. Because the two elaborated statements must match,
 the Mathlib-only statement is the one that is actually proved.
 </figcaption>
 </figure>
@@ -348,18 +356,22 @@ class="math inline">\mathbb{N}</span></td>
 </tr>
 <tr>
 <td><code>unsafe_witness_residue</code></td>
-<td>the witness an unsafe set must contain</td>
+<td>the residue <span class="math inline">n</span> is itself unsafe</td>
 <td><code>UnifiedValue.lean</code></td>
 </tr>
 <tr>
 <td><code>schurModResidue_k1</code></td>
-<td><span class="math inline">k=1</span>: <span
-class="math inline">\min(\ell-1,\ m/\ell)</span></td>
+<td><span class="math inline">k=1</span>, for <span
+class="math inline">2 \le \ell \le m</span>: <span
+class="math inline">\min(\ell-1, \lfloor m/\ell \rfloor)</span></td>
 <td><code>K1Theorem.lean</code></td>
 </tr>
 <tr>
 <td><code>sigmaInfty_le</code></td>
-<td><span class="math inline">\lvert C\rvert \le
+<td>if every pairwise difference in <span class="math inline">C</span>
+is divisible by one <span class="math inline">g \ge 2</span> dividing
+<span class="math inline">m</span>, then <span
+class="math inline">\lvert C\rvert \le
 m/\operatorname{minFac}(m)</span></td>
 <td><code>SigmaInfty.lean</code></td>
 </tr>
@@ -575,11 +587,24 @@ is the open half of the problem.</p>
 <p>Write <span class="math inline">n = m/\gcd(m,\ell-1)</span> and let
 <span class="math inline">\sigma(m,\ell)</span> be the largest size of a
 safe subset. <strong>Proven:</strong> <span class="math inline">k_0 \le
-n-1</span> when <span class="math inline">d &lt; m</span>, and <span
-class="math inline">k_0 \ge \lceil (n-1)/\sigma \rceil</span>. For prime
-modulus the threshold is settled exactly: <span
-class="math inline">\sigma(p,\ell) = 1</span> and <span
-class="math inline">k_0 = p-1</span>.</p>
+n-1</span> when <span class="math inline">d &lt; m</span>, and, for
+<span class="math inline">n \ge 2</span>, <span class="math inline">k_0
+\ge \lceil (n-1)/\sigma \rceil</span>. The lower bound needs <span
+class="math inline">n \ge 2</span>: at <span class="math inline">\ell
+\equiv 1 \pmod m</span> one has <span class="math inline">n = 1</span>,
+the interval is empty and <span class="math inline">\sigma =
+0</span>.</p>
+<p>For prime modulus the threshold is settled exactly, but only inside
+the hypotheses of the paper’s corollary: if <span
+class="math inline">p</span> is prime, <span class="math inline">\ell
+\ge p-1</span>, and <span class="math inline">\ell \not\equiv 1 \pmod
+p</span>, then <span class="math inline">\sigma(p,\ell) = 1</span> and
+<span class="math inline">k_0(p,\ell) = p-1</span>. Outside that range
+the threshold can be much smaller. At <span class="math inline">p =
+5</span>, <span class="math inline">\ell = 2</span> the partition <span
+class="math inline">\{1,4\} \sqcup \{2,3\}</span> is safe, so <span
+class="math inline">k_0(5,2) = 2</span> rather than <span
+class="math inline">4</span>.</p>
 <figure>
 <div class="fig-head">
 <p class="kicker">

@@ -31,7 +31,7 @@ $$S_m(k,\ell) = \frac{m}{\gcd(m,\ell-1)} - 1.$$
 Twelve structural results are machine-checked. Each is stated twice. The
 statement in `lean/comparator/Challenge.lean` uses Mathlib definitions only and
 leaves the proof as `sorry`. The proof in `lean/comparator/Solution.lean`
-discharges it from this project's development. The two signatures are identical,
+discharges it from this project's development. The comparator checks that the two elaborated declarations carry the same statement,
 so a proof cannot quietly weaken the statement it claims.
 
 CI runs the `leanprover/comparator` gate on every push. The build fails if any
