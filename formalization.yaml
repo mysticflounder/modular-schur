@@ -55,10 +55,11 @@ sources:                                             # [required]
     note: >
       Closed m ∈ {4,5,6,7} by residue case analysis; posed the m ≥ 8 case as
       Problem 1.5. Their Problem 1.3 (the k=1 value) is resolved here as
-      schurModResidue_k1 = min(ℓ-1, ⌊m/ℓ⌋) for 2 ≤ m, 2 ≤ ℓ ≤ m. Metadata unverified against the
-      source: no local copy exists, and the open-problem numbering rests on
-      project records of correspondence with the first author rather than on a
-      reading of the paper. See docs/references/.
+      schurModResidue_k1 = min(ℓ-1, ⌊m/ℓ⌋) for 2 ≤ m, 2 ≤ ℓ ≤ m. Authors, title,
+      venue, the m ∈ {4,5,6,7} closure, Theorem 9 (the m = 5 values), Corollary 8
+      (prime moduli), and the Problem 1 part numbering were checked against the
+      published version (https://math.colgate.edu/~integers/z62/z62.pdf) on
+      2026-08-24; no copy is archived in the repository. See docs/references/.
 
 # project status
 status:
@@ -312,8 +313,10 @@ editorial_review:
     for gcd(m,l-1) > 1. Those frontier results rest on solver certificates and
     have not been run through the axiom audit.
 
-    Metadata. Two cited sources are recorded from secondary notes rather than
-    from a reading of the originals; no local copies exist. Cost, wall time, and
+    Metadata. The Chappelon et al. (2013) citation is recorded from secondary
+    notes rather than from a reading of the original; the D'orville et al. (2025)
+    citation was checked against its published version on 2026-08-24. No local
+    copies are archived. Cost, wall time, and
     token totals were not logged during the work and are recorded as
     "not recorded" rather than estimated.
 
