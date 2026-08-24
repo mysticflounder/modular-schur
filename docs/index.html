@@ -239,7 +239,7 @@
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
 <p>The classical Schur number <span class="math inline">S(k)</span> is the largest <span class="math inline">N</span> such that <span class="math inline">\{1,\ldots,N\}</span> can be split into <span class="math inline">k</span> groups, each containing no solution to <span class="math inline">x + y = z</span> with <span class="math inline">x, y, z</span> in the same group. Think of it as a coloring game: color the integers <span class="math inline">1</span> through <span class="math inline">N</span> with <span class="math inline">k</span> colors, and call each color’s <em>class</em> the set of integers that receive that color (so the <span class="math inline">k</span> classes are exactly the <span class="math inline">k</span> groups above). The coloring wins when no class contains two numbers that add up to a third number of that same class (Figure <a href="#fig:schur-game" class="xref">1</a>). Values are known only through <span class="math inline">S(5) = 160</span> [<a href="#ref-Heule2017" class="cite">Heu17</a>]; <span class="math inline">S(6)</span> is unknown, and the growth rate of <span class="math inline">S(k)</span> is Erdős problem 483. Generalizations to longer equations (<span class="math inline">x_1 + \cdots + x_\ell = y</span>) were studied by Beutelspacher and Brestovansky [<a href="#ref-BB1982" class="cite">BB82</a>] and are now textbook material [<a href="#ref-LR2014" class="cite">LR14</a>].</p>
-<figure class="paper-fig" id="fig:schur-game"><svg class="fig-svg" role="img" aria-label="Figure 1 of the paper, drawn in TikZ." style="width:416px; aspect-ratio: 240.082 / 77.105" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="240.082pt" height="77.105pt" viewBox="0 0 240.082 77.105">
+<figure class="paper-fig" id="fig:schur-game"><svg class="fig-svg" role="img" aria-label="Figure 1 of the paper, drawn in TikZ." style="width:608px; aspect-ratio: 240.082 / 77.105" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="240.082pt" height="77.105pt" viewBox="0 0 240.082 77.105">
 <defs>
 <g>
 <g id="fg1-glyph-0-0">
@@ -589,7 +589,7 @@
 <p><span class="thm-kind">Definition</span> <span class="thm-num">1.1</span><span class="thm-dot">.</span> A set <span class="math inline">S \subseteq \mathbb{Z}</span> is <em><span class="math inline">\ell</span>-sum-free modulo <span class="math inline">m</span></em> if no <span class="math inline">x_1, \ldots, x_\ell \in S</span> (repetitions allowed) and <span class="math inline">y \in S</span> satisfy <span class="math inline">x_1 + \cdots + x_\ell \equiv y \pmod m</span>. The <em>modular Schur number</em> <span class="math inline">S_m(k,\ell)</span> is the greatest <span class="math inline">N \geq 0</span> such that <span class="math inline">[1,N]</span> admits a <span class="math inline">k</span>-partition into <span class="math inline">\ell</span>-sum-free sets modulo <span class="math inline">m</span>.</p>
 </div>
 <p>In other words: <span class="math inline">S_m(k,\ell)</span> is the largest list of positive integers that can be colored with <span class="math inline">k</span> colors so that no color class contains the forbidden modular equation. Figure <a href="#fig:classical-modular" class="xref">2</a> contrasts the two notions side by side.</p>
-<figure class="paper-fig" id="fig:classical-modular"><svg class="fig-svg" role="img" aria-label="Figure 2 of the paper, drawn in TikZ." style="width:755px; aspect-ratio: 435.697 / 326.563" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="435.697pt" height="326.563pt" viewBox="0 0 435.697 326.563">
+<figure class="paper-fig" id="fig:classical-modular"><svg class="fig-svg" role="img" aria-label="Figure 2 of the paper, drawn in TikZ." style="width:1104px; aspect-ratio: 435.697 / 326.563" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="435.697pt" height="326.563pt" viewBox="0 0 435.697 326.563">
 <defs>
 <g>
 <g id="fg2-glyph-0-0">
@@ -2369,7 +2369,7 @@
 <div class="thm thm-theorem" id="thm:main">
 <p><span class="thm-kind">Theorem</span> <span class="thm-num">1.2</span><span class="thm-dot">.</span> For every <span class="math inline">m \geq 2</span>, <span class="math inline">\ell \geq 2</span>, and <span class="math inline">k \geq n - 1</span>, <span class="math display">S_m(k, \ell) = n - 1 = \frac{m}{\gcd(m, \ell - 1)} - 1.</span></p>
 </div>
-<div class="paper-aside"><svg class="fig-svg" role="img" aria-label="An explanatory callout box from the paper." style="width:578px; aspect-ratio: 333.352 / 98.226" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="333.352pt" height="98.226pt" viewBox="0 0 333.352 98.226">
+<div class="paper-aside"><svg class="fig-svg" role="img" aria-label="An explanatory callout box from the paper." style="width:844px; aspect-ratio: 333.352 / 98.226" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="333.352pt" height="98.226pt" viewBox="0 0 333.352 98.226">
 <defs>
 <g>
 <g id="fg3-glyph-0-0">
@@ -3265,7 +3265,7 @@
 </g>
 </svg></div>
 <p>In other words: when you have enough color classes (at least <span class="math inline">n - 1</span> of them), the longest colorable list has exactly <span class="math inline">n - 1</span> entries, where <span class="math inline">n</span> is <span class="math inline">m</span> divided by <span class="math inline">\gcd(m, \ell - 1)</span> (Figure <a href="#fig:closed-form" class="xref">3</a>).</p>
-<figure class="paper-fig" id="fig:closed-form"><svg class="fig-svg" role="img" aria-label="Figure 3 of the paper, drawn in TikZ." style="width:420px; aspect-ratio: 242.031 / 132.302" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="242.031pt" height="132.302pt" viewBox="0 0 242.031 132.302">
+<figure class="paper-fig" id="fig:closed-form"><svg class="fig-svg" role="img" aria-label="Figure 3 of the paper, drawn in TikZ." style="width:613px; aspect-ratio: 242.031 / 132.302" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="242.031pt" height="132.302pt" viewBox="0 0 242.031 132.302">
 <defs>
 <g>
 <g id="fg4-glyph-0-0">
@@ -3631,7 +3631,7 @@
 <p><span class="thm-kind">Theorem</span> <span class="thm-num">3.1</span><span class="thm-dot">.</span> For all <span class="math inline">m \geq 2</span>, <span class="math inline">\ell \geq 2</span>, and <span class="math inline">k \geq 1</span>, <span class="math display">S_m(k,\ell) \leq n - 1.</span></p>
 </div>
 <p>In other words: once the list grows to include <span class="math inline">n</span>, it can no longer be partitioned into <span class="math inline">\ell</span>-sum-free classes, no matter how many classes are allowed.</p>
-<figure class="paper-fig" id="fig:self-defeating"><svg class="fig-svg" role="img" aria-label="Figure 4 of the paper, drawn in TikZ." style="width:290px; aspect-ratio: 167.226 / 190.322" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="167.226pt" height="190.322pt" viewBox="0 0 167.226 190.322">
+<figure class="paper-fig" id="fig:self-defeating"><svg class="fig-svg" role="img" aria-label="Figure 4 of the paper, drawn in TikZ." style="width:424px; aspect-ratio: 167.226 / 190.322" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="167.226pt" height="190.322pt" viewBox="0 0 167.226 190.322">
 <defs>
 <g>
 <g id="fg5-glyph-0-0">
@@ -3911,7 +3911,7 @@
 <div class="proof">
 <p><span class="proof-head">Proof.</span> Suppose <span class="math inline">N \geq n</span>. Since <span class="math inline">1 \leq n \leq m</span>, we have <span class="math inline">n \in [1, N]</span>; let <span class="math inline">C</span> be the class of a valid <span class="math inline">k</span>-partition containing <span class="math inline">n</span>. Write <span class="math inline">\ell - 1 = du</span> with <span class="math inline">u \in \mathbb{Z}</span>, so <span class="math display">(\ell - 1) \cdot n = du \cdot n = u \cdot (dn) = u \cdot m \equiv 0 \pmod m.</span> Hence <span class="math inline">\ell n \equiv n \pmod m</span>. The tuple <span class="math inline">(n, \ldots, n; n) \in C^{\ell+1}</span> thus witnesses <span class="math inline">\ell</span>-sum-freeness failure in <span class="math inline">C</span>, a contradiction.<span class="qed">□</span></p>
 </div>
-<figure class="paper-fig" id="fig:cap"><svg class="fig-svg" role="img" aria-label="Figure 5 of the paper, drawn in TikZ." style="width:413px; aspect-ratio: 238.065 / 98.196" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="238.065pt" height="98.196pt" viewBox="0 0 238.065 98.196">
+<figure class="paper-fig" id="fig:cap"><svg class="fig-svg" role="img" aria-label="Figure 5 of the paper, drawn in TikZ." style="width:603px; aspect-ratio: 238.065 / 98.196" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="238.065pt" height="98.196pt" viewBox="0 0 238.065 98.196">
 <defs>
 <g>
 <g id="fg6-glyph-0-0">
@@ -4254,7 +4254,7 @@
 <figcaption>
 <span class="fig-label">Figure 5.</span> For <span class="math inline">m=12,\ \ell=4</span> we have <span class="math inline">n=4</span>, so <span class="math inline">S_{12}(k,4)\le 3</span>. The list <span class="math inline">1,2,3</span> splits into <span class="math inline">\ell</span>-sum-free singletons, reaching <span class="math inline">N=n-1=3</span> (attained once <span class="math inline">k\ge n-1</span>). But the moment <span class="math inline">n=4</span> joins the list it must land in <em>some</em> class, and that class then contains the forbidden <span class="math inline">\ell</span>-sum <span class="math inline">4+4+4+4\equiv 4</span>. Hence the list cannot grow past <span class="math inline">n-1</span>.
 </figcaption></figure>
-<figure class="paper-fig" id="fig:two-ceilings"><svg class="fig-svg" role="img" aria-label="Figure 6 of the paper, drawn in TikZ." style="width:382px; aspect-ratio: 220.354 / 194.269" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="220.354pt" height="194.269pt" viewBox="0 0 220.354 194.269">
+<figure class="paper-fig" id="fig:two-ceilings"><svg class="fig-svg" role="img" aria-label="Figure 6 of the paper, drawn in TikZ." style="width:558px; aspect-ratio: 220.354 / 194.269" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="220.354pt" height="194.269pt" viewBox="0 0 220.354 194.269">
 <defs>
 <g>
 <g id="fg7-glyph-0-0">
@@ -4820,7 +4820,7 @@
 <section id="sec:lower" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Lower bound</h1>
 <p>The upper bound in Section <a href="#sec:upper" class="xref">3</a> showed the list can never reach length <span class="math inline">n</span>. Here we show it can always reach length <span class="math inline">n - 1</span>: just put each of <span class="math inline">1, 2, \ldots, n-1</span> in its own singleton class. By the singleton safety criterion (Lemma <a href="#lem:singleton" class="xref">2.3</a>), every one of those singletons is safe, because none of them is a multiple of <span class="math inline">n</span>. This matching lower bound, together with the upper bound, pins down the exact value. Figure <a href="#fig:singleton-ladder" class="xref">7</a> shows the construction for <span class="math inline">m = 12</span>, <span class="math inline">\ell = 4</span>.</p>
-<figure class="paper-fig" id="fig:singleton-ladder"><svg class="fig-svg" role="img" aria-label="Figure 7 of the paper, drawn in TikZ." style="width:415px; aspect-ratio: 239.512 / 119.686" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="239.512pt" height="119.686pt" viewBox="0 0 239.512 119.686">
+<figure class="paper-fig" id="fig:singleton-ladder"><svg class="fig-svg" role="img" aria-label="Figure 7 of the paper, drawn in TikZ." style="width:607px; aspect-ratio: 239.512 / 119.686" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="239.512pt" height="119.686pt" viewBox="0 0 239.512 119.686">
 <defs>
 <g>
 <g id="fg8-glyph-0-0">
@@ -5318,7 +5318,7 @@
 <p><span class="thm-kind">Theorem</span> <span class="thm-num">5.3</span><span class="thm-title"> (Large-<span class="math inline">\ell</span> coset criterion)</span><span class="thm-dot">.</span> Let <span class="math inline">C \subseteq \mathbb{Z}/m</span> with <span class="math inline">|C| \geq 2</span>, pick <span class="math inline">a_0 \in C</span>, and let <span class="math inline">H := \langle C - C \rangle = g\mathbb{Z}/m</span> with <span class="math inline">g := m/|H|</span>. For every <span class="math inline">\ell \geq |H| - 1</span>, <span class="math display">\ell C = \ell a_0 + H,</span> and consequently <span class="math inline">C</span> is <span class="math inline">\ell</span>-sum-free modulo <span class="math inline">m</span> if and only if <span class="math inline">g \nmid (\ell - 1) a_0</span>.</p>
 </div>
 <p>In other words: once <span class="math inline">\ell</span> is large enough (at least <span class="math inline">|H| - 1</span>), the collection of all <span class="math inline">\ell</span>-fold sums from <span class="math inline">C</span> fills out the entire coset <span class="math inline">\ell a_0 + H</span>. The class <span class="math inline">C</span> is safe precisely when that filled coset does not overlap with <span class="math inline">C</span> itself. Figure <a href="#fig:coset-fill" class="xref">8</a> traces the saturation for a prime modulus.</p>
-<figure class="paper-fig" id="fig:coset-fill"><svg class="fig-svg" role="img" aria-label="Figure 8 of the paper, drawn in TikZ." style="width:497px; aspect-ratio: 286.916 / 112.599" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="286.916pt" height="112.599pt" viewBox="0 0 286.916 112.599">
+<figure class="paper-fig" id="fig:coset-fill"><svg class="fig-svg" role="img" aria-label="Figure 8 of the paper, drawn in TikZ." style="width:727px; aspect-ratio: 286.916 / 112.599" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="286.916pt" height="112.599pt" viewBox="0 0 286.916 112.599">
 <defs>
 <g>
 <g id="fg9-glyph-0-0">
@@ -5724,7 +5724,7 @@
 <p><span class="thm-kind">Proposition</span> <span class="thm-num">5.6</span><span class="thm-dot">.</span> For <span class="math inline">m = 12</span> and every <span class="math inline">\ell \equiv 11 \pmod{12}</span> (so <span class="math inline">d = 2</span>, <span class="math inline">n = 6</span>), the set <span class="math inline">C = \{1, 5\} \subseteq \{1, \ldots, 5\}</span> is <span class="math inline">\ell</span>-sum-free modulo <span class="math inline">12</span>. Consequently <span class="math inline">\sigma(12, \ell) \geq 2</span> and <span class="math inline">k_0(12, \ell) \leq 3 &lt; n - 1</span>.</p>
 </div>
 <p>In other words: the pair <span class="math inline">\{1, 5\}</span> generates differences <span class="math inline">\{0, \pm 4\}</span>, so its differences lie in the subgroup <span class="math inline">\{0, 4, 8\} \subset \mathbb{Z}/12</span> (Figure <a href="#fig:subgroup-hide" class="xref">9</a>). That subgroup is small enough that <span class="math inline">\{1, 5\}</span> stays safe. This lets us cover <span class="math inline">[1, 5]</span> with only three classes rather than five, showing <span class="math inline">k_0 &lt; n - 1</span> here.</p>
-<figure class="paper-fig" id="fig:subgroup-hide"><svg class="fig-svg" role="img" aria-label="Figure 9 of the paper, drawn in TikZ." style="width:290px; aspect-ratio: 167.226 / 190.322" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="167.226pt" height="190.322pt" viewBox="0 0 167.226 190.322">
+<figure class="paper-fig" id="fig:subgroup-hide"><svg class="fig-svg" role="img" aria-label="Figure 9 of the paper, drawn in TikZ." style="width:424px; aspect-ratio: 167.226 / 190.322" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="167.226pt" height="190.322pt" viewBox="0 0 167.226 190.322">
 <defs>
 <g>
 <g id="fg10-glyph-0-0">
@@ -6026,7 +6026,7 @@
 <div class="thm thm-remark">
 <p><span class="thm-kind">Remark</span> <span class="thm-num">6.2</span><span class="thm-dot">.</span> The formula <span class="math inline">\min(\ell - 1, \lfloor m/\ell \rfloor)</span> interpolates naturally between two regimes. In the <em>no-wrap</em> regime <span class="math inline">\ell(\ell-1) &lt; m</span>, one has <span class="math inline">\ell - 1 &lt; m/\ell</span>, so the minimum equals <span class="math inline">\ell - 1</span>: the list is bottlenecked by the element <span class="math inline">1</span> summing up to <span class="math inline">\ell</span>, not by any wraparound (consistent with the observation in [<a href="#ref-DSWH2025" class="cite">DSWH25</a>] for small <span class="math inline">\ell</span>). In the <em>wrap</em> regime <span class="math inline">\ell(\ell-1) \geq m</span> (D’orville’s Problem 1, part 3), the minimum is <span class="math inline">\lfloor m/\ell \rfloor</span>: the list is bottlenecked by <span class="math inline">\ell</span>-fold sums wrapping around modulo <span class="math inline">m</span>; Figure <a href="#fig:k1-regimes" class="xref">10</a> plots both bounds and their minimum for <span class="math inline">m = 30</span>. The formula was empirically verified for <span class="math inline">m \in [2,30]</span>, <span class="math inline">\ell \in [2, m]</span> (414 cases) before the proof was written.</p>
 </div>
-<figure class="paper-fig" id="fig:k1-regimes"><svg class="fig-svg" role="img" aria-label="Figure 10 of the paper, drawn in TikZ." style="width:485px; aspect-ratio: 279.943 / 176.28" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="279.943pt" height="176.28pt" viewBox="0 0 279.943 176.28">
+<figure class="paper-fig" id="fig:k1-regimes"><svg class="fig-svg" role="img" aria-label="Figure 10 of the paper, drawn in TikZ." style="width:709px; aspect-ratio: 279.943 / 176.28" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="279.943pt" height="176.28pt" viewBox="0 0 279.943 176.28">
 <defs>
 <g>
 <g id="fg11-glyph-0-0">
@@ -6420,7 +6420,7 @@
 <p><span class="thm-kind">Theorem</span> <span class="thm-num">8.1</span><span class="thm-title"> (Coordinate-Union Edge Rule)</span><span class="thm-dot">.</span> Let <span class="math inline">P</span> be a nonempty support pattern. Two distinct atoms <span class="math inline">A, B \in X_P</span> are adjacent in <span class="math inline">G_{\mathrm{atom}}[X_P]</span> if and only if <span class="math inline">\rho_g(A) = \rho_g(B)</span> for some <span class="math inline">g \in P</span>. Equivalently, <span class="math inline">G_{\mathrm{atom}}[X_P]</span> is the union over <span class="math inline">g \in P</span> and <span class="math inline">r \in \mathbb{Z}/g</span> of the cliques <span class="math inline">C_{g,r} := \{A \in X_P : \rho_g(A) = r\}</span>.</p>
 </div>
 <p>In other words: adjacency in the atom graph is determined by coordinate-matching. Atoms that share a residue coordinate along any axis are adjacent; atoms that differ in every coordinate are non-adjacent. This turns the atom graph into a union of coordinate-cliques, a structured form that the next two reductions exploit (Figure <a href="#fig:edge-rule" class="xref">11</a>).</p>
-<figure class="paper-fig" id="fig:edge-rule"><svg class="fig-svg" role="img" aria-label="Figure 11 of the paper, drawn in TikZ." style="width:302px; aspect-ratio: 174.17 / 112.925" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="174.17pt" height="112.925pt" viewBox="0 0 174.17 112.925">
+<figure class="paper-fig" id="fig:edge-rule"><svg class="fig-svg" role="img" aria-label="Figure 11 of the paper, drawn in TikZ." style="width:441px; aspect-ratio: 174.17 / 112.925" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="174.17pt" height="112.925pt" viewBox="0 0 174.17 112.925">
 <defs>
 <g>
 <g id="fg12-glyph-0-0">
@@ -6608,7 +6608,7 @@
 <p><span class="thm-kind">Definition</span> <span class="thm-num">8.3</span><span class="thm-dot">.</span> A fiber <span class="math inline">X_P</span> is <em>whole-axis projection-injective</em> (WAP) if <span class="math inline">\rho_g</span> is injective on <span class="math inline">X_P</span> for some <span class="math inline">g \in P</span>; such an <span class="math inline">X_P</span> is a <em>whole-axis projection-injective fiber</em>.</p>
 </div>
 <p>In other words: a fiber is WAP when its atoms all have distinct coordinates along some single axis <span class="math inline">g</span>. The coordinate-cliques along that axis are then singletons, but that alone does not certify the cover number: a cover may draw cliques from every axis of <span class="math inline">P</span>, and two atoms that differ on <span class="math inline">g</span> can still share a coordinate on another axis. Call a fiber when <span class="math inline">\rho_g</span> is injective on <span class="math inline">X_P</span> for <em>every</em> <span class="math inline">g \in P</span>; by the edge rule this says exactly that <span class="math inline">G_{\mathrm{atom}}[X_P]</span> has no edges (Figure <a href="#fig:wap" class="xref">12</a>).</p>
-<figure class="paper-fig" id="fig:wap"><svg class="fig-svg" role="img" aria-label="Figure 12 of the paper, drawn in TikZ." style="width:527px; aspect-ratio: 304.09 / 158.408" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="304.09pt" height="158.408pt" viewBox="0 0 304.09 158.408">
+<figure class="paper-fig" id="fig:wap"><svg class="fig-svg" role="img" aria-label="Figure 12 of the paper, drawn in TikZ." style="width:770px; aspect-ratio: 304.09 / 158.408" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="304.09pt" height="158.408pt" viewBox="0 0 304.09 158.408">
 <defs>
 <g>
 <g id="fg13-glyph-0-0">

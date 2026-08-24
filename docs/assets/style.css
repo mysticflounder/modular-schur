@@ -38,7 +38,7 @@
   --margin-w: 148px;
   --gutter: 38px;
   --reach: 186px;     /* margin-w + gutter */
-  --measure: 700px;   /* prose only; ~76 characters at 18px Literata */
+  --measure: 700px;   /* prose only; ~62 characters at 22px Literata */
   --breakout: 320px;  /* how far figures and wide tables run past the measure */
   --pad: 56px;
   --grain: 1;
@@ -65,14 +65,14 @@
 
 * { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+/* The type ramp is rem-based, so the root size scales all of it together. */
+html { -webkit-text-size-adjust: 100%; font-size: 22px; }
 
 body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--serif);
-  font-size: 18px;
   line-height: 1.66;
   font-variant-numeric: oldstyle-num;
   text-wrap: pretty;
@@ -550,7 +550,7 @@ code, pre { font-family: var(--mono); }
 
 @media (max-width: 860px) {
   :root { --pad: 24px; --breakout: 0px; }
-  body { font-size: 17px; }
+  html { font-size: 20px; }
   .sheet { padding: 0 var(--pad) 64px; }
   .page-header { padding-top: 48px; }
   .page-header h1 { font-size: 2.1rem; }
@@ -709,9 +709,14 @@ figure.paper-fig {
 }
 figure.paper-fig .fig-svg {
   display: block;
-  margin: 0 auto;
-  /* Width comes as an inline style from scripts/inline-figures.mjs. */
-  max-width: 100%;
+  /* Width comes as an inline style from scripts/inline-figures.mjs. A wide
+   * figure may overhang the measure by half the breakout on each side; the
+   * left/transform pair keeps every figure centered on the prose axis. */
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  max-width: calc(100% + var(--breakout));
   height: auto;
 }
 figure.paper-fig figcaption { text-align: left; }
@@ -724,7 +729,15 @@ figure.paper-fig figcaption { text-align: left; }
 
 /* A bare TikZ callout, not a numbered float. */
 .paper-aside { margin: 2rem 0; text-align: center; }
-.paper-aside .fig-svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+.paper-aside .fig-svg {
+  display: block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  max-width: calc(100% + var(--breakout));
+  height: auto;
+}
 
 /* ── Splash band at the top of the paper page ──────────────────────────── */
 
