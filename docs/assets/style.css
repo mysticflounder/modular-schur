@@ -1,10 +1,12 @@
 /* Modular Schur: letterpress journal.
  *
- * Layout: a two-column book grid. Column 1 (132px) is the margin, and carries
- * the contents list, the roman section numerals, and the status labels. Column
- * 2 is the text block. Margin items are absolutely positioned against their own
- * paragraph or heading at left: -166px, which is the margin plus the gutter, so
- * they reach into column 1 without depending on document order.
+ * Layout: a two-column book grid. Column 1 (148px) is the margin, and carries
+ * the section numerals and the status labels. Column 2 is the text block; the
+ * contents list sits in the flow at its top. Every line of type on the page
+ * starts on one left edge, the text spine at var(--reach); only hung margin
+ * items sit left of it. Margin items are absolutely positioned against their
+ * own paragraph or heading at left: calc(-1 * var(--reach)), so they reach
+ * into column 1 without depending on document order.
  *
  * The hooks this file expects from the pipeline are listed at the bottom. */
 
@@ -156,6 +158,16 @@ strong { font-weight: 600; }
   margin-top: 26px;
 }
 
+/* The masthead type stands on the text spine with the abstract and the prose.
+ * The double rule and the footer stay full width; the dateline closes at the
+ * measure so its right end meets the text block's. */
+.page-header > .kicker,
+.page-header > h1,
+.page-header > .subtitle,
+.page-header > .byline,
+.page-header > .dateline { margin-left: var(--reach); }
+.page-header > .dateline { max-width: var(--measure); }
+
 /* ── The book grid ─────────────────────────────────────────────────────── */
 
 /* Three columns: margin, prose, and the breakout field. The third column is
@@ -168,20 +180,36 @@ strong { font-weight: 600; }
   margin-top: 46px;
 }
 
-.toc { grid-column: 1; text-align: right; }
+/* The contents list is front matter: it sits on the text spine between the
+ * abstract and the first section, leaving the margin column free for the
+ * section numerals that hang there. */
+.toc { grid-column: 2; margin-bottom: 46px; }
 .toc h2 {
   font-variant-caps: all-small-caps;
   letter-spacing: 0.115em;
   font-size: 0.8rem;
   font-weight: 400;
   color: var(--ink-faint);
-  margin: 0 0 0.55em;
+  margin: 0 0 0.65em;
   border: 0;
   padding: 0;
 }
-.toc ul { list-style: none; margin: 0; padding: 0; font-size: 0.86rem; line-height: 1.62; }
+.toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.86rem;
+  line-height: 1.62;
+  columns: 2;
+  column-gap: 36px;
+}
 .toc ul ul { display: none; }             /* level-2 headings only */
-.toc li { margin-bottom: 0.18em; }
+.toc li {
+  margin-bottom: 0.18em;
+  break-inside: avoid;
+  padding-left: 1.2em;      /* wrapped entry lines indent under their number */
+  text-indent: -1.2em;
+}
 .toc a { color: var(--ink-soft); border-bottom: 0; }
 .toc a:hover { color: var(--accent); }
 
@@ -218,7 +246,7 @@ strong { font-weight: 600; }
   color: var(--ink-faint);
   border: 0;
 }
-.content section.level2:first-of-type > h2 { margin-top: 1.8rem; }
+.content section.level2:first-of-type > h2 { margin-top: 0.3rem; }
 
 .content h3 {
   margin: 2.1rem 0 0.55em;
@@ -532,14 +560,18 @@ code, pre { font-family: var(--mono); }
   .abstract { margin-left: 0; }
   .content table { width: 100%; min-width: 0; max-width: 100%; }
 
+  /* The margin column is gone, so the spine folds back to the sheet edge. */
+  .page-header > .kicker, .page-header > h1, .page-header > .subtitle,
+  .page-header > .byline, .page-header > .dateline { margin-left: 0; }
+  .page-header > .dateline { max-width: none; }
+
   .toc {
-    text-align: left;
     border-top: 1px solid var(--rule);
     border-bottom: 1px solid var(--rule);
     padding: 14px 0;
     margin-bottom: 30px;
   }
-  .toc ul { columns: 2; column-gap: 24px; }
+  .toc ul { column-gap: 24px; }
 
   /* Margin items rejoin the flow. */
   .page-status .content section.level2 > h2::before {
@@ -577,7 +609,9 @@ code, pre { font-family: var(--mono); }
  * h1, one level above the status page's.                                    */
 
 .page-header .byline {
-  margin: 0.7em 0 0;
+  /* This rule is later than the masthead spine group, so it restates the
+   * spine offset; the narrow-screen block at the end resets it. */
+  margin: 0.7em 0 0 var(--reach);
   font-size: 1.02rem;
   color: var(--ink-soft);
   font-style: italic;
@@ -608,7 +642,7 @@ code, pre { font-family: var(--mono); }
   padding-bottom: 0.32em;
   text-wrap: balance;
 }
-.page-paper .content section.level1:first-of-type > h1 { margin-top: 1.8rem; }
+.page-paper .content section.level1:first-of-type > h1 { margin-top: 0.3rem; }
 
 /* The section number hangs in the margin, as the roman numerals do opposite. */
 .page-paper .content h1 .header-section-number {
@@ -664,7 +698,10 @@ code, pre { font-family: var(--mono); }
 /* ── Figures compiled from the paper's TikZ ────────────────────────────── */
 
 figure.paper-fig {
-  margin: 2.2rem 0;
+  /* The paper's figures stand on the prose measure and center on its axis;
+   * the breakout field is for tables and the status page's built figures. */
+  width: 100%;
+  margin: 2.6rem 0 2.8rem;
   padding: 0;
   border: 0;
   background: none;
@@ -691,8 +728,12 @@ figure.paper-fig figcaption { text-align: left; }
 
 /* ── Splash band at the top of the paper page ──────────────────────────── */
 
-.splash { margin: 4px 0 14px; }
+.splash { margin: 30px 0 20px; }
 .splash svg { display: block; width: 100%; height: auto; }
+
+/* The splash band is the top of the letterhead, so the masthead sits directly
+ * under it. The status page has no splash and keeps the base clearance. */
+.page-paper .page-header { padding-top: 0; }
 
 /* On load the Schur-triple arcs draw themselves toward z, then the z-rings
  * and the label appear. Static (fully drawn) under reduced motion. */
@@ -750,6 +791,7 @@ a.xref, a.cite { border-bottom-color: var(--rule); font-variant-numeric: oldstyl
 }
 
 @media (max-width: 860px) {
+  .page-header > .byline { margin-left: 0; }
   .refs li { padding-left: 0; }
   .ref-sigil {
     position: static;
