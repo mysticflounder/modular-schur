@@ -68,7 +68,8 @@ status:
     and kernel-axiom-clean (no project axioms, no native_decide): 12 headline
     theorems are packaged for the leanprover/comparator gate (see lean/comparator/).
     A separate, EARLIER computational scan tree (lean/ModularSchur/Generated/ and the
-    residue-axis / deficit-growth / scanner-bridge machinery) verifies per-modulus
+    residue-axis / deficit-growth / scanner-bridge machinery — a private-working-tree
+    path, not present in the public repository) verifies per-modulus
     tables via native_decide; it is subsumed by the structural proof and is NOT part
     of the comparator gate (its axiom closure includes Lean.ofReduceBool). See
     lean/comparator/README.md "audit boundary".
@@ -82,7 +83,8 @@ status:
     Lean.ofReduceBool. native_decide appears ONLY in the excluded scan tree.
     First measured 2026-06-20; re-checked on every CI run since, and
     independently confirmed against permitted_axioms by the comparator itself
-    in run 30218964742 (2026-07-26).
+    in CI (first public green run 30211804373, 2026-07-26; current public
+    green run 32621310205, commit cf59f78, 2026-08-23).
   main_results:
   - declaration: "lean/comparator/config.json theorem_names (12 mathlib-only structural headline claims)"
     file: "lean/comparator/Solution.lean"
@@ -156,7 +158,8 @@ fidelity:
     unbundled into their four fields, and schurMod / schurModResidue are spelled out
     as the full Nat.findGreatest expression (see lean/comparator/Challenge.lean and
     the two bridge lemmas in Solution.lean). The earlier native_decide-backed
-    per-modulus scan tree (lean/ModularSchur/Generated/, etc.) is deliberately left
+    per-modulus scan tree (lean/ModularSchur/Generated/, etc. — private working
+    tree only, not in the public repository) is deliberately left
     out of the gate; it is subsumed by the structural proof and is not
     kernel-axiom-clean. See lean/comparator/README.md "audit boundary".
 
@@ -172,9 +175,10 @@ review:
     without asserting anything about it. The authoritative external check is a
     leanprover/comparator run that verifies statement identity and axiom compliance and
     re-runs the nanoda + Lean default kernels (CI:
-    .github/workflows/comparator.yml). That run is now GREEN on a runner: CI run
-    30218964742 (2026-07-26) ended in "Your solution is okay!", covering statement
-    identity for all 12, axiom-closure compliance, and replay through both kernels. The
+    .github/workflows/comparator.yml). That check is GREEN on a runner: the current
+    public run 32621310205 (commit cf59f78, 2026-08-23) succeeded on both jobs,
+    covering statement identity for all 12, axiom-closure compliance, and replay
+    through both kernels; the first public green run was 30211804373 (2026-07-26). The
     job is blocking. Still "self-assessed" because no external human peer review has
     taken place; the comparator is a tool, not a reviewer.
 
@@ -241,7 +245,10 @@ editorial_review:
       plain: >
         A counting bound used in the threshold theory. If every pairwise
         difference within a set lies in a proper subgroup, the set has at most
-        m/minFac(m) elements.
+        m/minFac(m) elements. The Lean statement carries that hypothesis
+        explicitly; the paper-side bridge putting every stable safe set of
+        size at least 2 under it (Theorem 8.1) is prose only, its
+        formalization deferred (see lean/ModularSchur/SigmaInfty.lean).
 
   originality: >
     The uniform closed form S_m(k,l) = m/gcd(m,l-1) - 1 for k >= n-1 is original

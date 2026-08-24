@@ -4,6 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>A uniform closed form for modular Schur numbers <span class="math inline">S_m(k,\ell)</span></title>
+  <meta name="description" content="A uniform closed form for modular Schur numbers: S_m(k,l) = m/gcd(m,l-1) - 1 for all k &gt;= n-1, with a Lean 4 formalization behind an independent comparator gate.">
+  <link rel="canonical" href="https://mysticflounder.github.io/modular-schur/">
+  <meta property="og:title" content="A uniform closed form for modular Schur numbers S_m(k,\ell)">
+  <meta property="og:description" content="A uniform closed form for modular Schur numbers: S_m(k,l) = m/gcd(m,l-1) - 1 for all k &gt;= n-1, with a Lean 4 formalization behind an independent comparator gate.">
+  <meta property="og:url" content="https://mysticflounder.github.io/modular-schur/">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
+  <meta name="citation_title" content="A uniform closed form for modular Schur numbers S_m(k,ℓ)">
+  <meta name="citation_author" content="Adam McKenna">
+  <meta name="citation_publication_date" content="2026/06">
+  <meta name="citation_pdf_url" content="https://mysticflounder.github.io/modular-schur/paper/modular-schur.pdf">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400;1,7..72,500&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -59,6 +70,8 @@
 </style>
 </head>
 <body class="page-paper">
+
+<a class="skip-link" href="#content">Skip to content</a>
 
 <div class="sheet">
 
@@ -235,7 +248,7 @@
 </ul>
 </nav>
 
-<main class="content">
+<main id="content" class="content">
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
 <p>The classical Schur number <span class="math inline">S(k)</span> is the largest <span class="math inline">N</span> such that <span class="math inline">\{1,\ldots,N\}</span> can be split into <span class="math inline">k</span> groups, each containing no solution to <span class="math inline">x + y = z</span> with <span class="math inline">x, y, z</span> in the same group. Think of it as a coloring game: color the integers <span class="math inline">1</span> through <span class="math inline">N</span> with <span class="math inline">k</span> colors, and call each color’s <em>class</em> the set of integers that receive that color (so the <span class="math inline">k</span> classes are exactly the <span class="math inline">k</span> groups above). The coloring wins when no class contains two numbers that add up to a third number of that same class (Figure <a href="#fig:schur-game" class="xref">1</a>). Values are known only through <span class="math inline">S(5) = 160</span> [<a href="#ref-Heule2017" class="cite">Heu17</a>]; <span class="math inline">S(6)</span> is unknown, and the growth rate of <span class="math inline">S(k)</span> is Erdős problem 483. Generalizations to longer equations (<span class="math inline">x_1 + \cdots + x_\ell = y</span>) were studied by Beutelspacher and Brestovansky [<a href="#ref-BB1982" class="cite">BB82</a>] and are now textbook material [<a href="#ref-LR2014" class="cite">LR14</a>].</p>
@@ -7185,6 +7198,7 @@
 <footer class="page-footer">
   <p class="kicker">A. McKenna &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Apache-2.0</p>
   <p class="kicker"><a href="https://github.com/mysticflounder/modular-schur">https://github.com/mysticflounder/modular-schur</a></p>
+  <p class="kicker">Built 2026-08-24 from b57314a</p>
 </footer>
 
 </div>

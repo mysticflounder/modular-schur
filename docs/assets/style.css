@@ -111,6 +111,27 @@ a {
 }
 a:hover, a:focus-visible { color: var(--ink); border-bottom-color: var(--ink); }
 
+/* Skip link: off-screen until keyboard focus lands on it, then a small pill
+ * pinned to the top-left corner, above the paper grain and the sheet. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+}
+.skip-link:focus {
+  position: fixed;
+  left: 14px;
+  top: 12px;
+  z-index: 10;
+  padding: 0.45em 0.95em;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+}
+
 em, i { font-style: italic; }
 strong { font-weight: 600; }
 
@@ -808,8 +829,8 @@ a.xref, a.cite { border-bottom-color: var(--rule); font-variant-numeric: oldstyl
 }
 
 /* Hooks this file depends on:
- *   template:  .sheet  .page-header  .rule-double  .kicker  .subtitle
- *              .dateline  .body-grid  .toc  .content  .page-footer
+ *   template:  .skip-link  .sheet  .page-header  .rule-double  .kicker
+ *              .subtitle  .dateline  .body-grid  .toc  .content  .page-footer
  *   pandoc:    section.level2 / .level3  table/th/td  pre/code  blockquote
  *   content:   [Label]{.st .st-proven}   margin status, first child of a <p>
  *              [Label]{.stx .st-proven}  inline status, legend and prose

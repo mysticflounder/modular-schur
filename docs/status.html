@@ -4,6 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Research status</title>
+  <meta name="description" content="Research status record for the modular Schur project: claim-by-claim verification status, the Lean formalization inventory, and the computational frontier.">
+  <link rel="canonical" href="https://mysticflounder.github.io/modular-schur/status.html">
+  <meta property="og:title" content="Research status">
+  <meta property="og:description" content="Research status record for the modular Schur project: claim-by-claim verification status, the Lean formalization inventory, and the computational frontier.">
+  <meta property="og:url" content="https://mysticflounder.github.io/modular-schur/status.html">
+  <meta property="og:type" content="article">
+  <meta name="twitter:card" content="summary">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400;1,7..72,500&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -27,6 +34,8 @@
 </head>
 <body class="page-status">
 
+<a class="skip-link" href="#content">Skip to content</a>
+
 <div class="sheet">
 
 
@@ -36,7 +45,7 @@
   <h1>Research status</h1>
   <p class="subtitle">What is proven, what the kernel checks, what a solver only saw, and what is still open</p>
   <div class="dateline">
-    <p class="kicker">Status as of 2026-08-22</p>
+    <p class="kicker">Status as of 2026-08-24</p>
     <p class="kicker"><a href="index.html">The paper</a></p>
   </div>
 </header>
@@ -56,8 +65,8 @@
 </ul>
 </nav>
 
-<main class="content">
-<p>This page is the primary record of the modular Schur project: what is proven, what is machine-verified, what has been computed, what has been refuted, and what is open. It is updated as the research state changes rather than frozen at publication, so a claim’s status here supersedes any statement in the PDF.</p>
+<main id="content" class="content">
+<p>This page is the primary record of the modular Schur project: what is proven, what is machine-verified, what has been computed, what has been refuted, and what is open. It is updated as the research state changes rather than frozen at publication, so a claim’s status here supersedes any statement in <a href="paper/modular-schur.pdf">the PDF</a>.</p>
 <p>Every claim below carries a status label. <span class="stx st-proven">Proven</span> means a complete proof exists and has been audited. <span class="stx st-proven">Verified</span> means the Lean kernel checks it and the axiom closure has been inspected. <span class="stx st-empirical">Empirical</span> means a solver established it for specific parameters and nothing more. <span class="stx st-conj">Conjecture</span> means it is believed but unproven. <span class="stx st-refuted">Refuted</span> means it was believed and is now disproven. Those are kept on the page deliberately.</p>
 <section id="the-main-theorem" class="level2">
 <h2>The main theorem</h2>
@@ -107,6 +116,7 @@ The hatched residues are the ones <span class="math inline">\ell - 1</span> anni
 <p>Twelve structural results are machine-checked in Lean 4, on toolchain <code>leanprover/lean4:v4.28.0</code> with Mathlib pinned at <code>8f9d9cff</code>.</p>
 <p>They are checked through a <strong>comparator gate</strong>, which exists to stop a formalization from proving something weaker than it appears to. Each theorem is stated twice: once in <code>comparator/Challenge.lean</code> using only Mathlib definitions, with the proof left as <code>sorry</code>, and once in <code>comparator/Solution.lean</code> where it is proved from this project’s development. The comparator checks that the two elaborated declarations carry the same statement, so the Lean statement cannot quietly drift toward the project’s own convenient definitions. It then checks the permitted declaration and axiom boundary and replays the proof exports through the configured kernels. The source files are not byte-identical, and nothing compares them as bytes. The <code>sorry</code>s in <code>Challenge.lean</code> are the design: they are the twelve holes the gate fills.</p>
 <p><span class="st st-proven">Verified</span> The gate passes on the current commit. It fails the build on any of: a <code>sorryAx</code> in the closure, an axiom outside <code>{propext, Classical.choice, Quot.sound}</code>, a <code>Lean.ofReduceBool</code>, or a Challenge/Solution statement mismatch. A second job replays the proofs through the independent <code>nanoda</code> kernel.</p>
+<p>The comparator runs at its tag <code>v4.28.0</code>, matched to the Lean toolchain and pinned by commit in CI. The gate here is a self-audit of the project’s own trusted source, not a hostile-submission contest: CI hands the comparator a fully pre-built <code>.lake</code>, so the guarantee rests on the statement-identity, axiom-boundary, and kernel-replay checks rather than on the sandbox that exists to contain a malicious solution author. One open upstream issue questions that sandbox’s process containment (<a href="https://github.com/leanprover/comparator/issues/77">leanprover/comparator#77</a>); it does not touch the checks this gate relies on.</p>
 <figure>
 <div class="fig-head">
 <p class="kicker">
@@ -264,6 +274,7 @@ The gate exists to stop a formalization from proving something weaker than it ap
 </tr>
 </tbody>
 </table>
+<p>One boundary note on <code>sigmaInfty_le</code>: the paper-side theorem that places every stable safe set of size at least <span class="math inline">2</span> under that divisibility hypothesis (Theorem 8.1) is prose, not Lean; its formalization is deferred, and the Lean statement carries the hypothesis explicitly.</p>
 <p>The main theorem as Lean sees it, with no project-specific definitions in the statement:</p>
 <pre class="lean"><code>theorem schurMod_eq (m k ℓ : ℕ) (hm : 2 ≤ m) (hℓ : 2 ≤ ℓ)
     (hk : m / Nat.gcd m (ℓ - 1) - 1 ≤ k) :
@@ -373,7 +384,7 @@ The two routes reach some of the same results. Only the left one is claimed. The
 <h2>Computational coverage</h2>
 <section id="direct-sat-tables" class="level3">
 <h3>Direct SAT tables</h3>
-<p><code>scripts/schur_mod.py</code> encodes <span class="math inline">S_m(k,\ell)</span> as SAT and drives CaDiCaL, emitting a DRAT proof for each UNSAT boundary that <code>drat-trim</code> replays.</p>
+<p><code>scripts/schur_mod.py</code> encodes <span class="math inline">S_m(k,\ell)</span> as SAT and drives CaDiCaL. It has two modes. In certified mode (<code>--certified</code>) every UNSAT boundary must emit a DRAT proof that <code>drat-trim</code> replays, and the run fails closed when the proof or the checker is missing. The default exploratory mode may answer from an in-process solver with no certificate; its results are tabulations, not certificates.</p>
 <p><span class="st st-empirical">Empirical</span> Full grids computed for <span class="math inline">m = 8, 9, 10, 11, 12, 13</span> over <span class="math inline">k \le 12</span> and <span class="math inline">\ell \le 12</span>, with probes out to <span class="math inline">\ell = 25</span>. The encoder was validated first against the published values of D’orville et al. for <span class="math inline">m \in \{4,5,6,7\}</span>, <span class="math inline">k \le 6</span>, <span class="math inline">\ell \le 8</span> (168 cases, zero mismatches) and against brute force on 540+ small instances.</p>
 <p>The full run produced 10,712 CNF/proof/solution triples spanning <span class="math inline">m \le 18</span>, <span class="math inline">k \le 17</span>, <span class="math inline">\ell \le 54</span>. <strong>These artifacts are not distributed</strong>: they are local and gitignored. Only the boundary rows recorded in the phase tables carry an explicit <code>proof_verified</code> replay result. Treat the grids as reproducible rather than as shipped certificates.</p>
 </section>
@@ -446,7 +457,7 @@ Both ends of the bracket are proven and nothing closes the interval between them
 </section>
 <section id="dorville-et-al.-problems" class="level3">
 <h3>D’orville et al. problems</h3>
-<p>Of the three problems posed in the originating paper, <strong>problem 3</strong>, the values of <span class="math inline">S_m(1,\ell)</span> for <span class="math inline">2 &lt; \ell &lt; (m+1)/2</span>, <span class="math inline">m \ge 8</span>, is <strong>closed</strong> by this work as <span class="math inline">S_m(1,\ell) = \min(\ell-1, \lfloor m/\ell \rfloor)</span>, formalized as <code>schurModResidue_k1</code>. Problems 1 and 2 remain open.</p>
+<p>This work engages two parts of Problem 1 of the originating paper. (The numbering — “Problem 1, part 3” and “Problem 1, part 5” — is recorded from project correspondence with the first author rather than from a direct reading of the original; see the provenance caveats in <code>formalization.yaml</code>.) <strong>Part 3</strong>, the values of <span class="math inline">S_m(1,\ell)</span> for <span class="math inline">2 &lt; \ell &lt; (m+1)/2</span>, <span class="math inline">m \ge 8</span>, is <strong>closed</strong> by this work as <span class="math inline">S_m(1,\ell) = \min(\ell-1, \lfloor m/\ell \rfloor)</span>, formalized as <code>schurModResidue_k1</code>. <strong>Part 5</strong>’s large-<span class="math inline">k</span> regime is settled by the main theorem. The parts not named here are not addressed by this work.</p>
 </section>
 </section>
 <section id="refuted-and-retracted" class="level2">
@@ -556,13 +567,42 @@ Six atoms in a <span class="math inline">|P| = 2</span> fiber. The first axis co
 <h2>Reproduction</h2>
 <p><strong>Lean.</strong> Toolchain <code>leanprover/lean4:v4.28.0</code>, Mathlib pinned in <code>lean/lake-manifest.json</code>.</p>
 <pre><code>cd lean &amp;&amp; lake build</code></pre>
-<p><strong>Scans.</strong> Require <code>uv</code> and CaDiCaL; <code>drat-trim</code> for certificate checking.</p>
-<pre><code>uv run scripts/phase9_stable_tables.py --help</code></pre>
+<p><strong>Scans.</strong> Require <code>uv</code> and CaDiCaL; <code>drat-trim</code> for certificate checking. The headline computational claims map to these exact invocations:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>168 literature cases and 540+ brute-force checks</td>
+<td><code>uv run scripts/schur_mod.py validate</code></td>
+</tr>
+<tr>
+<td><span class="math inline">m \le 5500</span> residual-frontier closure</td>
+<td><code>uv run scripts/phase9_stable_tables.py --scan-residual-frontier 5500 --jobs 1</code></td>
+</tr>
+<tr>
+<td>56 fixed-quotient family lines</td>
+<td>one <code>--scan-n&lt;N&gt;-fixed-quotient-family</code> flag per family on <code>scripts/phase9_stable_tables.py</code>; <code>--help</code> lists them all</td>
+</tr>
+<tr>
+<td>10,712 CNF/proof/solution triples</td>
+<td>regenerable, not shipped: the grid driver in <code>scripts/schur_mod.py</code> re-creates them (<code>--help</code> for the grid flags); no checksums are published, so a re-run is a re-computation, not a verification of the original artifacts</td>
+</tr>
+</tbody>
+</table>
 <p>The full certificate tree is roughly 121 GB and is not distributed; <code>scripts/schur_mod.py</code> regenerates it deterministically.</p>
 </section>
 <section id="provenance" class="level2">
 <h2>Provenance</h2>
-<p>The quantity <span class="math inline">S_m(k,\ell)</span> was introduced by Chappelon et al. (2013). The three problems this work engages with are posed by D’orville, Sim, Wong, and Ho, <em>Integers</em> 25 #A62.</p>
+<p>The quantity <span class="math inline">S_m(k,\ell)</span> was introduced by Chappelon et al. (2013). The problems this work engages with are posed by D’orville, Sim, Wong, and Ho, <em>Integers</em> 25 #A62. For both sources the attribution and the problem numbering are recorded from secondary notes and author correspondence rather than from a direct reading of the originals; <code>formalization.yaml</code> carries the per-source caveats.</p>
 <p>The Lean development was written by two AI systems under human direction. Claude (Anthropic), driven through Claude Code, wrote every definition, every theorem statement, the <code>IntegerBridge</code> and <code>K1Theorem</code> modules, and the comparator layer that restates the results with Mathlib definitions alone. <a href="https://harmonic.fun">Aristotle</a> (Achim et al., 2025, <a href="https://arxiv.org/abs/2510.01346">arXiv:2510.01346</a>) filled the proof bodies of 10 lemmas in the residue-side modules. Of the 12 theorems in the gate, Aristotle supplied the proofs behind seven; the integer-form theorems <code>schurMod_eq</code>, <code>schurMod_is_greatest</code>, <code>no_valid_partition_of_ge_m</code>, <code>schurMod_eq_schurModResidue</code> and the <span class="math inline">k = 1</span> theorem <code>schurModResidue_k1</code> were proved in Claude-written modules. Every proof, whichever system produced it, is checked as described under <a href="#formalization-status">Formalization status</a>.</p>
 <p>Author: A. McKenna, 2026.</p>
 </section>
@@ -573,6 +613,7 @@ Six atoms in a <span class="math inline">|P| = 2</span> fiber. The first axis co
 <footer class="page-footer">
   <p class="kicker">A. McKenna &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Apache-2.0</p>
   <p class="kicker"><a href="https://github.com/mysticflounder/modular-schur">https://github.com/mysticflounder/modular-schur</a></p>
+  <p class="kicker">Built 2026-08-24 from b57314a</p>
 </footer>
 
 </div>

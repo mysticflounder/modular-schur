@@ -1,9 +1,19 @@
 #!/usr/bin/env python3
 """SAT tooling for modular generalized Schur numbers.
 
-This module implements a direct CNF encoding for S_m(k, ell) and uses either
-PySAT (if available) or an external CaDiCaL binary. In this workspace the
-external path is expected to be used, because package installation is blocked.
+This module implements a direct CNF encoding for S_m(k, ell) and runs in one
+of two execution modes.
+
+Exploratory mode (default): fast scanning. PySAT (Cadical153) is used when
+available, no DRAT certification is claimed, and a missing drat-trim or proof
+file is recorded as proof_verified=None rather than treated as an error.
+
+Certified mode (certified=True / --certified): the PySAT fast path is skipped
+and every instance goes through the external CaDiCaL binary with DRAT proof
+output. Every UNSAT must have its proof replayed by drat-trim, and the run
+fails closed (RuntimeError) if drat-trim is absent, the proof file is missing,
+or replay fails; SAT models are re-validated against the modular Schur
+condition in both modes.
 """
 
 from __future__ import annotations
@@ -166,10 +176,12 @@ class SchurModSolver:
         cadical_bin: str = "cadical",
         timeout_seconds: int = 300,
         seed: int = 0,
+        certified: bool = False,
     ) -> None:
         self.workdir = workdir
         self.timeout_seconds = timeout_seconds
         self.seed = seed
+        self.certified = certified
         self.cadical_bin = cadical_bin
         self.artifacts_dir = self.workdir / "artifacts"
         self.cnf_dir = self.artifacts_dir / "cnf"
@@ -329,6 +341,26 @@ class SchurModSolver:
         )
         return proc.returncode == 0 and "s VERIFIED" in proc.stdout
 
+    def _validate_model(self, m: int, k: int, ell: int, coloring: Sequence[int]) -> None:
+        """Re-check a parsed SAT model against the modular Schur condition.
+
+        The instance forbids, in every color class C, a solution of
+        x_1 + ... + x_ell ≡ y (mod m) with all x_i in C (repetition allowed)
+        and y in C. Raise RuntimeError if any color class violates this.
+        """
+        for color in range(1, k + 1):
+            members = [i for i, c in enumerate(coloring, start=1) if c == color]
+            if not members:
+                continue
+            reachable = self._reachable_residues_by_length(members, m, ell)[ell]
+            for y in members:
+                if y % m in reachable:
+                    raise RuntimeError(
+                        "model failed re-validation: color class "
+                        f"{color} of coloring {list(coloring)} admits an ell-term sum "
+                        f"congruent to {y} (mod {m}) for (m={m}, k={k}, ell={ell})"
+                    )
+
     def _solve_with_pysat(
         self, m: int, k: int, ell: int, n: int, num_vars: int, clauses: list[list[int]]
     ) -> SolveOutcome | None:
@@ -352,6 +384,7 @@ class SchurModSolver:
                     if chosen is None:
                         raise RuntimeError(f"Missing color assignment for position {i}")
                     coloring.append(chosen)
+                self._validate_model(m, k, ell, coloring)
                 return SolveOutcome(
                     status=SAT,
                     coloring=tuple(coloring),
@@ -382,10 +415,11 @@ class SchurModSolver:
             return outcome
 
         num_vars, clauses = self.build_cnf(m, k, ell, n)
-        pysat_outcome = self._solve_with_pysat(m, k, ell, n, num_vars, clauses)
-        if pysat_outcome is not None and pysat_outcome.status != TIMEOUT:
-            self.cache[key] = pysat_outcome
-            return pysat_outcome
+        if not self.certified:
+            pysat_outcome = self._solve_with_pysat(m, k, ell, n, num_vars, clauses)
+            if pysat_outcome is not None and pysat_outcome.status != TIMEOUT:
+                self.cache[key] = pysat_outcome
+                return pysat_outcome
 
         stem = f"m{m}_k{k}_e{ell}_n{n}"
         cnf_path = self.cnf_dir / f"{stem}.cnf"
@@ -396,7 +430,7 @@ class SchurModSolver:
         command = [
             self.cadical_bin,
             "-t", str(self.timeout_seconds),
-            "--seed=0",
+            f"--seed={self.seed}",
             "-q",
             "-w",
             str(sol_path),
@@ -405,17 +439,33 @@ class SchurModSolver:
         ]
 
         start = time.perf_counter()
-        proc = subprocess.run(
-            command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            check=False,
-        )
+        try:
+            proc = subprocess.run(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                timeout=self.timeout_seconds + 10,
+                check=False,
+            )
+        except subprocess.TimeoutExpired:
+            runtime = time.perf_counter() - start
+            outcome = SolveOutcome(
+                status=TIMEOUT,
+                coloring=None,
+                n=n,
+                runtime_seconds=runtime,
+                cnf_path=cnf_path,
+                solution_path=sol_path if sol_path.exists() else None,
+                proof_path=proof_path if proof_path.exists() else None,
+            )
+            self.cache[key] = outcome
+            return outcome
         runtime = time.perf_counter() - start
 
         if proc.returncode == 10:
             coloring = self._parse_solution(sol_path, n, k)
+            self._validate_model(m, k, ell, coloring)
             outcome = SolveOutcome(
                 status=SAT,
                 coloring=coloring,
@@ -426,9 +476,27 @@ class SchurModSolver:
                 exit_code=proc.returncode,
             )
         elif proc.returncode == 20:
-            proof_verified = None
-            if proof_path.exists():
+            if self.certified:
+                if not proof_path.exists():
+                    raise RuntimeError(
+                        f"certified mode: UNSAT at (m={m}, k={k}, ell={ell}, n={n}) "
+                        f"but the DRAT proof file is absent at {proof_path}"
+                    )
                 proof_verified = self._verify_proof(cnf_path, proof_path)
+                if proof_verified is None:
+                    raise RuntimeError(
+                        f"certified mode: UNSAT at (m={m}, k={k}, ell={ell}, n={n}) "
+                        "but drat-trim is absent from PATH, so the proof cannot be replayed"
+                    )
+                if proof_verified is not True:
+                    raise RuntimeError(
+                        f"certified mode: DRAT proof replay failed for "
+                        f"(m={m}, k={k}, ell={ell}, n={n}) on {proof_path}"
+                    )
+            else:
+                proof_verified = None
+                if proof_path.exists():
+                    proof_verified = self._verify_proof(cnf_path, proof_path)
             outcome = SolveOutcome(
                 status=UNSAT,
                 coloring=None,
@@ -474,6 +542,11 @@ class SchurModSolver:
             if outcome.status == SAT:
                 low = mid
             else:
+                if self.certified and outcome.proof_verified is not True:
+                    raise RuntimeError(
+                        f"certified mode: UNSAT at (m={m}, k={k}, ell={ell}, n={mid}) "
+                        "lacks a replayed DRAT proof; refusing to move the search boundary"
+                    )
                 high = mid
 
         witness = self.solve_n(m, k, ell, low)
@@ -487,6 +560,11 @@ class SchurModSolver:
             if unsat_boundary.status != UNSAT:
                 raise RuntimeError(
                     f"Expected UNSAT boundary at n={boundary_n}, got {unsat_boundary.status}"
+                )
+            if self.certified and unsat_boundary.proof_verified is not True:
+                raise RuntimeError(
+                    f"certified mode: UNSAT boundary at (m={m}, k={k}, ell={ell}, "
+                    f"n={boundary_n}) lacks a replayed DRAT proof"
                 )
 
         return SearchOutcome(value=low, witness=witness, unsat_boundary=unsat_boundary)
@@ -910,6 +988,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         default=300,
         help="Per-instance solver timeout in seconds.",
     )
+    parser.add_argument(
+        "--certified",
+        action="store_true",
+        help=(
+            "Certified mode: skip PySAT, run only the external CaDiCaL binary with "
+            "DRAT output, and require drat-trim to replay every UNSAT proof "
+            "(fail closed on any missing or failed replay). Default is exploratory "
+            "mode: fast, PySAT allowed, no certification claim."
+        ),
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     solve_parser = subparsers.add_parser("solve", help="Solve a fixed (m,k,ell,n) instance.")
@@ -956,7 +1044,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
     workdir = Path(args.workdir).resolve()
-    solver = SchurModSolver(workdir=workdir, timeout_seconds=args.timeout_seconds)
+    solver = SchurModSolver(
+        workdir=workdir,
+        timeout_seconds=args.timeout_seconds,
+        certified=args.certified,
+    )
 
     if args.command == "solve":
         outcome = solver.solve_n(args.m, args.k, args.ell, args.n)

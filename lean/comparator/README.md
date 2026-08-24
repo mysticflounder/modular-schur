@@ -60,9 +60,22 @@ git clone --branch "$TC" https://github.com/leanprover/comparator /tmp/cmp
 
 # This comparator tag invokes `landrun` and `lean4export` by name from PATH —
 # there are no COMPARATOR_LANDRUN / COMPARATOR_LEAN4EXPORT overrides. landrun is
-# Linux-only (Landlock LSM); on macOS expose the in-repo no-sandbox shim
-# (comparator/fake-landrun.sh) as `landrun`:
-mkdir -p /tmp/shim && ln -sf "$PWD/comparator/fake-landrun.sh" /tmp/shim/landrun
+# Linux-only (Landlock LSM); on macOS put a no-sandbox `landrun` shim on PATH
+# that strips the sandbox flags and execs the real command:
+mkdir -p /tmp/shim && cat > /tmp/shim/landrun <<'SH'
+#!/usr/bin/env bash
+# Drop landrun flags (arg shape: --best-effort --ro/--rw/--rwx/--rox/--env VAL,
+# -ldd -add-exec, then the real command); exec the command unsandboxed.
+while [[ $# -gt 0 ]]; do case "$1" in
+  --best-effort|-ldd|-add-exec) shift ;;
+  --ro|--rw|--rwx|--rox|--env)  shift 2 ;;
+  --) shift; break ;;
+  -*) shift ;;
+  *)  break ;;
+esac; done
+exec "$@"
+SH
+chmod +x /tmp/shim/landrun
 LE=/tmp/cmp/.lake/packages/lean4export/.lake/build/bin
 
 PATH="/tmp/shim:$LE:$PATH" \
@@ -70,8 +83,7 @@ PATH="/tmp/shim:$LE:$PATH" \
 # Success ends with "Your solution is okay!".
 ```
 
-[`fake-landrun.sh`](fake-landrun.sh) strips the landrun sandbox flags and execs
-the command unsandboxed; it drops only the sandbox (which contains a *malicious*
+The shim drops only the sandbox (which exists to contain a *malicious*
 Solution author — not the point for a self-audit of our own Solution), not any
 verification leg. Linux CI uses the real `landrun` sandbox.
 
@@ -120,12 +132,13 @@ comparator verifies the inlined statements in the two exports are identical.
 
 ## The audit boundary: what is NOT in the comparator gate
 
-The repository contains a large **`native_decide`-backed computational scan
-tree** (`ModularSchur/Generated/` and the residue-axis / deficit-growth /
-scanner-bridge machinery — thousands of generated lemmas verifying per-modulus
-tables). That line is an earlier *computational* route, subsumed by the
-structural closed-form proof above. It is **deliberately excluded** from this
-comparator gate:
+The project's private working tree contains a large **`native_decide`-backed
+computational scan tree** (`ModularSchur/Generated/` and the residue-axis /
+deficit-growth / scanner-bridge machinery — thousands of generated lemmas
+verifying per-modulus tables). That line is an earlier *computational* route,
+subsumed by the structural closed-form proof above. It is not distributed in
+the public repository and is **deliberately excluded** from this comparator
+gate:
 
 - Its `#print axioms` closure includes `Lean.ofReduceBool` (the `native_decide`
   compiler-trust axiom), so it is **not** kernel-axiom-clean in the
@@ -134,5 +147,6 @@ comparator gate:
 
 This boundary is deliberate and honest: the comparator gate covers the
 mathlib-statable, kernel-axiom-clean **structural** surface that the paper
-machine-verifies; the computational scan tree is auditable by reading the
-repository and running its own builds, but is not part of this gate.
+machine-verifies; the computational scan tree is retained only in the private
+working tree — not distributed here, not part of this gate, and not part of
+the public verification claim.

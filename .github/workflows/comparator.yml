@@ -27,6 +27,7 @@ on:
       - 'lean/ModularSchur/**'
       - 'lean/ModularSchur.lean'
       - 'lean/lakefile.toml'
+      - 'lean/lake-manifest.json'
       - 'lean/lean-toolchain'
       - 'scripts/lake-build.sh'
       - '.github/workflows/comparator.yml'
@@ -62,8 +63,9 @@ jobs:
     runs-on: ubuntu-latest
     # Tag-pinned to the project's lean-toolchain. Blocking: this job was held
     # non-blocking only until a first green CI run confirmed the real-landrun
-    # sandbox and the nanoda + Lean default kernel legs on a runner, which
-    # 30218964742 (2026-07-26) did, ending in "Your solution is okay!".
+    # sandbox and the nanoda + Lean default kernel legs on a runner — first
+    # public green run 30211804373 (2026-07-26); current public green run
+    # 32621310205 (commit cf59f78, 2026-08-23).
     # A failure here is either a real regression in the 12 gated theorems or
     # drift in one of the pinned tool revisions below — both worth stopping for.
     steps:
@@ -113,6 +115,14 @@ jobs:
           # bundled lean4export builds against the SAME Lean as the project.
           TC="$(cut -d: -f2 lean/lean-toolchain)"
           git clone --branch "$TC" https://github.com/leanprover/comparator "$RUNNER_TEMP/cmp"
+          # The tag is mutable; the pin is the commit. v4.28.0 ==
+          # 7a0cae3df7a0200ff330c82420b8d88a51c9cac7 — update together with
+          # lean/lean-toolchain.
+          CMP_SHA=7a0cae3df7a0200ff330c82420b8d88a51c9cac7
+          [ "$(git -C "$RUNNER_TEMP/cmp" rev-parse HEAD)" = "$CMP_SHA" ] || {
+            echo "comparator tag $TC does not point at pinned commit $CMP_SHA" >&2
+            exit 1
+          }
           ( cd "$RUNNER_TEMP/cmp" && lake build && lake build lean4export )
           echo "COMPARATOR_BIN=$RUNNER_TEMP/cmp/.lake/build/bin/comparator" >> "$GITHUB_ENV"
           echo "$RUNNER_TEMP/cmp/.lake/packages/lean4export/.lake/build/bin" >> "$GITHUB_PATH"

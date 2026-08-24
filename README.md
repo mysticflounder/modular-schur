@@ -88,7 +88,23 @@ inlines them into the page so they follow the site's light and dark palettes.
 The paper's main theorem is elementary and does not depend on SAT. The
 computational tables were produced with a SAT encoder driving CaDiCaL, with
 DRAT certificates replayed by `drat-trim`. The full certificate tree is about
-121 GB and is not distributed. The encoder regenerates it deterministically.
+121 GB and is not distributed. The encoder regenerates it deterministically
+(`--certified` makes every UNSAT fail closed unless its DRAT proof replays).
+
+The headline computational claims map to these invocations (require `uv` and
+CaDiCaL; `drat-trim` for certificate checking):
+
+```
+uv run scripts/schur_mod.py validate
+    # 168 literature cases + 540+ brute-force checks
+uv run scripts/phase9_stable_tables.py --scan-residual-frontier 5500 --jobs 1
+    # m <= 5500 residual-frontier closure
+uv run scripts/phase9_stable_tables.py --help
+    # lists the 56 --scan-n<N>-fixed-quotient-family flags and the grid driver
+```
+
+No checksums for the original certificate tree are published, so a re-run is a
+re-computation, not a verification of the original artifacts.
 
 ## Citing
 
