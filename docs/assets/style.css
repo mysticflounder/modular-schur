@@ -709,14 +709,10 @@ figure.paper-fig {
 }
 figure.paper-fig .fig-svg {
   display: block;
-  /* Width comes as an inline style from scripts/inline-figures.mjs. A wide
-   * figure may overhang the measure by half the breakout on each side; the
-   * left/transform pair keeps every figure centered on the prose axis. */
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
-  max-width: calc(100% + var(--breakout));
+  /* Width comes as an inline style from scripts/inline-figures.mjs; a wide
+   * figure caps at the prose measure, never wider than the text. */
+  margin: 0 auto;
+  max-width: 100%;
   height: auto;
 }
 figure.paper-fig figcaption { text-align: left; }
@@ -729,15 +725,7 @@ figure.paper-fig figcaption { text-align: left; }
 
 /* A bare TikZ callout, not a numbered float. */
 .paper-aside { margin: 2rem 0; text-align: center; }
-.paper-aside .fig-svg {
-  display: block;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
-  max-width: calc(100% + var(--breakout));
-  height: auto;
-}
+.paper-aside .fig-svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
 
 /* ── Splash band at the top of the paper page ──────────────────────────── */
 
