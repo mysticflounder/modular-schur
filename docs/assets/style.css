@@ -22,7 +22,9 @@
   --ink-faint:  oklch(0.520 0.016 66);
   --rule:       oklch(0.872 0.013 75);
   --rule-soft:  oklch(0.928 0.010 78);
-  --accent:     oklch(0.515 0.132 28);
+  /* Accent drawn from the site avatar's flounder teal (#23a0a8 ~ oklch 0.65
+   * 0.10 202), darkened to clear 4.5:1 with margin on both paper tones. */
+  --accent:     oklch(0.480 0.100 202);
 
   --st-proven:  oklch(0.500 0.090 152);
   --st-empiric: oklch(0.545 0.095 72);
@@ -55,7 +57,7 @@
     --ink-faint:  oklch(0.665 0.012 70);   /* was 4.49:1; needs margin over 4.5 */
     --rule:       oklch(0.330 0.012 66);
     --rule-soft:  oklch(0.268 0.010 64);
-    --accent:     oklch(0.700 0.115 32);
+    --accent:     oklch(0.720 0.090 200);
 
     --st-proven:  oklch(0.715 0.090 152);
     --st-empiric: oklch(0.750 0.095 76);
@@ -435,7 +437,7 @@ figure .lbl-sm  { font-size: 12.5px; text-anchor: middle; letter-spacing: 1.1px;
 .fail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 22px; }
 .fail-grid p { display: flex; gap: 9px; align-items: baseline; margin: 0;
                font-size: 0.85rem; line-height: 1.5; }
-.fail-grid p::before { content: "\00d7"; color: var(--accent); flex: none; }
+.fail-grid p::before { content: "\00d7"; color: var(--st-refuted); flex: none; }
 
 /* Figure 3: the audit boundary. Two columns split by a solid rule. */
 .bnd { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 26px; }
@@ -793,7 +795,7 @@ figure.paper-fig figcaption { text-align: left; }
 /* ── Cross-references and citations ────────────────────────────────────── */
 
 a.xref, a.cite { border-bottom-color: var(--rule); font-variant-numeric: oldstyle-num; }
-.xref-missing { color: var(--accent); font-weight: 600; }
+.xref-missing { color: var(--st-refuted); font-weight: 600; }
 
 /* ── Bibliography ──────────────────────────────────────────────────────── */
 
