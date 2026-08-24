@@ -671,6 +671,7 @@ figure.paper-fig {
 figure.paper-fig .fig-svg {
   display: block;
   margin: 0 auto;
+  width: auto;     /* inline SVG: keep the natural TikZ size, not the flex 100% */
   max-width: 100%;
   height: auto;
 }
@@ -684,7 +685,12 @@ figure.paper-fig figcaption { text-align: left; }
 
 /* A bare TikZ callout, not a numbered float. */
 .paper-aside { margin: 2rem 0; text-align: center; }
-.paper-aside .fig-svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+.paper-aside .fig-svg { display: block; margin: 0 auto; width: auto; max-width: 100%; height: auto; }
+
+/* ── Splash band at the top of the paper page ──────────────────────────── */
+
+.splash { margin: 4px 0 14px; }
+.splash svg { display: block; width: 100%; height: auto; }
 
 /* ── Cross-references and citations ────────────────────────────────────── */
 

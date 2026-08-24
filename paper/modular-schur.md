@@ -951,54 +951,64 @@ In other words: a fiber is WAP when its atoms all have distinct coordinates alon
 \centering
 \begin{lrbox}{\figbox}%
 \begin{tikzpicture}[figcard, x=1.05cm, y=0.95cm,
-   atom/.style={circle, draw=ink, fill=lin2!20, minimum size=6.5mm, inner sep=0pt, font=\small},
-   good/.style={-{Stealth[length=2mm]}, addX, thick},
-   ax/.style={mut}
+   atom/.style={circle, draw=ink, line width=0.8pt, fill=white,
+                minimum size=6.5mm, inner sep=0pt, font=\small, text=ink},
+   proj/.style={-{Stealth[length=1.9mm]}, addX, line width=0.8pt},
+   ax/.style={mut, line width=0.6pt},
+   band/.style={rounded corners=3.5pt},
+   ttl/.style={font=\small\bfseries, text=white, rounded corners=3pt,
+               inner xsep=8pt, inner ysep=3.5pt}
 ]
   % ---- left: separated (every axis injective) ----
-  \node[font=\small\bfseries, addX] at (2,3.9) {separated};
-  \node[font=\scriptsize, anchor=east, text=mut] at (0.55,1) {$r_1$};
-  \node[font=\scriptsize, anchor=east, text=mut] at (0.55,2) {$r_2$};
-  \node[font=\scriptsize, anchor=east, text=mut] at (0.55,3) {$r_3$};
-  \draw[ax] (0.6,0) -- (3.55,0);
+  \node[ttl, fill=addX] at (2,4.05) {separated};
+  \foreach \r in {1,2,3} {
+    \fill[band, addF!45] (0.5,\r-0.42) rectangle (3.62,\r+0.42);
+    \node[font=\scriptsize, anchor=east, text=mut] at (0.34,\r) {$r_{\r}$};
+  }
+  \draw[ax] (0.5,0) -- (3.62,0);
   \foreach \c in {1,2,3} {
     \draw[ax] (\c,0) -- (\c,-0.12);
-    \node[font=\scriptsize, anchor=north, text=mut] at (\c,-0.14) {$c_{\c}$};
+    \node[font=\scriptsize, anchor=north, text=mut] at (\c,-0.16) {$c_{\c}$};
   }
+  \node[font=\scriptsize, anchor=west, text=mut] at (3.72,0) {$\rho_{g_1}$};
   \node[atom] (LA) at (1,1) {$A$};
   \node[atom] (LB) at (2,3) {$B$};
   \node[atom] (LC) at (3,2) {$C$};
-  \draw[good] (LA) -- (1,0.16);
-  \draw[good] (LB) -- (2,0.16);
-  \draw[good] (LC) -- (3,0.16);
+  \draw[proj] (LA) -- (1,0.15);
+  \draw[proj] (LB) -- (2,0.15);
+  \draw[proj] (LC) -- (3,0.15);
   \foreach \c in {1,2,3} { \fill[addX] (\c,0) circle (1.7pt); }
-  \node[font=\scriptsize, addX, align=center] at (2,-1.02)
-    {3 distinct columns, 3 distinct rows:\\ every $\rho_g$ injective};
+  \node[font=\scriptsize, addX, align=center] at (2,-1.12)
+    {3 distinct columns, 3 distinct rows:\\ every $\rho_g$ injective, no edges};
   % ---- right: WAP but not separated ----
-  \node[font=\small\bfseries, sumX] at (8,3.9) {WAP but not separated};
-  \node[font=\scriptsize, anchor=east, text=mut] at (6.55,1) {$r_1$};
-  \node[font=\scriptsize, anchor=east, text=mut] at (6.55,2) {$r_2$};
-  \draw[ax] (6.6,0) -- (9.55,0);
-  \foreach \c/\lab in {7/1, 8/2, 9/3} {
+  \node[ttl, fill=sumX] at (7.6,4.05) {WAP but not separated};
+  \fill[band, addF!45] (6.1,2-0.42) rectangle (9.22,2+0.42);
+  \fill[band, sumF!70] (6.1,1-0.42) rectangle (9.22,1+0.42);
+  \node[font=\scriptsize, anchor=east, text=mut]  at (5.94,2) {$r_2$};
+  \node[font=\scriptsize, anchor=east, text=sumX] at (5.94,1) {$r_1$};
+  \draw[ax] (6.1,0) -- (9.22,0);
+  \foreach \c/\lab in {6.6/1, 7.6/2, 8.6/3} {
     \draw[ax] (\c,0) -- (\c,-0.12);
-    \node[font=\scriptsize, anchor=north, text=mut] at (\c,-0.14) {$c_{\lab}$};
+    \node[font=\scriptsize, anchor=north, text=mut] at (\c,-0.16) {$c_{\lab}$};
   }
-  \node[atom] (RA) at (7,1) {$A$};
-  \node[atom] (RB) at (8,2) {$B$};
-  \node[atom] (RC) at (9,1) {$C$};
-  \draw[sumX, thick] (RA) -- (RC);
-  \draw[good] (RA) -- (7,0.16);
-  \draw[good] (RB) -- (8,0.16);
-  \draw[good] (RC) -- (9,0.16);
-  \foreach \c in {7,8,9} { \fill[addX] (\c,0) circle (1.7pt); }
-  \node[font=\scriptsize, sumX, align=center] at (8,-1.02)
-    {columns all distinct, but $A,C$ share $r_1$:\\ an edge survives};
+  \node[font=\scriptsize, anchor=west, text=mut] at (9.32,0) {$\rho_{g_1}$};
+  \draw[proj] (7.6,1.66) -- (7.6,0.15);
+  \draw[sumF!70, line width=4pt] (6.6,1) -- (8.6,1);
+  \draw[sumX, line width=1.1pt] (6.6,1) -- (8.6,1);
+  \node[atom] (RA) at (6.6,1) {$A$};
+  \node[atom] (RB) at (7.6,2) {$B$};
+  \node[atom] (RC) at (8.6,1) {$C$};
+  \draw[proj] (RA) -- (6.6,0.15);
+  \draw[proj] (RC) -- (8.6,0.15);
+  \foreach \c in {6.6,7.6,8.6} { \fill[addX] (\c,0) circle (1.7pt); }
+  \node[font=\scriptsize, sumX, align=center] at (7.6,-1.12)
+    {columns all distinct, but $A,C$ share $r_1$:\\ the edge $A$--$C$ survives};
 \end{tikzpicture}
 \end{lrbox}%
 \usebox{\figbox}\par\smallskip
 \begin{minipage}{\wd\figbox}%
 \caption{Separation versus whole-axis projection-injectivity
-(Definition \ref{def:wap}). \emph{Left:} a separated fiber: the three atoms
+(Definition \ref{def:wap}). The shaded bands are the residue classes along the row axis $g_2$: each band is one coordinate-clique. \emph{Left:} a separated fiber: the three atoms
 occupy three distinct columns and three distinct rows, so $\rho_{g_1}$ and
 $\rho_{g_2}$ are both injective and, by the Coordinate-Union Edge Rule,
 $G_{\mathrm{atom}}[X_P]$ has no edges. The singleton coordinate-cliques along

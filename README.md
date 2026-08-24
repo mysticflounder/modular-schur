@@ -80,7 +80,8 @@ pandoc paper/modular-schur.md -o paper/modular-schur.pdf
 ```
 
 The web version is built in the source repository, which renders the same file
-to HTML and compiles its TikZ figures to SVG.
+to HTML, compiles its TikZ figures to SVG without the print card frames, and
+inlines them into the page so they follow the site's light and dark palettes.
 
 ## Reproduction of the scans
 
