@@ -38,7 +38,9 @@
   --margin-w: 148px;
   --gutter: 38px;
   --reach: 186px;     /* margin-w + gutter */
-  --measure: 700px;   /* prose only; ~62 characters at 22px Literata */
+  /* The prose column takes half the screen on wide displays, floored at
+   * 700px (~62 characters at 22px Literata) on smaller windows. */
+  --measure: max(700px, 50vw);
   --breakout: 320px;  /* how far figures and wide tables run past the measure */
   --pad: 56px;
   --grain: 1;
@@ -95,7 +97,9 @@ body::before {
 .sheet {
   position: relative;
   z-index: 2;
-  max-width: 1320px;
+  /* The sheet is the sum of its parts, so it grows with the measure. */
+  max-width: calc(var(--reach) + var(--measure) + var(--gutter)
+                  + var(--breakout) + 2 * var(--pad));
   margin: 0 auto;
   padding: 0 var(--pad) 84px;
 }
@@ -140,7 +144,7 @@ strong { font-weight: 600; }
 
 .page-header .subtitle {
   margin: 0 0 0.7em;
-  max-width: 820px;
+  max-width: var(--measure);
   font-size: 1.28rem;
   font-style: italic;
   color: var(--ink-soft);
