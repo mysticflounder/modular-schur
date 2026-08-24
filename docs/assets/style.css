@@ -529,6 +529,7 @@ code, pre { font-family: var(--mono); }
   .page-header .subtitle { font-size: 1.1rem; }
 
   .body-grid { display: block; margin-top: 34px; }
+  .abstract { margin-left: 0; }
   .content table { width: 100%; min-width: 0; max-width: 100%; }
 
   .toc {
@@ -584,7 +585,8 @@ code, pre { font-family: var(--mono); }
 
 .abstract {
   max-width: var(--measure);
-  margin: 2.1rem 0 0;
+  /* Align with the prose column below (margin + gutter), not the sheet edge. */
+  margin: 2.1rem 0 0 var(--reach);
   padding: 1.15rem 0 1.2rem;
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
@@ -691,6 +693,35 @@ figure.paper-fig figcaption { text-align: left; }
 
 .splash { margin: 4px 0 14px; }
 .splash svg { display: block; width: 100%; height: auto; }
+
+/* On load the Schur-triple arcs draw themselves toward z, then the z-rings
+ * and the label appear. Static (fully drawn) under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .splash-arc {
+    stroke-dasharray: 1;
+    animation: splash-draw 1.05s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  .splash-z, .splash-lab { animation: splash-appear 0.5s ease-out both; }
+}
+@keyframes splash-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes splash-appear { from { opacity: 0; } to { opacity: 1; } }
+
+/* ── Figure 5 on the status page: the Coordinate-Union Edge Rule ────────
+ * Cycles: first-axis cliques, second-axis cliques, then their union.
+ * Base state (and reduced motion): the union, bands and phase labels off. */
+.er-b1, .er-b2, .er-l1, .er-l2 { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .er-b1, .er-l1 { animation: er-phase1 12s linear infinite; }
+  .er-e1         { animation: er-edges1 12s linear infinite; }
+  .er-b2, .er-l2 { animation: er-phase2 12s linear infinite; }
+  .er-e2         { animation: er-edges2 12s linear infinite; }
+  .er-l3         { animation: er-phase3 12s linear infinite; }
+}
+@keyframes er-phase1 { 0% {opacity:0} 3%,28% {opacity:1} 33%,100% {opacity:0} }
+@keyframes er-edges1 { 0% {opacity:0} 3%,28% {opacity:1} 33%,63% {opacity:0} 68%,97% {opacity:1} 100% {opacity:0} }
+@keyframes er-phase2 { 0%,33% {opacity:0} 38%,63% {opacity:1} 68%,100% {opacity:0} }
+@keyframes er-edges2 { 0%,33% {opacity:0} 38%,97% {opacity:1} 100% {opacity:0} }
+@keyframes er-phase3 { 0%,63% {opacity:0} 68%,97% {opacity:1} 100% {opacity:0} }
 
 /* ── Cross-references and citations ────────────────────────────────────── */
 
