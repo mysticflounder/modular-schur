@@ -18,6 +18,12 @@ project:
   repo: "https://github.com/mysticflounder/modular-schur"   # [required] canonical PUBLIC repo, and the Palomar submission target
   private_repo: "https://github.com/flound1129/schur-numbers"  # the working repo; the public tree is a curated export of it
 
+  # Palomar submission snapshot, prepared 2026-08-25 UTC, NOT YET SUBMITTED.
+  # Submit this immutable public commit SHA at submit.palomar-registry.org:
+  #   b9f3693607e3d1c1cd02ecb055924b16c0b2aab2   (public main after the 2026-08-24 pending-items pass)
+  # Comparator gate last green on public commit bae075fa6632c32f9925fe10fbad7ef3e61864bc
+  # (run 32795126047); the commits after it change no gated path. This comment is
+  # a project record and is not itself part of the snapshot it names.
   # Palomar Registry submission fields.
   # The arXiv categories and MSC2020 codes below were confirmed by the author
   # on 2026-08-24.
