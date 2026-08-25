@@ -290,7 +290,7 @@ The gate exists to stop a formalization from proving something weaker than it ap
 <h3>The audit boundary</h3>
 <p>An earlier computational route to some of these results lives in a generated tree of 7,478 Lean files (35 MB), of which 1,737 use <code>native_decide</code>. That route is <strong>excluded from the gate</strong> and is not part of the verification claim above: <code>native_decide</code> trusts the compiler rather than the kernel, so its closure carries <code>Lean.ofReduceBool</code>.</p>
 <p><span class="st st-proven">Verified</span> The twelve theorems do not depend on that tree. <code>Solution.lean</code> imports only <code>IntegerBridge</code>, <code>K1Theorem</code>, and <code>SigmaInfty</code>; the resulting import cone reaches <code>Basic</code>, <code>Partition</code>, <code>SingletonSafety</code>, <code>UniversalBound</code>, <code>UnifiedValue</code>, <code>UnifiedTheorem</code>, and <code>StableRange</code>, and contains zero occurrences of <code>native_decide</code>. The structural proof subsumes the computational one; the generated tree is retained as history, not as evidence.</p>
-<p>The public repository carries exactly that import cone: the ten modules in the figure below, the comparator files, and the build configuration. The paper’s Section 8 names <code>SameSupportFiber.lean</code>, <code>CoordinateUnion.lean</code>, <code>WholeAxisPID.lean</code>, and <code>AnchoredExactTransversal.lean</code> for its structural reductions. Those four modules exist only in the private working tree, and since the paper’s 2026-08-24 revision its introduction says so. They are not distributed, not inside the gate, and not part of the verification claim on this page, and nothing here speaks to their build state or axiom closure. See the <a href="#errata-in-the-paper">errata</a>.</p>
+<p>The public repository carries exactly that import cone: the ten modules in the figure below, the comparator files, and the build configuration. The paper’s Section 8 names <code>SameSupportFiber.lean</code>, <code>CoordinateUnion.lean</code>, <code>WholeAxisPID.lean</code>, and <code>AnchoredExactTransversal.lean</code> for its structural reductions. Those four modules exist only in the private working tree, and since the paper’s 2026-08-24 revision its introduction says so. They are not distributed, not inside the gate, and not part of the verification claim on this page, and nothing on this page beyond the one measurement recorded next speaks to their build state or axiom closure. On 2026-08-24 the author ran <code>#print axioms</code> on the private tree for the five Section 8 declarations <code>SameSupportFiber.coordinateUnionEdgeRule_on_normalizedCell</code>, <code>WholeAxisPID.axis_cover_coordCliques_eq_card_of_forall_PID</code>, <code>AnchoredExactTransversal.axis_cover_eq_maxPacking_of_hasCarrierAET</code>, <code>TauClosure.tau_capstone</code>, and <code>TauClosure.tauDPRec_characterization</code>; each closes to <code>{propext, Classical.choice, Quot.sound}</code>. That measurement was made by the author’s tooling on the private tree, is not part of the public gate, and leaves the Certificate label this page gives the Section 8 results unchanged. See the <a href="#errata-in-the-paper">errata</a>.</p>
 <figure>
 <div class="fig-head">
 <p class="kicker">
@@ -403,7 +403,7 @@ The two routes reach some of the same results. Only the left one is claimed. The
 </section>
 <section id="verification-debt" class="level3">
 <h3>Verification debt</h3>
-<p>Not everything computed is machine-checked to the standard of the twelve gated theorems. The certificate-theorem sweep over the <span class="math inline">m \le 5500</span> frontier has not been run through the axiom audit, and <code>tauDPRec_characterization</code> has no recorded axiom closure. Those results rest on their solver certificates, not on a kernel-checked Lean proof. No row-to-certificate manifest exists for the frontier: nothing public maps each of its rows to the theorem or certificate that discharges it.</p>
+<p>Not everything computed is machine-checked to the standard of the twelve gated theorems. The certificate-theorem sweep over the <span class="math inline">m \le 5500</span> frontier has not been run through the axiom audit. <code>tauDPRec_characterization</code> has one recorded axiom closure, the author’s 2026-08-24 measurement on the private tree (<code>{propext, Classical.choice, Quot.sound}</code>; see <a href="#the-audit-boundary">the audit boundary</a>); the public gate has not measured it. Those results rest on their solver certificates, not on a kernel-checked Lean proof. No row-to-certificate manifest exists for the frontier: nothing public maps each of its rows to the theorem or certificate that discharges it.</p>
 </section>
 </section>
 <section id="open-questions" class="level2">
@@ -630,7 +630,7 @@ Six atoms in a <span class="math inline">|P| = 2</span> fiber. The first axis co
 <footer class="page-footer">
   <p class="kicker">A. McKenna &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Apache-2.0</p>
   <p class="kicker"><a href="https://github.com/mysticflounder/modular-schur">https://github.com/mysticflounder/modular-schur</a></p>
-  <p class="kicker">Built 2026-08-25 from 9e526e9</p>
+  <p class="kicker">Built 2026-08-25 from 28c5a2e</p>
 </footer>
 
 </div>

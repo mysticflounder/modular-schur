@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import functools
 import math
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Sequence
+from typing import Iterator, Sequence
 
 from schur_mod import SchurModSolver
 
@@ -325,7 +326,70 @@ def is_capstone_fixed_quotient_row(m: int, d: int) -> bool:
     return d > 0 and m % d == 0 and (m // d) in CAPSTONE_FIXED_QUOTIENT_NS
 
 
-def is_known_residual_row(m: int, d: int) -> bool:
+# Phase number of each capstone fixed-quotient line, keyed by n = m // d
+# (docs/phaseNN-nXXX-fixed-quotient.md). Used only to label manifest rows;
+# is_capstone_fixed_quotient_row keeps its own set, so the boolean filter is
+# unaffected by this table.
+CAPSTONE_FIXED_QUOTIENT_PHASES: dict[int, int] = {
+    48: 34,
+    70: 35,
+    45: 36,
+    80: 37,
+    72: 38,
+    66: 39,
+    78: 40,
+    60: 41,
+    84: 42,
+    135: 43,
+    110: 44,
+    102: 45,
+    105: 46,
+    165: 47,
+    90: 48,
+    120: 49,
+    36: 50,
+    96: 51,
+    114: 52,
+    108: 53,
+    130: 54,
+    126: 56,
+    112: 57,
+    132: 58,
+    138: 59,
+    160: 60,
+    170: 61,
+    144: 62,
+    225: 63,
+    168: 64,
+    240: 65,
+    180: 66,
+    150: 67,
+    156: 68,
+    190: 69,
+    255: 70,
+    189: 71,
+    200: 72,
+    140: 73,
+    210: 74,
+    270: 75,
+    174: 76,
+    285: 77,
+    154: 78,
+    186: 79,
+    220: 80,
+    300: 81,
+    230: 82,
+    315: 83,
+    198: 84,
+    231: 85,
+    204: 86,
+    330: 87,
+    182: 88,
+    345: 89,
+}
+
+
+def known_residual_row_phase(m: int, d: int) -> str | None:
     phase24_rows = {
         (675, 15),
         (720, 24),
@@ -406,31 +470,60 @@ def is_known_residual_row(m: int, d: int) -> bool:
     phase30 = d == 18 and m % 108 == 0
     phase31 = m % 30 == 0 and d == m // 30
     phase32 = m % 40 == 0 and d == m // 40
-    return (
-        (d == 6 and m % 36 == 0)
-        or (d == 12 and m % 72 == 0)
-        or (m % 72 == 0 and d == m // 12)
-        or (d == 10 and m % 100 == 0)
-        or (m % 144 == 0 and d == m // 24 and math.gcd(m // 144, 6) == 1)
-        or phase26
-        or phase27
-        or phase28
-        or phase29
-        or phase30
-        or phase31
-        or phase32
-        or is_capstone_fixed_quotient_row(m, d)
-        or (m, d) in phase90_rows
-        or (m, d) in phase91_rows
-        or (m, d) in phase92_rows
-        or (m, d) in phase93_rows
-        or (m, d) in phase94_rows
-        or (m, d) in phase95_rows
-        or (m == 600 and d == 20)
-        or (m, d) in phase24_rows
-        or (m, d) in phase33_rows
-        or (m, d) in phase55_rows
-    )
+    # Same clauses, same order as the original disjunction; the first clause
+    # that holds names the phase that discharges the row.
+    if d == 6 and m % 36 == 0:
+        return "phase19"
+    if d == 12 and m % 72 == 0:
+        return "phase20"
+    if m % 72 == 0 and d == m // 12:
+        return "phase21"
+    if d == 10 and m % 100 == 0:
+        return "phase22"
+    if m % 144 == 0 and d == m // 24 and math.gcd(m // 144, 6) == 1:
+        return "phase25"
+    if phase26:
+        return "phase26"
+    if phase27:
+        return "phase27"
+    if phase28:
+        return "phase28"
+    if phase29:
+        return "phase29"
+    if phase30:
+        return "phase30"
+    if phase31:
+        return "phase31"
+    if phase32:
+        return "phase32"
+    if is_capstone_fixed_quotient_row(m, d):
+        phase = CAPSTONE_FIXED_QUOTIENT_PHASES.get(m // d)
+        return f"phase{phase}" if phase is not None else f"capstone-n{m // d}"
+    if (m, d) in phase90_rows:
+        return "phase90"
+    if (m, d) in phase91_rows:
+        return "phase91"
+    if (m, d) in phase92_rows:
+        return "phase92"
+    if (m, d) in phase93_rows:
+        return "phase93"
+    if (m, d) in phase94_rows:
+        return "phase94"
+    if (m, d) in phase95_rows:
+        return "phase95"
+    if m == 600 and d == 20:
+        return "phase23"
+    if (m, d) in phase24_rows:
+        return "phase24"
+    if (m, d) in phase33_rows:
+        return "phase33"
+    if (m, d) in phase55_rows:
+        return "phase55"
+    return None
+
+
+def is_known_residual_row(m: int, d: int) -> bool:
+    return known_residual_row_phase(m, d) is not None
 
 
 def print_dgt1_gap_scan(limit: int, private_failure_limit: int | None) -> None:
@@ -492,8 +585,105 @@ def print_dgt1_gap_scan(limit: int, private_failure_limit: int | None) -> None:
             )
 
 
-def print_filtered_frontier_scan(limit: int) -> None:
-    rows: list[tuple[int, int, int, int, int, int, int, int, list[int]]] = []
+DISCHARGE_TRIVIAL_BOUND = "trivial-bound"
+DISCHARGE_PRIVATE_FRAGMENT = "private-fragment-certificate"
+DISCHARGE_KNOWN_RESIDUAL_PREFIX = "known-residual-row:"
+DISCHARGE_RESIDUAL = "RESIDUAL"
+
+COVERAGE_MANIFEST_COLUMNS = (
+    "m",
+    "d",
+    "n",
+    "d0",
+    "sigma_inf",
+    "k0_inf",
+    "forced",
+    "residual_tau",
+    "discharge",
+)
+
+
+@dataclass(frozen=True)
+class FrontierRow:
+    m: int
+    d: int
+    n: int
+    sigma_inf: int
+    k0_inf: int
+    packing_lb: int
+    forced: int | None
+    residual_tau: int | None
+    residual: list[int] | None
+    discharge: str
+
+
+def classify_frontier_row(m: int, c: int, d: int) -> FrontierRow:
+    # Shared per-row computation of the filtered frontier scan. Each quantity is
+    # computed exactly as far as the scan needs it to discharge the row; fields
+    # the scan never reaches for a discharged row stay None.
+    sigma = sigma_inf(m, c)
+    k0 = exact_k0_inf(m, c)
+    n = m // d
+    packing_lb = math.ceil((n - 1) / sigma)
+    if k0 <= packing_lb:
+        return FrontierRow(
+            m=m,
+            d=d,
+            n=n,
+            sigma_inf=sigma,
+            k0_inf=k0,
+            packing_lb=packing_lb,
+            forced=None,
+            residual_tau=None,
+            residual=None,
+            discharge=DISCHARGE_TRIVIAL_BOUND,
+        )
+
+    size, masks = stable_candidate_masks(m, c)
+    forced, forced_union = private_fragment_certificate(size, masks)
+    private_covers = forced_union == (1 << size) - 1 and len(forced) == k0
+    if private_covers:
+        discharge = DISCHARGE_PRIVATE_FRAGMENT
+    else:
+        phase = known_residual_row_phase(m, d)
+        discharge = (
+            DISCHARGE_KNOWN_RESIDUAL_PREFIX + phase if phase is not None else DISCHARGE_RESIDUAL
+        )
+    if discharge != DISCHARGE_RESIDUAL:
+        return FrontierRow(
+            m=m,
+            d=d,
+            n=n,
+            sigma_inf=sigma,
+            k0_inf=k0,
+            packing_lb=packing_lb,
+            forced=len(forced),
+            residual_tau=None,
+            residual=None,
+            discharge=discharge,
+        )
+
+    residual = [
+        idx + 1 for idx in range(size) if not (forced_union & (1 << idx))
+    ]
+    tau = residual_cover_number(size, masks, residual)
+    return FrontierRow(
+        m=m,
+        d=d,
+        n=n,
+        sigma_inf=sigma,
+        k0_inf=k0,
+        packing_lb=packing_lb,
+        forced=len(forced),
+        residual_tau=tau,
+        residual=residual,
+        discharge=DISCHARGE_RESIDUAL,
+    )
+
+
+def iter_frontier_rows(limit: int) -> Iterator[FrontierRow]:
+    # Visits every (m, d) with 8 <= m <= limit and d = gcd(m, c - 1) for some
+    # 1 <= c <= m, d not in {1, m}, once per d in order of first c.
     for m in range(8, limit + 1):
         seen: set[int] = set()
         for c in range(1, m + 1):
@@ -501,25 +691,13 @@ def print_filtered_frontier_scan(limit: int) -> None:
             if d in (1, m) or d in seen:
                 continue
             seen.add(d)
+            yield classify_frontier_row(m, c, d)
 
-            sigma = sigma_inf(m, c)
-            k0 = exact_k0_inf(m, c)
-            n = m // d
-            packing_lb = math.ceil((n - 1) / sigma)
-            if k0 <= packing_lb:
-                continue
 
-            size, masks = stable_candidate_masks(m, c)
-            forced, forced_union = private_fragment_certificate(size, masks)
-            private_covers = forced_union == (1 << size) - 1 and len(forced) == k0
-            if private_covers or is_known_residual_row(m, d):
-                continue
-
-            residual = [
-                idx + 1 for idx in range(size) if not (forced_union & (1 << idx))
-            ]
-            tau = residual_cover_number(size, masks, residual)
-            rows.append((m, d, n, sigma, packing_lb, k0, len(forced), tau, residual))
+def print_filtered_frontier_scan(limit: int) -> None:
+    rows = [
+        row for row in iter_frontier_rows(limit) if row.discharge == DISCHARGE_RESIDUAL
+    ]
 
     print(
         "Filtered non-private residual rows after Phase 19--95 "
@@ -527,11 +705,49 @@ def print_filtered_frontier_scan(limit: int) -> None:
     )
     print("| m | d | n | sigma_inf | packing_lb | k0_inf | forced | residual_tau | residual |")
     print("|---:|---:|---:|---:|---:|---:|---:|---:|---|")
-    for m, d, n, sigma, packing_lb, k0, forced_count, tau, residual in rows:
+    for row in rows:
         print(
-            f"| {m} | {d} | {n} | {sigma} | {packing_lb} | {k0} | "
-            f"{forced_count} | {tau} | `{residual}` |"
+            f"| {row.m} | {row.d} | {row.n} | {row.sigma_inf} | {row.packing_lb} | "
+            f"{row.k0_inf} | {row.forced} | {row.residual_tau} | `{row.residual}` |"
         )
+
+
+def normalized_cell_d(n: int, d: int) -> int | None:
+    # d0 of the normalized cell (n, d0) when this module defines a
+    # normalized_n{n}_d function (n = 30, 40, and the capstone quotients);
+    # the frontier scan itself never normalizes, so other rows get None.
+    normalize = globals().get(f"normalized_n{n}_d")
+    if normalize is None:
+        return None
+    return normalize(d)
+
+
+def write_coverage_manifest(limit: int, output_path: Path) -> dict[str, int]:
+    # One CSV line per (m, d) the filtered frontier scan visits, in scan order,
+    # with the rule that discharged it (or RESIDUAL). This records coverage,
+    # not verification: nothing is replayed. Returns counts per discharge
+    # value in order of first appearance.
+    counts: dict[str, int] = {}
+    with output_path.open("w", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(COVERAGE_MANIFEST_COLUMNS)
+        for row in iter_frontier_rows(limit):
+            d0 = normalized_cell_d(row.n, row.d)
+            writer.writerow(
+                [
+                    row.m,
+                    row.d,
+                    row.n,
+                    "" if d0 is None else d0,
+                    row.sigma_inf,
+                    row.k0_inf,
+                    "" if row.forced is None else row.forced,
+                    "" if row.residual_tau is None else row.residual_tau,
+                    row.discharge,
+                ]
+            )
+            counts[row.discharge] = counts.get(row.discharge, 0) + 1
+    return counts
 
 
 def is_power_of_three(value: int) -> bool:
@@ -7223,6 +7439,17 @@ def main() -> int:
         help="alias for --scan-filtered-frontier, retained for the strategy roadmap",
     )
     parser.add_argument(
+        "--coverage-manifest",
+        type=Path,
+        metavar="PATH",
+        help=(
+            "coverage manifest: one line per scanned row with the rule that "
+            "discharged it; this records coverage, not verification. Takes its "
+            "LIMIT from --scan-filtered-frontier (or --scan-residual-frontier) "
+            "and writes a CSV to PATH instead of printing the residual table"
+        ),
+    )
+    parser.add_argument(
         "--scan-m36t-d6-family",
         type=int,
         metavar="LIMIT",
@@ -7629,6 +7856,21 @@ def main() -> int:
     frontier_limit = args.scan_filtered_frontier
     if args.scan_residual_frontier is not None:
         frontier_limit = args.scan_residual_frontier
+    if args.coverage_manifest is not None:
+        if frontier_limit is None:
+            parser.error(
+                "--coverage-manifest requires --scan-filtered-frontier LIMIT "
+                "(or --scan-residual-frontier LIMIT)"
+            )
+        counts = write_coverage_manifest(frontier_limit, args.coverage_manifest)
+        print(
+            f"Coverage manifest for 8 <= m <= {frontier_limit}: "
+            f"{sum(counts.values())} rows written to {args.coverage_manifest} "
+            "(coverage, not verification)"
+        )
+        for label, count in counts.items():
+            print(f"{label}: {count}")
+        return 0
     if frontier_limit is not None:
         print_filtered_frontier_scan(frontier_limit)
         return 0

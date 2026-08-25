@@ -13,18 +13,28 @@ and every instance goes through the external CaDiCaL binary with DRAT proof
 output. Every UNSAT must have its proof replayed by drat-trim, and the run
 fails closed (RuntimeError) if drat-trim is absent, the proof file is missing,
 or replay fails; SAT models are re-validated against the modular Schur
-condition in both modes.
+condition in both modes. Certified mode also appends one JSON line per solved
+(SAT or UNSAT) instance to artifacts/proof/certified-records.jsonl, a
+CertifiedRecord with the keys m, k, ell, n, status, cnf_path, cnf_sha256,
+proof_path, proof_sha256, solver_path, solver_sha256, solver_version,
+solver_args, seed, verifier_path, verifier_sha256, verifier_args,
+replay_result, model_validated, wall_seconds, recorded_at; a record that cannot
+be written is a RuntimeError. Instances answered from the in-memory cache or by
+the trivial n=0 case never run the solver and produce no record.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import itertools
+import json
 import os
 import subprocess
 import sys
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, Sequence
 
@@ -32,6 +42,8 @@ from typing import Iterable, Sequence
 SAT = "SAT"
 UNSAT = "UNSAT"
 TIMEOUT = "TIMEOUT"
+
+CERTIFIED_RECORDS_FILENAME = "certified-records.jsonl"
 
 
 @dataclass(frozen=True)
@@ -45,6 +57,46 @@ class SolveOutcome:
     proof_path: Path | None = None
     proof_verified: bool | None = None
     exit_code: int | None = None
+
+
+@dataclass(frozen=True)
+class CertifiedRecord:
+    """One line of certified-records.jsonl: a durable record of a solved instance.
+
+    Written only in certified mode, after the solver result has been accepted
+    (SAT model re-validated by `_validate_model`, or UNSAT proof replayed by
+    drat-trim). Path fields are strings, hash fields are hex SHA-256 digests of
+    the file bytes, `solver_args` / `verifier_args` are the exact argv lists.
+    The verifier fields are null for SAT instances because no replay runs;
+    `replay_result` mirrors SolveOutcome.proof_verified; `model_validated` is
+    True for SAT and null for UNSAT; `wall_seconds` is solve plus replay time.
+    """
+
+    m: int
+    k: int
+    ell: int
+    n: int
+    status: str
+    cnf_path: str
+    cnf_sha256: str
+    proof_path: str | None
+    proof_sha256: str | None
+    solver_path: str
+    solver_sha256: str
+    solver_version: str | None
+    solver_args: list[str]
+    seed: int
+    verifier_path: str | None
+    verifier_sha256: str | None
+    verifier_args: list[str] | None
+    replay_result: bool | None
+    model_validated: bool | None
+    wall_seconds: float
+    recorded_at: str
+
+    def to_json_line(self) -> str:
+        """Serialize as a single JSON object (no trailing newline), keys in field order."""
+        return json.dumps(asdict(self), ensure_ascii=True)
 
 
 @dataclass(frozen=True)
@@ -192,6 +244,12 @@ class SchurModSolver:
         self.proof_dir.mkdir(parents=True, exist_ok=True)
         self.cache: dict[tuple[int, int, int, int], SolveOutcome] = {}
         self._pysat_solver_cls = self._load_pysat_solver()
+        # Certified-record fingerprints, computed once per run (certified mode only).
+        self._solver_path: str | None = None
+        self._solver_sha256: str | None = None
+        self._solver_version: str | None = None
+        self._solver_version_probed = False
+        self._verifier_sha256: dict[str, str] = {}
 
     @staticmethod
     def _load_pysat_solver():
@@ -327,12 +385,17 @@ class SchurModSolver:
             coloring.append(chosen)
         return tuple(coloring)
 
+    @staticmethod
+    def _verifier_command(drat_trim: str, cnf_path: Path, proof_path: Path) -> list[str]:
+        """The exact drat-trim argv used for replay (shared with the certified record)."""
+        return [drat_trim, str(cnf_path), str(proof_path)]
+
     def _verify_proof(self, cnf_path: Path, proof_path: Path) -> bool | None:
         drat_trim = shutil_which("drat-trim")
         if drat_trim is None:
             return None
         proc = subprocess.run(
-            [drat_trim, str(cnf_path), str(proof_path)],
+            self._verifier_command(drat_trim, cnf_path, proof_path),
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
@@ -340,6 +403,156 @@ class SchurModSolver:
             check=False,
         )
         return proc.returncode == 0 and "s VERIFIED" in proc.stdout
+
+    def _resolve_solver_path(self) -> str:
+        """Path of the CaDiCaL binary that subprocess.run executes for `cadical_bin`."""
+        if self._solver_path is not None:
+            return self._solver_path
+        name = self.cadical_bin
+        if os.sep in name or (os.altsep is not None and os.altsep in name):
+            resolved: str | None = str(Path(name).resolve())
+        else:
+            resolved = shutil_which(name)
+        if resolved is None or not Path(resolved).is_file():
+            raise RuntimeError(
+                f"certified mode: cannot locate the solver binary {name!r} to fingerprint it"
+            )
+        self._solver_path = resolved
+        return resolved
+
+    @staticmethod
+    def _probe_solver_version(solver_path: str) -> str | None:
+        """Output of `<solver> --version`, or None when the probe fails (never raises)."""
+        try:
+            proc = subprocess.run(
+                [solver_path, "--version"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                timeout=60,
+                check=False,
+            )
+        except (OSError, ValueError, subprocess.SubprocessError):
+            return None
+        if proc.returncode != 0:
+            return None
+        version = proc.stdout.strip()
+        return version or None
+
+    def _solver_fingerprint(self) -> tuple[str, str, str | None]:
+        """(path, sha256, version) of the solver binary; hashed and probed once per run."""
+        solver_path = self._resolve_solver_path()
+        if self._solver_sha256 is None:
+            try:
+                self._solver_sha256 = sha256_file(Path(solver_path))
+            except OSError as exc:
+                raise RuntimeError(
+                    f"certified mode: cannot hash the solver binary {solver_path}: {exc}"
+                ) from exc
+        if not self._solver_version_probed:
+            self._solver_version = self._probe_solver_version(solver_path)
+            self._solver_version_probed = True
+        return solver_path, self._solver_sha256, self._solver_version
+
+    def _verifier_fingerprint(self, verifier_path: str) -> str:
+        """SHA-256 of the drat-trim binary; hashed once per run per path."""
+        digest = self._verifier_sha256.get(verifier_path)
+        if digest is None:
+            try:
+                digest = sha256_file(Path(verifier_path))
+            except OSError as exc:
+                raise RuntimeError(
+                    f"certified mode: cannot hash the verifier binary {verifier_path}: {exc}"
+                ) from exc
+            self._verifier_sha256[verifier_path] = digest
+        return digest
+
+    def _write_certified_record(
+        self,
+        m: int,
+        k: int,
+        ell: int,
+        outcome: SolveOutcome,
+        solver_args: Sequence[str],
+        replay_seconds: float,
+    ) -> CertifiedRecord:
+        """Append one certified-records.jsonl line for an accepted SAT/UNSAT outcome.
+
+        Called only in certified mode, after `_validate_model` (SAT) or the
+        drat-trim replay (UNSAT) has succeeded. This never alters the outcome;
+        any failure to fingerprint the inputs or to append the line raises
+        RuntimeError so that certified mode fails closed.
+        """
+        where = f"(m={m}, k={k}, ell={ell}, n={outcome.n})"
+        if outcome.status not in (SAT, UNSAT):
+            raise RuntimeError(
+                f"certified mode: refusing to record a {outcome.status} outcome for {where}"
+            )
+        if outcome.cnf_path is None:
+            raise RuntimeError(f"certified mode: outcome for {where} has no CNF path to record")
+        if outcome.status == UNSAT and outcome.proof_path is None:
+            raise RuntimeError(f"certified mode: UNSAT outcome for {where} has no proof path to record")
+
+        try:
+            cnf_sha256 = sha256_file(outcome.cnf_path)
+            proof_sha256 = (
+                sha256_file(outcome.proof_path) if outcome.proof_path is not None else None
+            )
+        except OSError as exc:
+            raise RuntimeError(
+                f"certified mode: cannot hash the CNF/proof files for {where}: {exc}"
+            ) from exc
+        solver_path, solver_sha256, solver_version = self._solver_fingerprint()
+
+        verifier_path: str | None = None
+        verifier_sha256: str | None = None
+        verifier_args: list[str] | None = None
+        if outcome.status == UNSAT:
+            assert outcome.proof_path is not None
+            verifier_path = shutil_which("drat-trim")
+            if verifier_path is None:
+                raise RuntimeError(
+                    f"certified mode: drat-trim is absent from PATH while recording {where}"
+                )
+            verifier_sha256 = self._verifier_fingerprint(verifier_path)
+            verifier_args = self._verifier_command(verifier_path, outcome.cnf_path, outcome.proof_path)
+
+        record = CertifiedRecord(
+            m=m,
+            k=k,
+            ell=ell,
+            n=outcome.n,
+            status=outcome.status,
+            cnf_path=str(outcome.cnf_path),
+            cnf_sha256=cnf_sha256,
+            proof_path=str(outcome.proof_path) if outcome.proof_path is not None else None,
+            proof_sha256=proof_sha256,
+            solver_path=solver_path,
+            solver_sha256=solver_sha256,
+            solver_version=solver_version,
+            solver_args=list(solver_args),
+            seed=self.seed,
+            verifier_path=verifier_path,
+            verifier_sha256=verifier_sha256,
+            verifier_args=verifier_args,
+            replay_result=outcome.proof_verified,
+            model_validated=True if outcome.status == SAT else None,
+            wall_seconds=outcome.runtime_seconds + replay_seconds,
+            recorded_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        )
+
+        records_path = self.proof_dir / CERTIFIED_RECORDS_FILENAME
+        try:
+            with records_path.open("a", encoding="ascii") as handle:
+                handle.write(record.to_json_line())
+                handle.write("\n")
+                handle.flush()
+        except OSError as exc:
+            raise RuntimeError(
+                f"certified mode: cannot append the certified record for {where} "
+                f"to {records_path}: {exc}"
+            ) from exc
+        return record
 
     def _validate_model(self, m: int, k: int, ell: int, coloring: Sequence[int]) -> None:
         """Re-check a parsed SAT model against the modular Schur condition.
@@ -462,6 +675,7 @@ class SchurModSolver:
             self.cache[key] = outcome
             return outcome
         runtime = time.perf_counter() - start
+        replay_seconds = 0.0
 
         if proc.returncode == 10:
             coloring = self._parse_solution(sol_path, n, k)
@@ -482,7 +696,9 @@ class SchurModSolver:
                         f"certified mode: UNSAT at (m={m}, k={k}, ell={ell}, n={n}) "
                         f"but the DRAT proof file is absent at {proof_path}"
                     )
+                replay_start = time.perf_counter()
                 proof_verified = self._verify_proof(cnf_path, proof_path)
+                replay_seconds = time.perf_counter() - replay_start
                 if proof_verified is None:
                     raise RuntimeError(
                         f"certified mode: UNSAT at (m={m}, k={k}, ell={ell}, n={n}) "
@@ -525,6 +741,8 @@ class SchurModSolver:
                 f"with exit code {proc.returncode} and output:\n{proc.stdout}"
             )
 
+        if self.certified and outcome.status in (SAT, UNSAT):
+            self._write_certified_record(m, k, ell, outcome, command, replay_seconds)
         self.cache[key] = outcome
         return outcome
 
@@ -576,6 +794,15 @@ def shutil_which(name: str) -> str | None:
         if candidate.exists() and os.access(candidate, os.X_OK):
             return str(candidate)
     return None
+
+
+def sha256_file(path: Path) -> str:
+    """Hex SHA-256 of the bytes of `path`, streamed in 1 MiB chunks."""
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def format_coloring(coloring: Sequence[int] | None) -> str:
@@ -994,7 +1221,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         help=(
             "Certified mode: skip PySAT, run only the external CaDiCaL binary with "
             "DRAT output, and require drat-trim to replay every UNSAT proof "
-            "(fail closed on any missing or failed replay). Default is exploratory "
+            "(fail closed on any missing or failed replay), and append one JSON line "
+            "per solved instance (solver/verifier hashes and versions, argv, CNF and "
+            "proof hashes, replay result) to artifacts/proof/certified-records.jsonl. "
+            "Default is exploratory "
             "mode: fast, PySAT allowed, no certification claim."
         ),
     )

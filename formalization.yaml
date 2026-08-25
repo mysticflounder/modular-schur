@@ -19,8 +19,8 @@ project:
   private_repo: "https://github.com/flound1129/schur-numbers"  # the working repo; the public tree is a curated export of it
 
   # Palomar Registry submission fields.
-  # NOTE: the arXiv category and MSC2020 codes below are proposed, not confirmed
-  # by the author. Confirm them before submitting.
+  # The arXiv categories and MSC2020 codes below were confirmed by the author
+  # on 2026-08-24.
   arxiv_categories: ["math.CO", "math.NT"]           # [required] 1-2 categories
   msc2020: ["05D10", "11B13", "11B75", "68V20"]      # [required] 1-8 codes
   originality: "original"        # [required] original result, not a formalization of a third-party paper
