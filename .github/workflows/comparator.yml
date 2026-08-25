@@ -37,16 +37,35 @@ on:
 jobs:
   conformance:
     name: conformance + axiom audit (validated)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4 (v4.4.0)
 
       - name: Install elan (Lean toolchain manager)
         run: |
-          curl -sSfL https://github.com/leanprover/elan/releases/latest/download/elan-x86_64-unknown-linux-gnu.tar.gz \
-            | tar xz
+          set -euo pipefail
+          # Pinned elan release v4.2.3 (published 2026-06-08), asset
+          # elan-x86_64-unknown-linux-gnu.tar.gz. The elan release publishes no
+          # checksum file, so this SHA-256 was computed locally with
+          # `shasum -a 256` on the asset downloaded 2026-08-24.
+          ELAN_VERSION=v4.2.3
+          ELAN_ASSET=elan-x86_64-unknown-linux-gnu.tar.gz
+          ELAN_SHA256=df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2
+          curl -sSfL -o "$ELAN_ASSET" \
+            "https://github.com/leanprover/elan/releases/download/$ELAN_VERSION/$ELAN_ASSET"
+          echo "$ELAN_SHA256  $ELAN_ASSET" | sha256sum -c -
+          tar xzf "$ELAN_ASSET"
           ./elan-init -y --default-toolchain "$(cat lean/lean-toolchain)"
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Print pinned dependency versions
+        # The literals here must match the pins used by this job's steps
+        # (actions/checkout, ELAN_* in the Install elan step).
+        run: |
+          echo "actions/checkout: 11d5960a326750d5838078e36cf38b85af677262 (v4 = v4.4.0)"
+          echo "elan: v4.2.3 elan-x86_64-unknown-linux-gnu.tar.gz sha256=df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2"
+          echo "lean-toolchain: $(cat lean/lean-toolchain)"
+          echo "lean --version: $(cd lean && lean --version)"
 
       - name: Fetch mathlib build cache
         working-directory: lean
@@ -60,7 +79,7 @@ jobs:
 
   comparator:
     name: leanprover/comparator (nanoda + default kernel)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Tag-pinned to the project's lean-toolchain. Blocking: this job was held
     # non-blocking only until a first green CI run confirmed the real-landrun
     # sandbox and the nanoda + Lean default kernel legs on a runner — first
@@ -69,14 +88,36 @@ jobs:
     # A failure here is either a real regression in the 12 gated theorems or
     # drift in one of the pinned tool revisions below — both worth stopping for.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4 (v4.4.0)
 
       - name: Install elan
         run: |
-          curl -sSfL https://github.com/leanprover/elan/releases/latest/download/elan-x86_64-unknown-linux-gnu.tar.gz \
-            | tar xz
+          set -euo pipefail
+          # Pinned elan release v4.2.3 (published 2026-06-08), asset
+          # elan-x86_64-unknown-linux-gnu.tar.gz. The elan release publishes no
+          # checksum file, so this SHA-256 was computed locally with
+          # `shasum -a 256` on the asset downloaded 2026-08-24.
+          ELAN_VERSION=v4.2.3
+          ELAN_ASSET=elan-x86_64-unknown-linux-gnu.tar.gz
+          ELAN_SHA256=df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2
+          curl -sSfL -o "$ELAN_ASSET" \
+            "https://github.com/leanprover/elan/releases/download/$ELAN_VERSION/$ELAN_ASSET"
+          echo "$ELAN_SHA256  $ELAN_ASSET" | sha256sum -c -
+          tar xzf "$ELAN_ASSET"
           ./elan-init -y --default-toolchain "$(cat lean/lean-toolchain)"
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Print pinned dependency versions
+        # The literals here must match the pins used by this job's steps
+        # (actions/checkout, ELAN_* in the Install elan step,
+        # dtolnay/rust-toolchain, CMP_SHA in the build step).
+        run: |
+          echo "actions/checkout: 11d5960a326750d5838078e36cf38b85af677262 (v4 = v4.4.0)"
+          echo "dtolnay/rust-toolchain: 4360b52568e2003a75bf9bc1d59f33a8e3fc893c (stable, resolved 2026-08-24)"
+          echo "leanprover/comparator pinned commit (CMP_SHA): 7a0cae3df7a0200ff330c82420b8d88a51c9cac7 (tag v4.28.0)"
+          echo "elan: v4.2.3 elan-x86_64-unknown-linux-gnu.tar.gz sha256=df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2"
+          echo "lean-toolchain: $(cat lean/lean-toolchain)"
+          echo "lean --version: $(cd lean && lean --version)"
 
       - name: Fetch mathlib build cache
         working-directory: lean
@@ -88,7 +129,7 @@ jobs:
         run: ./scripts/lake-build.sh Challenge Solution
 
       - name: Install Rust (for nanoda)
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable, resolved 2026-08-24
 
       - name: Build landrun, comparator (+ matched lean4export), and nanoda
         run: |

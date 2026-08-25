@@ -39,15 +39,16 @@ sources:                                             # [required]
       S_m(k,ℓ) = m/gcd(m,ℓ-1) - 1 for k ≥ n-1) is the headline machine-verified
       result; it subsumes and extends the two prior per-modulus sources below.
   - title: "Modular Schur numbers"
-    authors: ["Jonathan Chappelon", "Manuel P. Revuelta Marchena", "María I. Sanz Domínguez"]
+    authors: ["Jonathan Chappelon", "María Pastora Revuelta Marchena", "María Isabel Sanz Domínguez"]
     id: "Electron. J. Combin. 20(2) (2013) #P61; arXiv:1306.5635"
     type: "article"
     note: >
       Introduced S_m(k,ℓ); closed m ∈ {1,2,3}. Universal upper bound
-      S_m(k,ℓ) ≤ m-1 (Lemma 2.2 here). Partially verified: the arXiv ID resolves
-      to a paper with this title, but no local copy exists, so the author list,
-      the journal reference, and these three content claims are unchecked
-      against the source. See docs/references/.
+      S_m(k,ℓ) ≤ m-1 (Lemma 2.2 here). Checked against the published text
+      (Electron. J. Combin. 20(2) (2013) #P61, DOI 10.37236/2374) on 2026-08-24:
+      authors, venue, and these three content claims match; a copy is archived at
+      docs/references/chappelon-etal-2013.pdf (gitignored, SHA-256 in the
+      reference note). See docs/references/.
   - title: "Modular generalizations of Schur numbers"
     authors: ["J. D'orville", "K. A. Sim", "K. B. Wong", "C. K. Ho"]
     id: "Integers 25 (2025) #A62"
@@ -59,7 +60,8 @@ sources:                                             # [required]
       venue, the m ∈ {4,5,6,7} closure, Theorem 9 (the m = 5 values), Corollary 8
       (prime moduli), and the Problem 1 part numbering were checked against the
       published version (https://math.colgate.edu/~integers/z62/z62.pdf) on
-      2026-08-24; no copy is archived in the repository. See docs/references/.
+      2026-08-24; a copy is archived at docs/references/dorville-etal-2025.pdf
+      (gitignored, SHA-256 in the reference note). See docs/references/.
 
 # project status
 status:
@@ -313,10 +315,9 @@ editorial_review:
     for gcd(m,l-1) > 1. Those frontier results rest on solver certificates and
     have not been run through the axiom audit.
 
-    Metadata. The Chappelon et al. (2013) citation is recorded from secondary
-    notes rather than from a reading of the original; the D'orville et al. (2025)
-    citation was checked against its published version on 2026-08-24. No local
-    copies are archived. Cost, wall time, and
+    Metadata. Both cited sources were checked against their published versions
+    on 2026-08-24; copies are archived under docs/references/ (gitignored PDFs,
+    SHA-256 recorded in the reference notes). Cost, wall time, and
     token totals were not logged during the work and are recorded as
     "not recorded" rather than estimated.
 

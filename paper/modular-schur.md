@@ -1,7 +1,7 @@
 ---
 title: "A uniform closed form for modular Schur numbers $S_m(k,\\ell)$"
 author: Adam McKenna
-date: June 2026
+date: "June 2026, revised 24 August 2026"
 abstract: |
   Choose a modulus $m$ and a length $\ell$. The *modular Schur number*
   $S_m(k,\ell)$, introduced by Chappelon, Revuelta Marchena, and Sanz
@@ -20,9 +20,11 @@ abstract: |
   settling the large-$k$ regime of their Problem 1, part 5.
 
   We then ask how many colors are actually needed before the formula takes
-  hold, the threshold $k_0(m,\ell)$. For a prime modulus we pin it down
-  exactly, $k_0(p,\ell) = p - 1$, via a saturation lemma of
-  Cauchy--Davenport type. This breaks for composite moduli: in
+  hold, the threshold $k_0(m,\ell)$. For a prime modulus $p$, when
+  $\ell \geq p - 1$ and $\ell \not\equiv 1 \pmod p$, the threshold is
+  exactly $k_0(p,\ell) = p - 1$; the value is already implicit in
+  Corollary 8 of D'orville et al., and we recover it by a saturation lemma
+  of Cauchy--Davenport type. This breaks for composite moduli: in
   $\mathbb{Z}/12$ the pair $\{1,5\}$ is a safe two-element class for suitable
   $\ell$, refuting the natural guess that only singletons are safe. We also
   settle the single-color case,
@@ -30,8 +32,10 @@ abstract: |
   $2 \leq \ell \leq m$ (their Problem 1, part 3).
 
   The composite threshold stays open, but we reduce it to one finite
-  question. A uniform "$K + \tau$" schema collapses each family of pairs
-  sharing the same $n$ to finitely many *cells*. On them we prove a
+  question. In the stable regime $\ell \geq m - 1$ the threshold depends
+  only on $\ell \bmod m$; for that stable threshold $k_0^\infty$, a uniform
+  "$K + \tau$" schema collapses each family of pairs sharing the same $n$
+  to finitely many *cells*. On them we prove a
   *Coordinate-Union Edge Rule* (each cell's conflict graph is a union of
   coordinate cliques) and a *separated-fiber* criterion
   (whenever every axis separates a fiber's atoms, the fiber pins down its
@@ -316,7 +320,7 @@ The proof is elementary: both bounds reduce to the observation that $n$ itself i
 
 The formula follows from \cite[Theorem 4 + Corollary 3]{DSWH2025} by choosing the optimal singleton: the smallest $a \in [1, m-1]$ for which Corollary 3's hypothesis $\ell \equiv 1 \pmod{m/\gcd(a,m)}$ holds is $a = n$, giving the upper bound $S_m(k,\ell) < n$. \cite{DSWH2025} used Corollary 3 only through Corollary 5 (the coprime case $\gcd(m,\ell-1)=1$, where the hypothesis holds for no $a \leq m-1$); they did not record the optimization for general $\gcd$. The principal new content of the present note is the threshold $k_0$ analysis in Section \ref{sec:threshold}: a cyclic-group iterated-sumset saturation lemma (Theorem \ref{thm:coset}), a sharp $k_0$ for prime moduli, and the explicit witness $\{1,5\} \subseteq \mathbb{Z}/12$ showing the prime case does not generalize naively. The note also resolves their Problem 1, part 3 in closed form (the single-class case, Section \ref{sec:k1}) and develops structural machinery toward the composite-modulus threshold (Section \ref{sec:structural}).
 
-Theorem \ref{thm:main}, the $k = 1$ case (Theorem \ref{thm:k1}), and the structural reductions of Section \ref{sec:structural} are all formalized in Lean 4; the core closed-form proof was produced with the Aristotle automated theorem prover \cite{aristotle}. The full Lean development, with the precise statements and a guide to the modules, is at <https://github.com/mysticflounder/modular-schur>.
+Theorem \ref{thm:main} and the $k = 1$ case (Theorem \ref{thm:k1}) are formalized in Lean 4 and checked through a comparator gate in the public repository at <https://github.com/mysticflounder/modular-schur>, which carries exactly the ten modules in the import cone of those statements; the core closed-form proof was produced with the Aristotle automated theorem prover \cite{aristotle}. The Lean modules named in Section \ref{sec:structural} for the structural reductions live in the author's private working tree: they are not distributed with the public repository and are not part of its gated verification claim.
 
 ## Organization
 
@@ -606,14 +610,14 @@ Theorem \ref{thm:main} says that $S_m(k,\ell) = n - 1$ once $k$ is large enough.
 $k_0(m, \ell) \leq \max(1, n - 1)$.
 \end{theorem}
 
-In other words: you never need more than $n - 1$ classes before the formula $S_m(k,\ell) = n - 1$ kicks in.
+In other words: for $n \geq 2$ you never need more than $n - 1$ classes before the formula $S_m(k,\ell) = n - 1$ kicks in; for $n = 1$ the threshold is $1$.
 
 \begin{proof}
 Theorem \ref{thm:unified-lower} exhibits a valid $(n-1)$-partition achieving $N = n - 1$ when $n \geq 2$. When $n = 1$ the value is zero, achieved trivially at $k = 1$.
 \end{proof}
 
 \begin{theorem}[Covering lower bound]\label{thm:k0-lower-cov}
-Let $\sigma(m, \ell) := \max\{|C| : C \subseteq \{1, \ldots, n-1\}, C \text{ is } \ell\text{-sum-free mod } m\}$. Then $k_0(m, \ell) \geq \lceil (n-1)/\sigma(m, \ell) \rceil$.
+Assume $n \geq 2$, that is, $\ell \not\equiv 1 \pmod m$. Let $\sigma(m, \ell) := \max\{|C| : C \subseteq \{1, \ldots, n-1\}, C \text{ is } \ell\text{-sum-free mod } m\}$. Then $k_0(m, \ell) \geq \lceil (n-1)/\sigma(m, \ell) \rceil$.
 \end{theorem}
 
 In other words: $\sigma(m, \ell)$ is the maximum number of elements that can share a single safe class. To cover all $n - 1$ elements, you need at least $\lceil (n-1)/\sigma \rceil$ classes.
@@ -624,7 +628,7 @@ If $[1, n-1]$ admits a valid $k$-partition, summing class sizes gives $n - 1 \le
 
 ## Tight threshold for prime modulus
 
-For prime moduli, every non-singleton class eventually becomes unsafe once $\ell$ is large, which forces every class to be a singleton and pins $k_0$ exactly at $n - 1 = p - 1$. The following lemma is the key tool: it describes what the set of all $\ell$-fold sums from a multi-element class looks like, once $\ell$ is large relative to the size of the subgroup that class generates.
+For prime moduli, every non-singleton class eventually becomes unsafe once $\ell$ is large, which forces every class to be a singleton and, for $\ell \not\equiv 1 \pmod p$ (so that $n = p$), pins $k_0$ exactly at $n - 1 = p - 1$. The following lemma is the key tool: it describes what the set of all $\ell$-fold sums from a multi-element class looks like, once $\ell$ is large relative to the size of the subgroup that class generates.
 
 \begin{theorem}[Large-$\ell$ coset criterion]\label{thm:coset}
 Let $C \subseteq \mathbb{Z}/m$ with $|C| \geq 2$, pick $a_0 \in C$, and let $H := \langle C - C \rangle = g\mathbb{Z}/m$ with $g := m/|H|$. For every $\ell \geq |H| - 1$,
@@ -669,12 +673,15 @@ In other words: once $\ell$ is large enough (at least $|H| - 1$), the collection
 \begin{minipage}{\wd\figbox}%
 \caption{Saturation over a prime modulus (Theorem \ref{thm:coset}), for
 $C=\{1,3\}\subseteq\mathbb{Z}/5$. Since $\langle C-C\rangle=\mathbb{Z}/5$ (a prime has
-no proper nontrivial subgroup), the $\ell$-fold sumsets grow
-$1C\subset 2C\subset\cdots$ and fill the whole group after at most $|H|-1=4$ steps.
+no proper nontrivial subgroup), the $\ell$-fold sumsets grow in size,
+$|1C|<|2C|<\cdots$ (Cauchy--Davenport; the sets themselves are nested only
+after the shift $D=C-a_0$ used in the proof), and fill the whole group after
+at most $|H|-1=4$ steps.
 The filled set $\ell C=\mathbb{Z}/5$ then contains $C$ itself (mustard ring), so some
 $\ell$-sum of elements of $C$ equals an element of $C$, and the class is not
 $\ell$-sum-free. The same collapse hits every class of size $\ge 2$ over a prime, so
-only singletons survive and $k_0(p,\ell)=p-1$ (Corollary \ref{cor:prime-sharp}).}
+only singletons survive and, for $\ell\ge p-1$ with $\ell\not\equiv 1\pmod p$,
+$k_0(p,\ell)=p-1$ (Corollary \ref{cor:prime-sharp}).}
 \label{fig:coset-fill}
 \end{minipage}
 \end{figure}
@@ -785,7 +792,7 @@ Write $N^* := \min(\ell - 1, \lfloor m/\ell \rfloor)$.
 \end{proof}
 
 \begin{remark}
-The formula $\min(\ell - 1, \lfloor m/\ell \rfloor)$ interpolates naturally between two regimes. In the \emph{no-wrap} regime $\ell(\ell-1) < m$, one has $\ell - 1 < m/\ell$, so the minimum equals $\ell - 1$: the list is bottlenecked by the element $1$ summing up to $\ell$, not by any wraparound (consistent with the observation in \cite{DSWH2025} for small $\ell$). In the \emph{wrap} regime $\ell(\ell-1) \geq m$ (D'orville's Problem 1, part 3), the minimum is $\lfloor m/\ell \rfloor$: the list is bottlenecked by $\ell$-fold sums wrapping around modulo $m$; Figure \ref{fig:k1-regimes} plots both bounds and their minimum for $m = 30$. The formula was empirically verified for $m \in [2,30]$, $\ell \in [2, m]$ (414 cases) before the proof was written.
+The formula $\min(\ell - 1, \lfloor m/\ell \rfloor)$ interpolates naturally between two regimes. In the \emph{no-wrap} regime $\ell(\ell-1) < m$, one has $\ell - 1 < m/\ell$, so the minimum equals $\ell - 1$: the list is bottlenecked by the element $1$ summing up to $\ell$, not by any wraparound (consistent with the observation in \cite{DSWH2025} for small $\ell$). In the \emph{wrap} regime $\ell(\ell-1) \geq m$ (D'orville's Problem 1, part 3), the minimum is $\lfloor m/\ell \rfloor$: the list is bottlenecked by $\ell$-fold sums wrapping around modulo $m$; Figure \ref{fig:k1-regimes} plots both bounds and their minimum for $m = 30$. The formula was empirically verified for $m \in [2,30]$, $\ell \in [2, m]$ (435 cases) before the proof was written.
 \end{remark}
 
 \begin{figure}[t]
@@ -853,17 +860,19 @@ For composite $m$, the threshold $k_0(m,\ell)$ is not pinned by Theorem \ref{thm
 
 ## The $K + \tau$ schema
 
-The key insight is that all pairs $(m, \ell)$ sharing the same quotient $n = m/\gcd(m, \ell-1)$ produce essentially the same covering problem, and that problem depends only on a *normalized cell* $d_0$ derived from $\gcd(m, \ell-1)$.
+Throughout this section the threshold is taken in the *stable regime* $\ell \geq m - 1$. There, by Theorem \ref{thm:coset} (every class $C$ with $|C| \geq 2$ has $|\langle C - C \rangle| \leq m$, so the theorem applies) together with the singleton criterion (Lemma \ref{lem:singleton}), whether a class is $\ell$-sum-free depends only on $c := \ell \bmod m$; hence $k_0(m,\ell)$ is a function of $(m, c)$ there, and we write $k_0^\infty(m, c)$ for this common value. The reduction below is a statement about $k_0^\infty$, not about the ordinary threshold at small $\ell$: the pairs $(m,\ell) = (5,2)$ and $(5,3)$ share $n = 5$ and the normalized cell $d_0 = 1$ defined next, yet $k_0(5,2) = 2$ (the partition $\{1,4\} \sqcup \{2,3\}$ is safe) while $k_0(5,3) = 4$.
+
+The key insight is that all pairs $(m, \ell)$ in the stable regime sharing the same quotient $n = m/\gcd(m, \ell-1)$ produce the same covering problem, and that problem depends only on a *normalized cell* $d_0$ derived from $\gcd(m, \ell-1)$.
 
 Fix a quotient $n \geq 2$, write $n = \prod_i p_i^{f_i}$, and set $\mathrm{cap}_i := \lfloor \log_{p_i}(n - 1) \rfloor$. For any $\ell$ with $m/\gcd(m, \ell-1) = n$, write $d := \gcd(m, \ell - 1)$ and define the *normalized cell*
 $$d_0 := \prod_i p_i^{\min(v_{p_i}(d),\ \mathrm{cap}_i)}.$$
 The maximal $\ell$-sum-free fragments on $\{1, \ldots, n-1\} \subseteq \mathbb{Z}/m$ depend only on $d_0$: prime factors of $d$ outside the support of $n$ are absorbed by $g \mapsto g/\gcd(g, d)$ in the singleton criterion (Lemma \ref{lem:singleton}), and exponents above $\mathrm{cap}_i$ produce divisors $> n - 1$. Splitting any optimal cover into *private* fragments (those containing a witness point in no other fragment) and the *residual* cover yields
-$$k_0(m, \ell) = K(d_0) + \tau(d_0),$$
+$$k_0^\infty(m, c) = K(d_0) + \tau(d_0),$$
 where $K(d_0)$ counts the private fragments and $\tau(d_0)$ is the minimum number of non-private fragments needed to cover the points left over once the private (forced) fragments are removed. Each fixed-quotient family thus reduces to a finite collection of $\prod_i (\mathrm{cap}_i + 1)$ normalized cells, and per-cell $\tau$ is an exact (NP-hard but tractable in practice) set-cover computation on the *atom graph* $G_{\mathrm{atom}}(d_0)$: its vertices are the *atoms* of the residual universe $R(d_0)$ (maximal sets of points lying in exactly the same maximal residual fragments), and two atoms are adjacent when some fragment contains both.
 
 ## The Coordinate-Union Edge Rule
 
-The atom graph has hidden product structure that makes the set-cover problem more tractable. Each atom $A$ carries a set of *coordinates*, one per prime $g$ in its support pattern, that record which residue class modulo $g$ the atom lies in. The edge rule says: two atoms are adjacent exactly when they share a coordinate.
+The atom graph has hidden product structure that makes the set-cover problem more tractable. Each atom $A$ carries a set of *coordinates*, one per axis label $g$ in its support pattern (the labels are not necessarily primes; the axes in the examples below are prime powers such as $121$, $125$, and $256$), that record which residue class modulo $g$ the atom lies in. The edge rule says: two atoms are adjacent exactly when they share a coordinate.
 
 Write the maximal residual fragments of a cell as $F_1, \ldots, F_s$ with *labels* $g_i \mid m$ and *anchors* $r_i$. For an atom $A$, its *support pattern* is $P(A) := \{g_i : A \subseteq F_i\} \setminus \{1\}$, and for $g \in P(A)$ its *coordinate* is $\rho_g(A) := r_i \bmod g$ for any $i$ with $g_i = g$ and $A \subseteq F_i$. The *same-support fiber* is $X_P := \{A : P(A) = P\}$.
 
@@ -1040,7 +1049,7 @@ In other words: an AET is a cover-and-packing witness that does not require the 
 
 ## Computational frontier and verification basis
 
-Using the schema and the duality engine, every remaining pair $(m,\ell)$ with $m \leq 5500$ has been certified to an explicit value of $k_0$: fixed-quotient family closures for $n \leq 345$, plus direct single-pair certificates for the six remaining pairs $5184 \leq m \leq 5472$. Every per-cell fact is machine-checked in Lean by `native_decide`, which carries the same trust profile as `bv_decide`, the Lean community's standard verified-SAT tactic: on the toolchain used (`leanprover/lean4:v4.28.0`) both reduce to the identical axioms `Lean.ofReduceBool` and `Lean.trustCompiler`. The Lean kernel verifies the entire proof apart from the evaluation of the compiled decision procedure, which it delegates to the Lean compiler and the CPU running it; that delegation is sound provided no project-level compiler redirection (`@[extern]`, `@[implemented_by]`, `unsafe`) shadows a verified definition in the evaluated closure, of which the development has none (the only externs it reaches are the Lean-core and Mathlib primitives that `bv_decide`'s own checker also relies on). Beyond the kernel itself, the certification therefore trusts only the Lean compiler and the local CPU: no external solver output, network service, or manual step takes part.
+Using the schema and the duality engine, every remaining pair $(m,\ell)$ with $m \leq 5500$ has been certified to an explicit value of $k_0^\infty$: fixed-quotient family closures for $n \leq 345$, plus direct single-pair certificates for the six remaining pairs $5184 \leq m \leq 5472$. Every per-cell fact is machine-checked in Lean by `native_decide`, which carries the same trust profile as `bv_decide`, the Lean community's standard verified-SAT tactic: on the toolchain used (`leanprover/lean4:v4.28.0`) both reduce to the identical axioms `Lean.ofReduceBool` and `Lean.trustCompiler`. The Lean kernel verifies the entire proof apart from the evaluation of the compiled decision procedure, which it delegates to the Lean compiler and the CPU running it; that delegation is sound provided no project-level compiler redirection (`@[extern]`, `@[implemented_by]`, `unsafe`) shadows a verified definition in the evaluated closure, of which the development has none (the only externs it reaches are the Lean-core and Mathlib primitives that `bv_decide`'s own checker also relies on). Beyond the kernel itself, the certification therefore trusts only the Lean compiler and the local CPU: no external solver output, network service, or manual step takes part.
 
 \begin{remark}\label{rem:tw}
 An earlier approach bounded $\tau(d_0)$ by a nice-tree-decomposition DP on $G_{\mathrm{atom}}(d_0)$ with a three-term frontier-bag bound. On the $n = 220$ family ($d = 110t$, cap profile $(\mathrm{cap}_2, \mathrm{cap}_5, \mathrm{cap}_{11}) = (7, 3, 2)$, a collection of $96$ cells) an exhaustive scan gives a maximum treewidth $\max_{d_0} \mathrm{tw}(G_{\mathrm{atom}}(d_0)) = 15$, attained at $d_0 = 440$ and matching the bag-size bound $16$. The bound is $n$-specific, however: the treewidth already exceeds $15$ at $n = 440$ (the same prime support $\{2,5,11\}$), so the tree-decomposition route does not give a uniform DP across quotients. The Coordinate-Union Edge Rule and the cover/packing duality above superseded it as the per-cell tool.
@@ -1052,7 +1061,13 @@ The paper closes three questions from the prior literature and opens several new
 
 1. *AET existence and a closed form for $\tau(d_0)$.* The reductions of Section \ref{sec:structural} reduce the composite-$m$ threshold problem to a single obstruction: does every non-separated fiber admit an anchored exact transversal (Proposition \ref{prop:aet})? The answer is no, and not only for other moduli: beyond the $27 = 3^3$ coordinate axis that produces AET-failing fibers at $n \in \{330, 660\}$ (cover $14$, packing $13$), a certified failure exists on the dyadic family itself, at $n = 880$, $d_0 = 35200$, $P = (121, 125, 256)$, with packing $48$ and cover $50$. Empirically the failures are isolated: an AET exists on every other dyadic fiber tested, which covers around $30$ WAP-failing fibers, including difficult cases with large prime-power components ($11^2$ and $5^3$; $5^4$ and $11^3$), for $n$ up to $14080$, and all $75$ fibers at $n \in \{220, 440\}$ that are WAP but not separated, where the exact minimum cover equals the exact maximum packing throughout. No proof covers the passing region: the two-axis case is conditional on a König/parallel-edge argument and the three-axis case has no structural argument at all. A closed form for $\tau(d_0)$ therefore cannot lean on AET alone; it must either characterize where AET fails or bound the cover--packing deficit there directly. The deficit across four dyadic levels grew $5 \to 7 \to 11 \to 14$ with no convergent trajectory, and every simple scalar predictor of $\tau$ (dyadic level, support exponent, maximal class size, class counts, projection size) has been ruled out by the data, leaving the shape of the covering certificate as the only surviving predictor. A uniform closed form for $\tau(d_0)$ at composite $m$ thus remains conjectural.
 2. *Boundary $1 < k < n - 1$.* Theorem \ref{thm:main} governs the "many classes" regime $k \geq n - 1$, and Theorem \ref{thm:k1} settles the single-class case $k = 1$. The intermediate regime $1 < k < n - 1$, where classes must be simultaneously large and $\ell$-sum-free, is empirically eventually periodic in $\ell \bmod m$ for fixed $k$ (verified through $m \leq 13$), but there is no formula.
-3. *Optimizing over $\ell$.* For fixed $k$ and $m \to \infty$, what is $\max_\ell S_m(k, \ell)$? The pointwise value is Theorem \ref{thm:main}; taking the maximum over $\ell$ turns the question into a divisor-counting problem on $m$.
+3. *Optimizing over $\ell$.* For fixed $k$ and $m \to \infty$, what is $\max_\ell S_m(k, \ell)$? Theorem \ref{thm:main} supplies the pointwise value only when $k \geq n - 1$, a condition that depends on $\ell$, so for fixed $k$ the maximum can come from the boundary regime of the previous item: at $m = 100$, $k = 1$, Theorem \ref{thm:k1} gives $S_{100}(1, 10) = 9$, while Theorem \ref{thm:main} at $k = 1$ covers only the $\ell$ with $n \leq 2$. Within the range where Theorem \ref{thm:main} applies the question is a divisor-counting problem on $m$; outside it, it is open.
+
+# Revision history {#sec:revisions}
+
+- *June 2026.* First version.
+- *2026-08-23.* Theorem \ref{thm:pid} restated with separation on every axis of $P$; the earlier statement, which assumed weak axis projection on a single axis, is false for $|P| \geq 2$ (at $(n, d_0, P) = (220, 110, (8, 25))$ the true cover is $1$ where $12$ was claimed). The abstract and open problem 1 now record the certified dyadic AET failure at $n = 880$.
+- *2026-08-24.* Section \ref{sec:structural} restated for the stable-regime threshold $k_0^\infty$, which is now defined there; the earlier display $k_0(m,\ell) = K(d_0) + \tau(d_0)$ for the ordinary threshold is false ($(5,2)$ and $(5,3)$ share a cell with $k_0 = 2$ and $4$). The hypotheses $\ell \geq p - 1$ and $\ell \not\equiv 1 \pmod p$ added to the prime-threshold statements in the abstract and in the caption of Figure \ref{fig:coset-fill}, with the value attributed to D'orville et al., Corollary 8. Open problem 3 corrected. $n \geq 2$ added to Theorem \ref{thm:k0-lower-cov}; the gloss after Theorem \ref{thm:k0-upper} corrected at $n = 1$; the caption of Figure \ref{fig:coset-fill} no longer asserts $1C \subset 2C$; the one-color check count corrected from $414$ to $435$; "axis label" replaces "prime" for the atom coordinates; the Lean formalization sentence in the introduction narrowed to the public modules.
 
 # References
 
