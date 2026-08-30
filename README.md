@@ -128,6 +128,15 @@ The named project-only capstones have a reproducible transitive axiom audit:
 cd lean && lake env lean ModularSchur/PublicAxiomAudit.lean
 ```
 
+## Palomar Registry metadata
+
+`formalization.yaml` follows the v0.4 metadata schema. For a future Palomar
+submission, select project path `lean`, repository-relative comparator path
+`lean/comparator/config.json`, and repository-relative metadata path
+`formalization.yaml`. The submitted commit must be a full 40-character public
+SHA chosen only after its verification checks pass; the repository does not
+record a prospective self-referential SHA in its metadata.
+
 Maintainers use the global `lake-build` wrapper for top-level builds. Plain
 `lake build` remains the portable command for a clean external checkout.
 
@@ -170,13 +179,13 @@ re-computation, not a verification of the original artifacts.
 ## Citing
 
 A. McKenna, *A uniform closed form for modular Schur numbers $S_m(k,\ell)$*
-(2026). The Lean development was written by Claude (Anthropic) through Claude
-Code, which produced the definitions, the statements, the `IntegerBridge` and
-`K1Theorem` modules and the comparator layer; [Aristotle](https://harmonic.fun)
-(Achim et al., 2025, [arXiv:2510.01346](https://arxiv.org/abs/2510.01346))
-filled the proof bodies of 10 lemmas in the residue-side modules. See the
-`Provenance` section of the [status page](https://mysticflounder.github.io/modular-schur/)
-for the per-theorem split.
+(2026). Multiple AI-assisted workflows contributed under human direction:
+Claude (Anthropic) through Claude Code, [Aristotle](https://harmonic.fun)
+(Achim et al., 2025, [arXiv:2510.01346](https://arxiv.org/abs/2510.01346)), and
+OpenAI Codex/GPT-5. The exact Aristotle contribution is recorded by trailers on
+commits `e07bf41` and `7c56323`; Git does not provide reliable finer attribution
+for every other file. See the `Provenance` section of the
+[status page](https://mysticflounder.github.io/modular-schur/).
 
 ## Licence
 

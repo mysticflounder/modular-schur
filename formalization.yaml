@@ -1,4 +1,5 @@
-# formalization.yaml (v0.3): repo-root metadata for formalization projects.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# formalization.yaml (v0.4): repo-root metadata for formalization projects.
 # Requiredness/conformance:
 #   - Fields marked [required] should be present and filled.
 #   - Fields not marked [required] are examples/recommended metadata only; they may be omitted.
@@ -8,45 +9,55 @@
 # Cost and token totals were not logged during the work and are recorded as
 # "not recorded" rather than estimated.
 
-version: "v0.3"
+version: "v0.4"
 
 # project - the formalization itself (not the source).
 project:
   name: "schur-numbers"                              # [required]
+  description: >
+    Lean 4 formalization of modular Schur numbers. For m ≥ 2 and ℓ ≥ 2, put
+    n = m/gcd(m,ℓ-1). The main result proves the uniform closed form
+    S_m(k,ℓ) = n-1 for every k ≥ n-1. The development also proves the residue
+    formulation, universal and local obstructions, the exact k=1 formula for
+    2 ≤ ℓ ≤ m, and kernel-audited canonical-cover and critical-core reductions.
+    Twelve Mathlib-only headline statements are checked by the Palomar
+    Comparator configuration; the additional public project layer is audited
+    separately and is explicitly outside that statement-comparison gate.
   authors: ["Adam McKenna"]                          # [required]
+  responsible_maintainers: ["Adam McKenna"]          # [required by Palomar]
   license: "Apache-2.0"                              # [required]
   repo: "https://github.com/mysticflounder/modular-schur"   # [required] canonical PUBLIC repo, and the Palomar submission target
-  private_repo: "https://github.com/flound1129/schur-numbers"  # the working repo; the public tree is a curated export of it
 
-  # Palomar submission is NOT YET COMPLETE. Select and submit an immutable
-  # 40-character public commit SHA only after the candidate commit exists and
-  # its current registry-layout and CI checks pass. A snapshot cannot reliably
-  # name its own Git object, so the selected SHA belongs in the submission
-  # record and release handoff rather than this file.
-  # Palomar Registry submission fields.
-  # The arXiv categories and MSC2020 codes below were confirmed by the author
-  # on 2026-08-24.
-  arxiv_categories: ["math.CO", "math.NT"]           # [required] 1-2 categories
-  msc2020: ["05D10", "11B13", "11B75", "68V20"]      # [required] 1-8 codes
-  originality: "original"        # [required] original result, not a formalization of a third-party paper
-  development_kind: "substantive"  # [required] substantive development, not a thin wrapper
-  comparator_config_path: "lean/comparator/config.json"  # non-default name; conventionally comparator.json
-  project_path: "lean"           # non-default layout: the Lake project is in lean/, not at the repo root
+# Palomar submission is NOT YET COMPLETE. Select and submit an immutable
+# 40-character public commit SHA only after the candidate commit exists and its
+# current registry-layout and CI checks pass. A snapshot cannot reliably name
+# its own Git object, so the selected SHA belongs in the submission record and
+# release handoff rather than this file.
+
+# This public repository contains the substantive Lean source. Omitting a
+# repository block is the v0.4 spelling for a substantive development.
+classification:
+  arxiv: ["math.CO", "math.NT"]
+  msc2020: ["05D10", "11B13", "11B75", "68V20"]
 
 # sources - what was formalized / extended.
 sources:                                             # [required]
   - title: "A uniform closed form for modular Schur numbers S_m(k,ℓ)"
     authors: ["Adam McKenna"]
     id: "McKenna 2026 (this project's paper; paper/modular-schur.pdf)"
-    type: "preprint"
+    type: "original-proof"
+    location: "Theorem 1.2 and its accompanying Lean formalization"
+    relationship: "other"
     note: >
-      The project's own writeup. Theorem 1.2 (the uniform closed form
-      S_m(k,ℓ) = m/gcd(m,ℓ-1) - 1 for k ≥ n-1) is the headline machine-verified
-      result; it subsumes and extends the two prior per-modulus sources below.
+      First presentation of the uniform result by this formalization and its
+      accompanying project writeup. Theorem 1.2 is the headline
+      machine-verified result; it subsumes and extends the two prior
+      per-modulus sources below.
   - title: "Modular Schur numbers"
     authors: ["Jonathan Chappelon", "María Pastora Revuelta Marchena", "María Isabel Sanz Domínguez"]
     id: "Electron. J. Combin. 20(2) (2013) #P61; arXiv:1306.5635"
     type: "article"
+    relationship: "background"
     note: >
       Introduced S_m(k,ℓ); closed m ∈ {1,2,3}. Universal upper bound
       S_m(k,ℓ) ≤ m-1 (Lemma 2.2 here). Checked against the published text
@@ -58,6 +69,7 @@ sources:                                             # [required]
     authors: ["J. D'orville", "K. A. Sim", "K. B. Wong", "C. K. Ho"]
     id: "Integers 25 (2025) #A62"
     type: "article"
+    relationship: "background"
     note: >
       Closed m ∈ {4,5,6,7} by residue case analysis; posed the m ≥ 8 case as
       Problem 1.5. Their Problem 1.3 (the k=1 value) is resolved here as
@@ -95,28 +107,23 @@ status:
     generated native-evaluation axiom. The public 27-module project allowlist
     has a separate named-capstone audit in
     lean/ModularSchur/PublicAxiomAudit.lean and contains no native_decide.
-    First measured 2026-06-20; re-checked on every CI run since, and
-    independently confirmed against permitted_axioms by the comparator itself
-    in CI (first public green run 30211804373, 2026-07-26; pre-expansion
-    baseline run 32795126047, commit bae075f, 2026-08-25).
+    First measured 2026-06-20 and independently confirmed against
+    permitted_axioms by the comparator itself in CI. The expanded public
+    release passed both comparator jobs in run 33297349901 at commit
+    6fcb3470d0f22776694bd44ee2a28c87184b953d on 2026-08-30.
   main_results:
-  - declaration: "lean/comparator/config.json theorem_names (12 mathlib-only structural headline claims)"
+  - declaration: "Headline.schurMod_eq"
     file: "lean/comparator/Solution.lean"
     sorry_count: 0
     axioms: ["propext", "Classical.choice", "Quot.sound"]
     comparator_config: "lean/comparator/config.json"
-  - declaration: "ModularSchur.schurMod_eq"
-    file: "lean/ModularSchur/IntegerBridge.lean"
+    note: "Theorem 1.2 in the Mathlib-only comparator surface; the same config checks 12 headline declarations."
+  - declaration: "Headline.schurModResidue_k1"
+    file: "lean/comparator/Solution.lean"
     sorry_count: 0
     axioms: ["propext", "Classical.choice", "Quot.sound"]
     comparator_config: "lean/comparator/config.json"
-    note: "Theorem 1.2: S_m(k,ℓ) = m/gcd(m,ℓ-1) - 1 for k ≥ n-1, integer (Definition 1.1) form."
-  - declaration: "ModularSchur.schurModResidue_k1"
-    file: "lean/ModularSchur/K1Theorem.lean"
-    sorry_count: 0
-    axioms: ["propext", "Classical.choice", "Quot.sound"]
-    comparator_config: "lean/comparator/config.json"
-    literature_dependencies: ["D'orville–Sim–Wong–Ho, Integers 25 (2025) #A62, Problem 1.3"]
+    note: "Resolves D'orville–Sim–Wong–Ho Problem 1.3; the cited problem is provenance, not an assumed result."
   - declaration: "ModularSchur.CanonicalBlocks.axisCover_canonicalExtensionalFamily_eq_seedCountFormula_add_residual"
     file: "lean/ModularSchur/CanonicalSeedCount.lean"
     sorry_count: 0
@@ -135,22 +142,21 @@ status:
 
 # how it was produced.
 # The token counts and spend below were never logged and are recorded as "not
-# recorded". Two AI systems worked on the Lean tree, and the split is recorded
-# from the Git trailers: Claude (Anthropic), driven through Claude Code, wrote
-# every definition, every theorem statement, the IntegerBridge and K1Theorem
-# modules and the whole comparator layer; Aristotle (Harmonic)
-# [Achim et al. 2025] filled the proof bodies of 10 lemmas in seven modules on
-# 2026-04-16 (commits e07bf41 and 7c56323, the only two that carry an Aristotle
-# trailer). Fill the cost/token fields from the actual logs before posting.
+# recorded". Multiple AI workflows contributed under human direction. Git
+# records repository commits, not reliable model/session-to-file attribution,
+# so this is an aggregate process account. The narrow Aristotle contribution
+# is additionally recorded by trailers on commits e07bf41 and 7c56323. Fill
+# cost/token fields only from actual logs.
 automation:                                          # [required]
   methods:
     - method: "agent"                                # AI agents under human direction
-      models: ["claude-opus-4-8"]                   # principal model; the exact set across all sessions was not logged
+      models: ["Anthropic Claude (Opus/Sonnet/Fable; exact session set not reconstructed)"]
       framework: "Claude Code"
       tool_setup: >
-        Claude Code CLI with project skills/hooks (persistent memory, Lean build
-        wrapper with memory/priority caps, doc-check hook). The informal proofs,
-        formalization, and paper draft were iterated together over several sessions.
+        Claude Code under human direction contributed to the original
+        structural formalization, comparator packaging, project documentation,
+        and paper draft. Project skills and hooks provided persistent memory,
+        memory-governed Lean builds, and documentation checks.
       cost:
         wall_time: "not recorded"
         spend_usd: "not recorded"
@@ -159,24 +165,39 @@ automation:                                          # [required]
       prompting_notes: >
         Math-proofs working style: hardest sub-obstruction first; neutral obstruction
         names; axiom hygiene gated at every checkpoint.
-    - method: "automated_theorem_prover"
+    - method: "other"
       models: ["Aristotle (Harmonic)"]              # per the paper acknowledgments [Achim et al. 2025, arXiv:2510.01346]
       framework: "Aristotle / Harmonic"
       tool_setup: >
         Aristotle filled the proof bodies of 10 lemmas whose statements were
         already written, across ModularSchur.SingletonSafety, UniversalBound,
         UnifiedValue, UnifiedTheorem, Partition, SigmaInfty and StableRange.
-        It did not write the definitions, the statements, the IntegerBridge or
-        K1Theorem modules, or the comparator layer.
+        That bounded contribution is recorded by the Aristotle trailers on
+        commits e07bf41 and 7c56323.
       cost:
         wall_time: "not recorded"
         spend_usd: "not recorded"
         tokens: "not recorded"
+    - method: "agent"
+      models: ["OpenAI GPT-5"]
+      framework: "OpenAI Codex"
+      tool_setup: >
+        Codex agents under human direction contributed to later canonical
+        project-layer formalization, TauClosure trust hardening, public
+        dependency auditing, release tooling, and documentation. Git does not
+        preserve model/session-to-file attribution, so no per-file authorship
+        is asserted here.
+      cost:
+        wall_time: "not recorded"
+        spend_usd: "not recorded"
+        hardware: "API-only / local laptop (no GPU)"
+        tokens: "not recorded"
   spend_usd: "not recorded"
   notes: >
     Human-directed AI autoformalization. The structural closed-form proof is the
-    paper's machine-verified content; the comparator packaging (this gate) was the
-    final auditability step. Token/spend totals are not yet reconstructed.
+    paper's machine-verified content; the comparator and later project-layer
+    audits provide separate public trust boundaries. Token/spend totals are not
+    yet reconstructed.
 
 # fidelity
 fidelity:
@@ -206,12 +227,13 @@ review:
     without asserting anything about it. The authoritative external check is a
     leanprover/comparator run that verifies statement identity and axiom compliance and
     re-runs the nanoda + Lean default kernels (CI:
-    .github/workflows/comparator.yml). That check is GREEN on a runner: the
-    pre-expansion public run 32795126047 (commit bae075f, 2026-08-25) succeeded on both jobs,
-    covering statement identity for all 12, axiom-closure compliance, and replay
-    through both kernels; the first public green run was 30211804373 (2026-07-26). The
-    job is blocking. Still "self-assessed" because no external human peer review has
-    taken place; the comparator is a tool, not a reviewer.
+    .github/workflows/comparator.yml). The expanded public release passed both
+    jobs in run 33297349901 at commit
+    6fcb3470d0f22776694bd44ee2a28c87184b953d on 2026-08-30, covering
+    statement identity for all 12, axiom-closure compliance, and replay through
+    both kernels. The job is blocking. This remains "self-assessed" because no
+    external human peer review has taken place; the comparator is a tool, not a
+    reviewer.
 
 # editorial_review - material for Palomar Registry editorial review.
 editorial_review:
@@ -287,14 +309,13 @@ editorial_review:
     Wong, and Ho) to every gcd, and settles the large-k regime of their Problem
     1, part 5. The k=1 closed form resolves their Problem 1.3.
 
-    Not original, and not claimed as such: the quantity S_m(k,l) itself is due to
-    Chappelon, Revuelta Marchena, and Sanz Dominguez (2013), and the universal
-    bound S_m(k,l) <= m-1 is theirs. Both are restated and reproved here so the
-    formal development is self-contained.
-
-    The formalization is original. It does not wrap or re-export an existing Lean
-    development, and no prior Mathlib or community formalization of modular Schur
-    numbers is known to the author.
+    Prior background is not claimed as original: the quantity S_m(k,l) is due
+    to Chappelon, Revuelta Marchena, and Sanz Dominguez (2013), and the
+    universal bound S_m(k,l) <= m-1 is theirs. Both are restated and reproved so
+    the formal development is self-contained. The uniform closed form and this
+    Lean formalization are original. The repository does not wrap or re-export
+    an existing Lean development, and no prior Mathlib or community
+    formalization of modular Schur numbers is known to the author.
 
   review_roles:
     human: >
@@ -302,20 +323,17 @@ editorial_review:
       each step, and accepted or rejected each result. The author did not hand-write
       the Lean proofs.
     ai: >
-      The informal proofs, the Lean formalization, and the paper draft were produced
-      by AI agents under human direction over several sessions. Two systems worked
-      on the Lean tree. Claude (Anthropic), driven through Claude Code, wrote every
-      definition and every theorem statement, the IntegerBridge and K1Theorem
-      modules, and the comparator layer that restates the results with Mathlib
-      definitions alone. Aristotle (Harmonic) filled the proof bodies of 10 lemmas
-      in seven modules. Of the 12 theorems in the gate, Aristotle supplied the
-      proofs behind seven (schurModResidue_eq, schurModResidue_le,
-      le_schurModResidue, singleton_sumFree_iff, unsafe_witness_residue,
-      not_sumFree_of_mem_zero, sigmaInfty_le); the remaining five (schurMod_eq,
-      schurMod_is_greatest, no_valid_partition_of_ge_m,
-      schurMod_eq_schurModResidue, schurModResidue_k1) were proved in
-      Claude-written modules. Every proof, from either system, is checked by the
-      Lean 4 kernel and replayed by the comparator.
+      The informal proofs, Lean formalization, and paper draft were produced by
+      multiple AI systems under human direction. Claude through Claude Code
+      contributed to the original structural development and comparator
+      packaging. Aristotle filled the 10 proof bodies identified by trailers on
+      commits e07bf41 and 7c56323. OpenAI Codex/GPT-5 contributed to later
+      canonical project-layer work, TauClosure trust hardening, public
+      dependency-audit packaging, release tooling, and documentation. Git does
+      not support reliable per-file model attribution, so none is asserted
+      beyond the bounded Aristotle trailers. Every published declaration is
+      checked by the Lean kernel; comparator declarations are additionally
+      replayed by the comparator.
     external: >
       None. No external human has peer-reviewed this work. The comparator is an
       automated gate, not a reviewer, and a green run is not a referee report.
@@ -387,5 +405,7 @@ acknowledgements: >
   Built on mathlib4 (leanprover-community) and Lean 4. The paper and the Lean
   development were written collaboratively with Claude (Anthropic); Aristotle
   (Harmonic) [Achim et al. 2025] filled the proof bodies of 10 lemmas in the
-  residue-side modules. Auditability packaging follows the leanprover/comparator
-  gate and the mathlib-initiative/formalization.yaml standard.
+  residue-side modules. OpenAI Codex (GPT-5) contributed to later canonical
+  formalization, Lean trust hardening, public audit/release packaging, and
+  documentation. Auditability packaging follows the leanprover/comparator gate
+  and the mathlib-initiative/formalization.yaml standard.

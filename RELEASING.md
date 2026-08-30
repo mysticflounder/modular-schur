@@ -368,16 +368,48 @@ publisher, and repeat the dry run.
 ## Palomar Registry handoff
 
 Public publication and registry submission are separate terminal states. After
-a clean public release:
+a clean public release, re-read the current
+[submission standard](https://github.com/PalomarRegistry/PalomarPolicy/blob/main/CONTRIBUTING.md),
+[mechanical contract](https://github.com/PalomarRegistry/PalomarSubmission/blob/main/scripts/submission_contract.py),
+and [v0.4 metadata schema](https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/v0.4.schema.json).
+The requirements are external and can change after this runbook is committed.
 
-1. re-read the current official Palomar submission page and schema;
-2. audit the public checkout, not the private source tree, against those current
+The current nonstandard-layout form values are:
+
+- repository: `mysticflounder/modular-schur`;
+- project path: `lean`;
+- comparator configuration path: `lean/comparator/config.json`;
+- formalization metadata path: `formalization.yaml`;
+- authorization relationship: responsible author or maintainer;
+- commit: the final full 40-character public SHA, selected last.
+
+Before selecting that SHA:
+
+1. audit the public checkout, not the private source tree, against the current
    requirements;
-3. validate the challenge/solution size, import, statement, and axiom limits;
-4. validate `formalization.yaml`, root licensing, toolchain pin, and Lake layout;
-5. wait for public CI;
-6. select the final 40-character public commit SHA;
-7. submit that immutable SHA only after explicit submission authority.
+2. require one Lakefile under `lean/`, a supported toolchain, credential-free
+   GitHub dependencies pinned to full lowercase SHAs, and one matching root
+   licence;
+3. validate the Challenge size/import boundary, comparator keys, statements,
+   permitted axioms, and both kernel replays;
+4. validate `formalization.yaml` against both the upstream schema and Palomar's
+   stricter provenance/classification contract;
+5. ensure the checked-out snapshot stays below Palomar's current size limit;
+6. wait for public CI and verify that its commit or an unchanged-gated-path
+   ancestor is the one being relied on;
+7. select the final 40-character public commit SHA;
+8. submit that immutable SHA only after explicit submission authority.
+
+The upstream schema check can be reproduced with:
+
+```bash
+uv run --with check-jsonschema check-jsonschema \
+  --schemafile https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json \
+  formalization.yaml
+```
+
+The registry intake remains authoritative for Palomar's additional checks. A
+local schema pass alone does not establish submission readiness.
 
 Do not place a prospective SHA in `formalization.yaml`: the release commit
 cannot reliably name itself. Record the selected submission SHA in the
