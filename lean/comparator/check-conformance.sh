@@ -19,14 +19,17 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LEAN_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"            # the lean/ directory (holds lakefile.toml)
-REPO_ROOT="$(cd "$LEAN_ROOT/.." && pwd)"
-BUILD="$REPO_ROOT/scripts/lake-build.sh"
 cd "$LEAN_ROOT"
 
 NAMES="$(grep -cE '^#print axioms' comparator/axiom-audit.lean || true)"
 
 echo "== building Challenge / Solution =="
-"$BUILD" Challenge Solution
+if command -v lake-build >/dev/null 2>&1; then
+  lake-build Challenge Solution
+else
+  # Hosted CI does not install the developer's global lean-usage wrapper.
+  lake build Challenge Solution
+fi
 
 echo "== axiom audit (Solution theorems) =="
 OUT="$(mktemp "${TMPDIR:-/tmp}/comparator-audit.XXXXXX")"
@@ -43,8 +46,8 @@ if grep -Eiq "sorryAx|unknown identifier|unknown constant|error:" "$OUT"; then
   grep -Ei "sorryAx|unknown identifier|unknown constant|error:" "$OUT" >&2
   fail=1
 fi
-if grep -Fq "Lean.ofReduce" "$OUT"; then
-  echo "FAIL: a Solution theorem uses native_decide (Lean.ofReduce*); not permitted in this comparator set." >&2
+if grep -Eq 'Lean\.ofReduce|Lean\.trustCompiler|\._native\.[^.[:space:]]+\.ax_' "$OUT"; then
+  echo "FAIL: a Solution theorem uses native evaluation; not permitted in this comparator set." >&2
   fail=1
 fi
 

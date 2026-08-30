@@ -8,12 +8,12 @@ import Mathlib
 /-!
 # Challenge.lean — comparator challenge module (mathlib-only)
 
-This file imports **mathlib only** and states the headline results of the
-*modular Schur number* project (paper: "A uniform closed form for modular Schur
-numbers `S_m(k,ℓ)`") as `sorry` stubs. A reviewer reads THIS file (not the
-repository) to see exactly what is being claimed, in formal language, with no
-need to trust any of the project's own definitions — every type and predicate
-below is from mathlib.
+This file imports **mathlib only** and states the currently comparator-gated
+structural results from the *modular Schur number* project (paper: "A uniform
+closed form for modular Schur numbers `S_m(k,ℓ)`") as `sorry` stubs. A reviewer
+reads THIS file (not the repository) to see exactly what is being claimed, in
+formal language, with no need to trust any of the project's own definitions —
+every type and predicate below is from mathlib.
 
 `Solution.lean` (which `import`s the project) discharges each `sorry` with the
 real, axiom-clean project theorem, restating the **identical** signature under
@@ -44,16 +44,20 @@ in the project's own `noncomputable def`.
 
 ## Audit boundary — what is and isn't here
 
-The 12 theorems below are exactly the project's **structural closed-form**
-results whose statement is expressible with mathlib definitions alone, and whose
-`#print axioms` closure is `{propext, Classical.choice, Quot.sound}` (sorry-free,
-no `native_decide`). They are the paper's machine-verified content.
+The 12 theorems below are the currently configured **structural closed-form**
+results whose statements have been expressed with mathlib definitions alone and
+whose `#print axioms` closure is `{propext, Classical.choice, Quot.sound}`
+(sorry-free, no `native_decide`). They are the original paper's machine-verified
+content. Newer project-wide theorem packages are recorded as non-gated planning
+stubs in `comparator/README.md`; no declaration is added here until its complete
+mathlib-only statement and matching project proof are ready.
 
 The repository ALSO contains a large `native_decide`-backed computational scan
 tree (`ModularSchur/Generated/`, the residue-axis / deficit-growth / scanner
 machinery) which verifies per-modulus tables. That line is an older computational
 route subsumed by the structural proof; it is **not** part of this comparator
-gate (its closure includes `Lean.ofReduceBool`). The gate covers the
+gate (its closure includes a generated per-computation native-evaluation axiom
+named like `declaration._native.native_decide.ax_*`). The gate covers the
 mathlib-statable, kernel-axiom-clean structural surface only.
 -/
 

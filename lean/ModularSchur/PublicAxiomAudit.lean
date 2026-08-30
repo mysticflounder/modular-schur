@@ -1,0 +1,53 @@
+/-
+Copyright (c) 2026 Adam McKenna. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Adam McKenna
+-/
+import ModularSchur.CanonicalCriticalCore
+import ModularSchur.DeficitGrowthCertificateShape
+import ModularSchur.WholeAxisPID
+
+/-!
+# Public project-only dependency audit
+
+This module prints the transitive dependency closure of the named capstones in the
+curated public project-only layer. The twelve comparator declarations have a
+separate audit in `comparator/axiom-audit.lean`.
+-/
+
+namespace ModularSchur
+
+#print axioms TauClosure.tauDPRec_characterization
+#print axioms TauClosure.costDP_eq_tauDPRec
+#print axioms TauClosure.tau_capstone
+#print axioms TauClosure.tauDP_eq_tau_of_root
+
+#print axioms CoordinateUnion.coordinateUnionEdgeRule_atomClass
+#print axioms SameSupportFiber.coordinateUnionEdgeRule_on_normalizedCell
+#print axioms AnchoredExactTransversal.axis_cover_eq_maxPacking_of_hasCarrierAET
+#print axioms TwoAxisAnchoredExactTransversal.X_P_subset_coordCliques_biUnion_of_nonempty
+#print axioms TwoAxisAnchoredExactTransversal.hasAET_of_twoAxisCertificate
+#print axioms WholeAxisPID.axis_cover_coordCliques_eq_card_of_forall_PID
+#print axioms WholeAxisPID.axis_cover_coordCliques_eq_card_of_singleton_pattern
+
+#print axioms AxisLabelledCover.axis_cover_extensionalImage_eq_privateLabels_add_residual
+
+namespace CanonicalBlocks
+
+#print axioms canonicalPrivateLabels_eq_supportOneSeedLabels
+#print axioms card_supportOneSeedLabels_eq_seedCountFormula
+#print axioms axisCover_canonicalExtensionalFamily_eq_seedCountFormula_add_residual
+#print axioms canonicalSeedResidualPoints_mul_eq_image
+#print axioms canonicalSeedResidualNeighbourhood_activePrimeLabelMap_eq_image
+#print axioms axisCover_canonicalSeedResidual_mul_prime_eq
+#print axioms axisCover_canonicalExtensionalFamily_mul_prime_eq
+#print axioms axisCover_canonicalExtensionalFamily_mul_eq_of_prime_not_mem
+#print axioms axisCover_canonicalExtensionalFamily_primePow_mul_prime_eq
+#print axioms axisCover_canonicalExtensionalFamily_eq_exponentTruncatedCore_add_excess_unrestricted
+
+end CanonicalBlocks
+
+#print axioms DeficitGrowth.axis_cover_eq_maxPacking_of_cornerClusterInvariant
+#print axioms DeficitGrowth.axis_cover_eq_maxPacking_of_DyadicScannerCertificateShape
+
+end ModularSchur

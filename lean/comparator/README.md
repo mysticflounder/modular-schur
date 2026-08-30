@@ -16,16 +16,50 @@ Paper: *A uniform closed form for modular Schur numbers `S_m(k,ℓ)`* (A. McKenn
 
 | # | Requirement | Here |
 |---|-------------|------|
-| 1 | `Challenge.lean` — **mathlib-only**, headline claims as `sorry` stubs | [`Challenge.lean`](Challenge.lean) (module `Challenge`, `import Mathlib`) |
+| 1 | `Challenge.lean` — **mathlib-only**, currently gated claims as `sorry` stubs | [`Challenge.lean`](Challenge.lean) (module `Challenge`, `import Mathlib`) |
 | 2 | `Solution.lean` — imports the project, discharges the stubs | [`Solution.lean`](Solution.lean) (module `Solution`, `import ModularSchur.*`) |
 | 3 | Comparator run in CI + axiom audit | [`config.json`](config.json) + [`../../.github/workflows/comparator.yml`](../../.github/workflows/comparator.yml) + [`axiom-audit.lean`](axiom-audit.lean) |
 | 4 | `formalization.yaml` (mathlib-initiative spec) | [`../../formalization.yaml`](../../formalization.yaml) |
 
-Challenge and Solution declare the 12 results in a **shared `Headline`
-namespace** (so `config.json` lists `Headline.schurMod_eq`, …). The comparator
-looks up each name in *both* exports, so they must agree on the fully-qualified
-name; the namespace also keeps Solution's restatements from colliding with the
-project's own top-level theorem names.
+Challenge and Solution declare the current 12 gated results in a shared
+`Headline` namespace (so `config.json` lists `Headline.schurMod_eq`, …). The
+comparator looks up each name in *both* exports, so they must agree on the
+fully-qualified name; the namespace also keeps Solution's restatements from
+colliding with the project's own top-level theorem names.
+
+## Pending comparator declaration stubs — SKETCH — NOT PROMOTABLE
+
+The project-wide headline list has grown beyond the 12 declarations currently
+in the gate. The rows below are planning-only declaration stubs for the next
+comparator expansion. They are not Lean declarations and are absent from
+`Headline`, `Challenge.lean`, `Solution.lean`, `config.json`, and both axiom
+audits. Thus they make no comparator, kernel-proof, or publication claim.
+
+Every row has comparator status **SKETCH — NOT PROMOTABLE**. That label applies
+to the missing comparator package, not to the underlying prose or project-Lean
+result. Proposed names are working names until the exact mathlib-only statements
+and matching project-backed declarations are reviewed.
+
+| Project-wide package | Proposed `Headline` declaration slots | Underlying result | Work required before gate entry |
+|---|---|---|---|
+| Stable prime-block normal form and exact stable prefix cover | `stablePrimeBlockNormalForm`; `stablePrefixBlockCover` | **PROVEN** in prose and independently audited | Formalize the project-side Lean producers; then write complete mathlib-only statements and matching `Solution` proofs. |
+| Inactive-prime stripping and the prime-power/one-active boundary | `inactivePrimeStripping`; `axisCoverCanonicalExtensionalFamilyMulEqOfPrimeNotMem`; `primePowerStableBoundary`; `atMostOneActivePrimeBoundary` | **PROVEN IN LEAN** for the terminal inactive-prime stripping package (O2--O5), independently audited; the full stable prefix/layer-count boundary formulas (O6--O9) remain prose-only/Open in Lean | Add exact mathlib-only `Challenge` statements and matching project-backed `Solution` proofs for the certified terminal O2--O5 declarations; no mathlib-only comparator proofs exist yet. Separately formalize the full O6--O9 prefix/layer-count formulas before translating them. |
+| Exact two-active-prime matching boundary | `twoActivePrimeMatchingBoundary` | **PROVEN** in prose and independently audited; project Lean currently has coverage and certificate-to-AET adapters | Supply the finite Kőnig certificate producer and final project consumer, then translate the complete statement. |
+| Labelled/arithmetic support-one seed decomposition and closed count | `axisCoverExtensionalImageEqPrivateLabelsAddResidual`; `canonicalPrivateLabelsEqSupportOneSeedLabels`; `cardSupportOneSeedLabelsEqSeedCountFormula`; `axisCoverCanonicalExtensionalFamilyEqSeedCountFormulaAddResidual` | **PROVEN IN LEAN** and independently audited | Inline the project definitions using mathlib-only objects and add statement-matched `Solution` wrappers. |
+| One-step stable-prime residual-cover transport | `canonicalSeedResidualNeighbourhoodPrimeMultiplicationLabelMapEqImage`; `axisCoverCanonicalSeedResidualMulPrimeEq`; `seedCountFormulaMulPrime`; `axisCoverCanonicalExtensionalFamilyMulPrimeEq` | **PROVEN IN LEAN** and independently audited | Inline the arithmetic label, residual-neighborhood, and cover definitions using mathlib-only objects, then add exact statement-matched `Solution` wrappers. Do not require a global label bijection. |
+| Unrestricted exponent truncation | `exponentTruncatedCore`; `axisCoverCanonicalExtensionalFamilyPrimePowMulPrimeEq`; `axisCoverCanonicalExtensionalFamilyEqExponentTruncatedCoreAddExcessUnrestricted` | **PROVEN IN LEAN** and independently audited | Inline the unrestricted truncated-core, exponent-excess, and canonical-cover definitions using mathlib-only objects, then add statement-matched `Solution` wrappers. No positive-depth hypothesis is required by the unrestricted project identity; no mathlib-only comparator proof exists yet. |
+
+Sources for these slots are the
+[stable normal-form proof](../../docs/proofs/stable-prime-block-normal-form-2026-08-24.md),
+[inactive-prime proof](../../docs/proofs/inactive-prime-stripping-and-prime-power-boundary-2026-08-24.md),
+[inactive-prime Lean audit](../../docs/skeptic-inactive-prime-stripping-lean-2026-08-26.md),
+[two-active-prime proof](../../docs/proofs/two-active-prime-matching-boundary-2026-08-24.md),
+and [labelled seed decomposition](../../docs/proofs/axis-labelled-cover-seed-decomposition-2026-08-25.md).
+
+Promotion is atomic: only after an exact statement and project proof exist should
+one add the `Challenge` theorem, the matching proved `Solution` theorem, the
+`config.json` name, and the corresponding `axiom-audit.lean` entry in the same
+change. Until then, the live gate remains the current 12-theorem set.
 
 ## Run it
 
@@ -49,18 +83,19 @@ wired in CI; to run it locally:
 cd lean
 # Build the comparator at the tag matching this repo's lean-toolchain, so its
 # bundled lean4export is built against the SAME Lean as the project.
-TC="$(cut -d: -f2 lean-toolchain)"           # v4.28.0
+TC="$(cut -d: -f2 lean-toolchain)"           # v4.33.0
+# CI pins this tag to comparator commit 3927ad383f208ae977c340a91c48ac9b497d2097.
 git clone --branch "$TC" https://github.com/leanprover/comparator /tmp/cmp
 ( cd /tmp/cmp && lake build && lake build lean4export )   # comparator + matched lean4export
 
 # Build the project's Challenge/Solution first. A pre-built .lake means the
 # comparator does not rebuild Solution, so its guarantee no longer rests on the
 # sandbox (comparator README assumption: "obtained a fully pre-built .lake").
-../scripts/lake-build.sh Challenge Solution
+lake-build Challenge Solution
 
-# This comparator tag invokes `landrun` and `lean4export` by name from PATH —
-# there are no COMPARATOR_LANDRUN / COMPARATOR_LEAN4EXPORT overrides. landrun is
-# Linux-only (Landlock LSM); on macOS put a no-sandbox `landrun` shim on PATH
+# Comparator v4.33.0 accepts COMPARATOR_LANDRUN / COMPARATOR_LEAN4EXPORT /
+# COMPARATOR_NANODA overrides. This PATH-based setup also works: landrun is
+# Linux-only (Landlock LSM), so on macOS put a no-sandbox `landrun` shim on PATH
 # that strips the sandbox flags and execs the real command:
 mkdir -p /tmp/shim && cat > /tmp/shim/landrun <<'SH'
 #!/usr/bin/env bash
@@ -95,13 +130,14 @@ comparator at `/tmp/cfg.json`), or build
 [`ammkrn/nanoda_lib`](https://github.com/ammkrn/nanoda_lib) and put `nanoda_bin`
 on PATH. The statement-identity + Lean default-kernel legs run either way.
 
-## What is in the gate: the 12 mathlib-only headline claims
+## What is in the gate: the current 12 mathlib-only structural claims
 
-These are exactly the project's **structural closed-form** results whose
-**statement** is expressible with mathlib definitions alone, so a reviewer can
-read `Challenge.lean` without trusting any project definition. All 12 are
-axiom-clean: their `#print axioms` closure ⊆ `{propext, Classical.choice,
-Quot.sound}` (no `sorryAx`, no custom axioms, **no `native_decide`**).
+These are the currently configured structural closed-form results whose
+statements have already been expressed with mathlib definitions alone, so a
+reviewer can read `Challenge.lean` without trusting any project definition.
+They are not an exhaustive project-wide ranking. All 12 are axiom-clean: their
+`#print axioms` closure ⊆ `{propext, Classical.choice, Quot.sound}` (no
+`sorryAx`, no custom axioms, **no `native_decide`**).
 
 | Name (under `Headline`) | Project theorem | Paper / role |
 |---|---|---|
@@ -133,15 +169,16 @@ comparator verifies the inlined statements in the two exports are identical.
 ## The audit boundary: what is NOT in the comparator gate
 
 The project's private working tree contains a large **`native_decide`-backed
-computational scan tree** (`ModularSchur/Generated/` and the residue-axis /
-deficit-growth / scanner-bridge machinery — thousands of generated lemmas
-verifying per-modulus tables). That line is an earlier *computational* route,
-subsumed by the structural closed-form proof above. It is not distributed in
-the public repository and is **deliberately excluded** from this comparator
-gate:
+computational scan tree** (`ModularSchur/Generated/` and generated-dependent
+concrete residue-axis, deficit-growth, and scanner bridges — thousands of
+generated lemmas verifying per-modulus tables). That line is an earlier
+*computational* route, subsumed by the structural closed-form proof above. It
+is not distributed in the public repository and is **deliberately excluded**
+from this comparator gate:
 
-- Its `#print axioms` closure includes `Lean.ofReduceBool` (the `native_decide`
-  compiler-trust axiom), so it is **not** kernel-axiom-clean in the
+- Its `#print axioms` closure includes a generated per-computation
+  native-evaluation axiom named like
+  `declaration._native.native_decide.ax_*`, so it is **not** kernel-axiom-clean in the
   `{propext, Classical.choice, Quot.sound}` sense this gate enforces.
 - The headline closed form does not depend on it.
 
@@ -150,3 +187,11 @@ mathlib-statable, kernel-axiom-clean **structural** surface that the paper
 machine-verifies; the computational scan tree is retained only in the private
 working tree — not distributed here, not part of this gate, and not part of
 the public verification claim.
+
+The public repository separately carries a hand-written,
+generated-independent project layer, including `ResidueAxis`, the canonical
+seed/transport/critical-core package, and several structural adapters. Those
+modules contain no `native_decide` and have their own capstone axiom audit in
+`ModularSchur/PublicAxiomAudit.lean`. They remain outside the twelve configured
+`Headline` declarations until complete mathlib-only statements and matching
+`Solution` wrappers are reviewed atomically.

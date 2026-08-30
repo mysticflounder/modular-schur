@@ -18,12 +18,11 @@ project:
   repo: "https://github.com/mysticflounder/modular-schur"   # [required] canonical PUBLIC repo, and the Palomar submission target
   private_repo: "https://github.com/flound1129/schur-numbers"  # the working repo; the public tree is a curated export of it
 
-  # Palomar submission snapshot, prepared 2026-08-25 UTC, NOT YET SUBMITTED.
-  # Submit this immutable public commit SHA at submit.palomar-registry.org:
-  #   b9f3693607e3d1c1cd02ecb055924b16c0b2aab2   (public main after the 2026-08-24 pending-items pass)
-  # Comparator gate last green on public commit bae075fa6632c32f9925fe10fbad7ef3e61864bc
-  # (run 32795126047); the commits after it change no gated path. This comment is
-  # a project record and is not itself part of the snapshot it names.
+  # Palomar submission is NOT YET COMPLETE. Select and submit an immutable
+  # 40-character public commit SHA only after the candidate commit exists and
+  # its current registry-layout and CI checks pass. A snapshot cannot reliably
+  # name its own Git object, so the selected SHA belongs in the submission
+  # record and release handoff rather than this file.
   # Palomar Registry submission fields.
   # The arXiv categories and MSC2020 codes below were confirmed by the author
   # on 2026-08-24.
@@ -76,24 +75,30 @@ status:
     scans. The STRUCTURAL closed-form proof (the paper) is mathlib-only, sorry-free,
     and kernel-axiom-clean (no project axioms, no native_decide): 12 headline
     theorems are packaged for the leanprover/comparator gate (see lean/comparator/).
-    A separate, EARLIER computational scan tree (lean/ModularSchur/Generated/ and the
-    residue-axis / deficit-growth / scanner-bridge machinery — a private-working-tree
-    path, not present in the public repository) verifies per-modulus
-    tables via native_decide; it is subsumed by the structural proof and is NOT part
-    of the comparator gate (its axiom closure includes Lean.ofReduceBool). See
-    lean/comparator/README.md "audit boundary".
-  sorry_count: 0                # structural modules imported by Solution.lean are sorry-free; Challenge.lean's 12 stubs are intentional (discharged by Solution.lean)
+    The public repository also distributes a separate 27-module hand-written,
+    generated-independent project layer, including the exact seed-count,
+    stable-prime residual transport, recurrence, prime-power, and unrestricted
+    exponent-truncation capstones. Those declarations are built and axiom-audited
+    but are not among the 12 comparator entries. A separate, EARLIER generated
+    computational scan tree remains private and verifies per-modulus tables via
+    native_decide; it is not part of the public release or comparator gate. Its
+    closure includes a generated per-computation native-evaluation axiom named
+    like declaration._native.native_decide.ax_*. See LEAN_STATUS.md and
+    lean/comparator/README.md.
+  sorry_count: 0                # the 27 public project modules are sorry-free; Challenge.lean's 12 statement stubs are intentional and discharged by Solution.lean
   sorry_in_definitions: 0
   axioms: ["propext", "Classical.choice", "Quot.sound"]   # verified axiom closure of all 12 comparator headline results
   axioms_note: >
     Verified via `#print axioms` on each of the 12 Headline theorems
     (lean/comparator/axiom-audit.lean): closure is exactly {propext,
     Classical.choice, Quot.sound}: no sorryAx, no custom axioms, no
-    Lean.ofReduceBool. native_decide appears ONLY in the excluded scan tree.
+    generated native-evaluation axiom. The public 27-module project allowlist
+    has a separate named-capstone audit in
+    lean/ModularSchur/PublicAxiomAudit.lean and contains no native_decide.
     First measured 2026-06-20; re-checked on every CI run since, and
     independently confirmed against permitted_axioms by the comparator itself
-    in CI (first public green run 30211804373, 2026-07-26; current public
-    green run 32621310205, commit cf59f78, 2026-08-23).
+    in CI (first public green run 30211804373, 2026-07-26; pre-expansion
+    baseline run 32795126047, commit bae075f, 2026-08-25).
   main_results:
   - declaration: "lean/comparator/config.json theorem_names (12 mathlib-only structural headline claims)"
     file: "lean/comparator/Solution.lean"
@@ -112,6 +117,21 @@ status:
     axioms: ["propext", "Classical.choice", "Quot.sound"]
     comparator_config: "lean/comparator/config.json"
     literature_dependencies: ["D'orville–Sim–Wong–Ho, Integers 25 (2025) #A62, Problem 1.3"]
+  - declaration: "ModularSchur.CanonicalBlocks.axisCover_canonicalExtensionalFamily_eq_seedCountFormula_add_residual"
+    file: "lean/ModularSchur/CanonicalSeedCount.lean"
+    sorry_count: 0
+    axioms: ["propext", "Classical.choice", "Quot.sound"]
+    note: "Project-only, independently audited exact support-one seed count and residual decomposition; not comparator-configured."
+  - declaration: "ModularSchur.CanonicalBlocks.axisCover_canonicalExtensionalFamily_mul_prime_eq"
+    file: "lean/ModularSchur/CanonicalResidualCoverTransport.lean"
+    sorry_count: 0
+    axioms: ["propext", "Classical.choice", "Quot.sound"]
+    note: "Project-only, independently audited one-step stable-prime recurrence; not comparator-configured."
+  - declaration: "ModularSchur.CanonicalBlocks.axisCover_canonicalExtensionalFamily_eq_exponentTruncatedCore_add_excess_unrestricted"
+    file: "lean/ModularSchur/CanonicalCriticalCore.lean"
+    sorry_count: 0
+    axioms: ["propext", "Classical.choice", "Quot.sound"]
+    note: "Project-only, independently audited unrestricted critical-core reduction; not comparator-configured."
 
 # how it was produced.
 # The token counts and spend below were never logged and are recorded as "not
@@ -166,11 +186,12 @@ fidelity:
     validity-partition structures (IsValidPartition / IsValidPartitionNat) are
     unbundled into their four fields, and schurMod / schurModResidue are spelled out
     as the full Nat.findGreatest expression (see lean/comparator/Challenge.lean and
-    the two bridge lemmas in Solution.lean). The earlier native_decide-backed
-    per-modulus scan tree (lean/ModularSchur/Generated/, etc. — private working
-    tree only, not in the public repository) is deliberately left
-    out of the gate; it is subsumed by the structural proof and is not
-    kernel-axiom-clean. See lean/comparator/README.md "audit boundary".
+    the two bridge lemmas in Solution.lean). The 27-module project-only public
+    layer is separately built and axiom-audited but not statement-compared by
+    the gate. The earlier native_decide-backed per-modulus scan tree
+    (`lean/ModularSchur/Generated/` and generated-dependent concrete bridges)
+    remains private, is deliberately left out of the gate, and is not
+    kernel-axiom-clean. See LEAN_STATUS.md and lean/comparator/README.md.
 
 # review status
 review:
@@ -178,14 +199,15 @@ review:
   reviewers: []
   notes: >
     Self-audit: lean/comparator/check-conformance.sh builds Challenge + Solution and
-    checks no Headline theorem depends on sorryAx or native_decide (Lean.ofReduce*).
+    checks no Headline theorem depends on sorryAx or native evaluation
+    (including generated names like declaration._native.native_decide.ax_*).
     It is a blocklist, not a whitelist; a project-defined axiom would pass it.
     lean/comparator/axiom-audit.lean prints the #print axioms closure for all 12
     without asserting anything about it. The authoritative external check is a
     leanprover/comparator run that verifies statement identity and axiom compliance and
     re-runs the nanoda + Lean default kernels (CI:
-    .github/workflows/comparator.yml). That check is GREEN on a runner: the current
-    public run 32621310205 (commit cf59f78, 2026-08-23) succeeded on both jobs,
+    .github/workflows/comparator.yml). That check is GREEN on a runner: the
+    pre-expansion public run 32795126047 (commit bae075f, 2026-08-25) succeeded on both jobs,
     covering statement identity for all 12, axiom-closure compliance, and replay
     through both kernels; the first public green run was 30211804373 (2026-07-26). The
     job is blocking. Still "self-assessed" because no external human peer review has
@@ -299,13 +321,17 @@ editorial_review:
       automated gate, not a reviewer, and a green run is not a referee report.
 
   limitations: >
-    Scope of the gate. The 12 theorems above are the whole of the machine-checked
-    claim. The project also contains an earlier computational route, a generated
-    tree of roughly 7,500 Lean files that decides per-modulus tables with
-    native_decide. That tree is excluded from the gate, is not exported to the
-    public repository, and is not part of any verification claim here: its axiom
-    closure carries Lean.ofReduceBool, which trusts the compiler rather than the
-    kernel.
+    Scope of the gate. The 12 theorems above are the whole comparator-checked
+    claim. The public repository also carries project-only kernel proofs listed
+    in LEAN_STATUS.md; those have a separate capstone axiom audit and no
+    statement-comparison claim. The project also contains an earlier
+    computational route, a generated tree of roughly 7,500 Lean files that
+    decides per-modulus tables with native_decide. That tree is excluded from
+    the gate, is not exported to the public repository, and is not part of any
+    verification claim here: its axiom closure carries a generated
+    per-computation native-evaluation axiom named like
+    declaration._native.native_decide.ax_*, which trusts the compiler rather
+    than the kernel.
 
     Statement shape. To state the results using Mathlib definitions alone, the
     project's bundled partition structures are unbundled into their four fields,

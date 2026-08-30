@@ -5,7 +5,7 @@ import ModularSchur.Partition
 # Lemma 2.1: Residue reduction (integer ↔ residue bridge)
 
 The paper's Definition 1.1 defines `S_m(k,ℓ)` as the greatest `N` such that the
-**integers** `{1,…,N} ⊆ ℕ` admit a `k`-partition into classes whose integer
+**integers** `{1,…,N} ⊆ ℕ` have a `k`-partition into classes whose integer
 sums never hit a class member modulo `m`.  The main Lean development
 (`Partition.lean`) works on **residues** `{1,…,N} ⊆ ZMod m` via `stableResidues`.
 This file defines the integer-level object `schurMod` and proves

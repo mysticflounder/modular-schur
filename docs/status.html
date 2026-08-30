@@ -45,7 +45,7 @@
   <h1>Research status</h1>
   <p class="subtitle">What is proven, what the kernel checks, what a solver only saw, and what is still open</p>
   <div class="dateline">
-    <p class="kicker">Status as of 2026-08-24</p>
+    <p class="kicker">Status as of 2026-08-29</p>
     <p class="kicker"><a href="index.html">The paper</a></p>
   </div>
 </header>
@@ -114,10 +114,10 @@ The hatched residues are the ones <span class="math inline">\ell - 1</span> anni
 </section>
 <section id="formalization-status" class="level2">
 <h2>Formalization status</h2>
-<p>Twelve structural results are machine-checked in Lean 4, on toolchain <code>leanprover/lean4:v4.28.0</code> with Mathlib pinned at <code>8f9d9cff</code>.</p>
+<p>Twelve structural results are machine-checked in Lean 4, on toolchain <code>leanprover/lean4:v4.33.0</code> with Mathlib pinned at <code>db584cd6</code>.</p>
 <p>They are checked through a <strong>comparator gate</strong>, which exists to stop a formalization from proving something weaker than it appears to. Each theorem is stated twice: once in <code>comparator/Challenge.lean</code> using only Mathlib definitions, with the proof left as <code>sorry</code>, and once in <code>comparator/Solution.lean</code> where it is proved from this project’s development. The comparator checks that the two elaborated declarations carry the same statement, so the Lean statement cannot quietly drift toward the project’s own convenient definitions. It then checks the permitted declaration and axiom boundary and replays the proof exports through the configured kernels. The source files are not byte-identical, and nothing compares them as bytes. The <code>sorry</code>s in <code>Challenge.lean</code> are the design: they are the twelve holes the gate fills.</p>
-<p><span class="st st-proven">Verified</span> The gate last passed on public commit <a href="https://github.com/mysticflounder/modular-schur/commit/bae075fa6632c32f9925fe10fbad7ef3e61864bc"><code>bae075f</code></a> (<a href="https://github.com/mysticflounder/modular-schur/actions/runs/32795126047">run 32795126047</a>, 2026-08-25 UTC). That commit is the one that pinned the workflow’s actions, the elan release, and the comparator checkout to fixed revisions, so the run also exercised the pinned workflow. No later public commit touches the gated paths (the <code>lean/</code> package files, <code>scripts/lake-build.sh</code>, and the workflow file itself, as listed in the workflow’s path filter); the later commits, including the one that carries this page, change the site and metadata only. The build stamp in the page footer is the commit of the private source tree the public tree is synced from, not a public-repository SHA. The gate fails the build on any of: a <code>sorryAx</code> in the closure, an axiom outside <code>{propext, Classical.choice, Quot.sound}</code>, a <code>Lean.ofReduceBool</code>, or a Challenge/Solution statement mismatch. A second job replays the proofs through the independent <code>nanoda</code> kernel.</p>
-<p>The comparator runs at its tag <code>v4.28.0</code>, matched to the Lean toolchain and pinned by commit in CI. The gate here is a self-audit of the project’s own trusted source, not a hostile-submission contest: CI hands the comparator a fully pre-built <code>.lake</code>, so the guarantee rests on the statement-identity, axiom-boundary, and kernel-replay checks rather than on the sandbox that exists to contain a malicious solution author. One open upstream issue questions that sandbox’s process containment (<a href="https://github.com/leanprover/comparator/issues/77">leanprover/comparator#77</a>); it does not touch the checks this gate relies on.</p>
+<p><span class="st st-proven">Verified</span> The gate last passed on public commit <a href="https://github.com/mysticflounder/modular-schur/commit/bae075fa6632c32f9925fe10fbad7ef3e61864bc"><code>bae075f</code></a> (<a href="https://github.com/mysticflounder/modular-schur/actions/runs/32795126047">run 32795126047</a>, 2026-08-25 UTC). That commit pinned the workflow’s actions, the elan release, and the comparator checkout to fixed revisions, so the run also exercised the pinned workflow. It is a historical green run for the earlier ten-module public snapshot. The current release changes <code>lean/</code> and the workflow; its own CI run must pass before its public commit is used as a registry candidate. The build stamp in the page footer is the commit of the private source tree the public tree is synced from, not a public-repository SHA. The gate fails the build on any of: a <code>sorryAx</code> in the closure, an axiom outside <code>{propext, Classical.choice, Quot.sound}</code>, a generated native-evaluation axiom such as <code>declaration._native.native_decide.ax_*</code>, or a Challenge/Solution statement mismatch. A second job replays the proofs through the independent <code>nanoda</code> kernel.</p>
+<p>The comparator runs at its tag <code>v4.33.0</code> (commit <code>3927ad383f208ae977c340a91c48ac9b497d2097</code>), matched to the Lean toolchain and pinned by commit in CI. The gate here is a self-audit of the project’s own trusted source, not a hostile-submission contest: CI hands the comparator a fully pre-built <code>.lake</code>, so the guarantee rests on the statement-identity, axiom-boundary, and kernel-replay checks rather than on the sandbox that exists to contain a malicious solution author. One open upstream issue questions that sandbox’s process containment (<a href="https://github.com/leanprover/comparator/issues/77">leanprover/comparator#77</a>); it does not touch the checks this gate relies on.</p>
 <figure>
 <div class="fig-head">
 <p class="kicker">
@@ -186,7 +186,7 @@ The gate fails the build on any one of these
 a <code>sorryAx</code> anywhere in the closure
 </p>
 <p>
-a <code>Lean.ofReduceBool</code>
+a generated native-evaluation axiom such as <code>declaration._native.native_decide.ax_*</code>
 </p>
 <p>
 an axiom outside the permitted three
@@ -286,11 +286,22 @@ The gate exists to stop a formalization from proving something weaker than it ap
         (∀ i, P i ⊆ Finset.Ioc 0 N) ∧
         (∀ i, ∀ f : Fin ℓ → ℕ, (∀ a, f a ∈ P i) → ∀ y ∈ P i, (∑ a, f a) % m ≠ y % m))
       (m - 1) = m / Nat.gcd m (ℓ - 1) - 1</code></pre>
+<section id="current-project-only-research-layer" class="level3">
+<h3>Current project-only research layer</h3>
+<p><span class="st st-proven">Verified</span> Separate from the twelve-theorem comparator gate, the curated public <code>ModularSchur</code> aggregate now imports the canonical-block, support-one seed, residual-transport, and critical-core modules. Independent theorem-closing audits certify the seed-count package and the final recurrence, fresh-prime, prime-power, and unrestricted critical-core consumers. Their axiom closures contain only <code>propext</code>, <code>Classical.choice</code>, and <code>Quot.sound</code>. The generalized transport helpers compile and feed that consumer chain; they did not each receive a separate statement-fidelity audit. The public project-only module closure contains no proof placeholder, custom axiom, <code>native_decide</code>, unsafe or partial declaration, or external implementation.</p>
+<p>The resulting project-only theorem packages prove:</p>
+<ul>
+<li>the closed cardinality <code>K_seed(n,a)</code> of the support-one seed labels and the exact decomposition of the canonical cover into that seed count plus the residual cover;</li>
+<li>for <code>n ≠ 0</code>, a prime <code>p</code>, and <code>a_p ≤ v_p(n)</code>, exact transport of residual points and nonempty residual neighborhoods under <code>n → pn</code>, invariance of the residual cover number, and <code>κ(pn,a) = κ(n,a) + (p−1)p^(a_p)</code>; a fresh prime is the depth-zero case and contributes <code>p−1</code>;</li>
+<li>for every <code>n ≠ 0</code> and arbitrary depth data, the unrestricted reduction to the exponent-truncated critical core together with the closed contribution from all removed exponent layers.</li>
+</ul>
+<p>These packages are <strong>not</strong> among the twelve comparator declarations. They are distributed and axiom-audited as a separate project-only layer; the comparator does not compare their statements. They close the exponent-tail bookkeeping, not the universal <code>tau</code> problem. The remaining frontier is the cover theory on the exponent-truncated critical domain: the first missing two-axis producer constructs <code>TwoAxisCertificateShape cell P</code> from <code>P.card = 2</code>; genuinely multi-axis obstructions remain after that.</p>
+</section>
 <section id="the-audit-boundary" class="level3">
 <h3>The audit boundary</h3>
-<p>An earlier computational route to some of these results lives in a generated tree of 7,478 Lean files (35 MB), of which 1,737 use <code>native_decide</code>. That route is <strong>excluded from the gate</strong> and is not part of the verification claim above: <code>native_decide</code> trusts the compiler rather than the kernel, so its closure carries <code>Lean.ofReduceBool</code>.</p>
+<p>An earlier computational route to some of these results lives in a generated tree of 7,585 Lean files (36 MB), of which 1,735 use <code>native_decide</code>. That route is <strong>excluded from the gate</strong> and is not part of the verification claim above: <code>native_decide</code> trusts the compiler rather than the kernel, so its closure carries a generated per-computation native-evaluation axiom named like <code>declaration._native.native_decide.ax_*</code>.</p>
 <p><span class="st st-proven">Verified</span> The twelve theorems do not depend on that tree. <code>Solution.lean</code> imports only <code>IntegerBridge</code>, <code>K1Theorem</code>, and <code>SigmaInfty</code>; the resulting import cone reaches <code>Basic</code>, <code>Partition</code>, <code>SingletonSafety</code>, <code>UniversalBound</code>, <code>UnifiedValue</code>, <code>UnifiedTheorem</code>, and <code>StableRange</code>, and contains zero occurrences of <code>native_decide</code>. The structural proof subsumes the computational one; the generated tree is retained as history, not as evidence.</p>
-<p>The public repository carries exactly that import cone: the ten modules in the figure below, the comparator files, and the build configuration. The paper’s Section 8 names <code>SameSupportFiber.lean</code>, <code>CoordinateUnion.lean</code>, <code>WholeAxisPID.lean</code>, and <code>AnchoredExactTransversal.lean</code> for its structural reductions. Those four modules exist only in the private working tree, and since the paper’s 2026-08-24 revision its introduction says so. They are not distributed, not inside the gate, and not part of the verification claim on this page, and nothing on this page beyond the one measurement recorded next speaks to their build state or axiom closure. On 2026-08-24 the author ran <code>#print axioms</code> on the private tree for the five Section 8 declarations <code>SameSupportFiber.coordinateUnionEdgeRule_on_normalizedCell</code>, <code>WholeAxisPID.axis_cover_coordCliques_eq_card_of_forall_PID</code>, <code>AnchoredExactTransversal.axis_cover_eq_maxPacking_of_hasCarrierAET</code>, <code>TauClosure.tau_capstone</code>, and <code>TauClosure.tauDPRec_characterization</code>; each closes to <code>{propext, Classical.choice, Quot.sound}</code>. That measurement was made by the author’s tooling on the private tree, is not part of the public gate, and leaves the Certificate label this page gives the Section 8 results unchanged. See the <a href="#errata-in-the-paper">errata</a>.</p>
+<p>The public repository carries that ten-module comparator cone and a separate project-only allowlist of hand-written, generated-independent modules. The second layer now includes <code>SameSupportFiber.lean</code>, <code>CoordinateUnion.lean</code>, <code>WholeAxisPID.lean</code>, <code>AnchoredExactTransversal.lean</code>, and the canonical seed/transport/critical-core package. These modules are distributed and have a separate axiom audit, but they are not inside the twelve-declaration comparator gate. The gate claim remains confined to the import cone above. On 2026-08-24 the author ran <code>#print axioms</code> for the five Section 8 declarations <code>SameSupportFiber.coordinateUnionEdgeRule_on_normalizedCell</code>, <code>WholeAxisPID.axis_cover_coordCliques_eq_card_of_forall_PID</code>, <code>AnchoredExactTransversal.axis_cover_eq_maxPacking_of_hasCarrierAET</code>, <code>TauClosure.tau_capstone</code>, and <code>TauClosure.tauDPRec_characterization</code>; each closes to <code>{propext, Classical.choice, Quot.sound}</code>. That measurement was made by the author’s tooling on the private tree, is not part of the public gate, and leaves the Certificate label this page gives the Section 8 results unchanged. See the <a href="#errata-in-the-paper">errata</a>.</p>
 <figure>
 <div class="fig-head">
 <p class="kicker">
@@ -348,7 +359,7 @@ Retained as history, not as evidence.
 <div class="stack" style="display: flex; gap: 26px">
 <div>
 <p class="fig-count">
-7,478
+7,585
 </p>
 <p class="kicker">
 Lean files
@@ -356,7 +367,7 @@ Lean files
 </div>
 <div>
 <p class="fig-count" style="color: var(--accent)">
-1,737
+1,735
 </p>
 <p class="kicker">
 use native_decide
@@ -368,7 +379,7 @@ use native_decide
 Axiom closure
 </p>
 <p class="mods" style="color: var(--accent)">
-<code>Lean.ofReduceBool</code>
+<code>declaration._native.native_decide.ax_*</code>
 </p>
 </div>
 <p class="bnd-verdict" style="color: var(--accent)">
@@ -449,7 +460,7 @@ Both ends of the bracket are proven and nothing closes the interval between them
 <li>A closed form for <span class="math inline">\sigma^\infty(m,c)</span> as a function of <span class="math inline">(m,c)</span>, rather than a maximum over subsets.</li>
 <li>The boundary regime <span class="math inline">1 \le k &lt; n-1</span>. No unified formula; per-row eventual periodicity in <span class="math inline">\ell</span> is <strong>conjectured</strong>, supported by the tables for <span class="math inline">8 \le m \le 13</span>.</li>
 <li><span class="math inline">\sigma(m,\ell) = \max\{\lvert H\rvert : H &lt; \mathbb{Z}/m</span> proper, <span class="math inline">\ell H \cap H = \varnothing\}</span>. <strong>Conjecture</strong>.</li>
-<li>A universal closed form for <span class="math inline">\tau</span>, the residual minimum set cover. <strong>Open</strong>, and the anchored-transversal route to it is the one refuted above.</li>
+<li>A universal closed form for <span class="math inline">\tau</span>, the residual minimum set cover. <strong>Open</strong>. Exponent-tail stripping is now proved in Lean, so the live problem is the exponent-truncated critical domain. Anchored exact transversals remain useful certificates for individual fibers but do not supply a universal route.</li>
 </ul>
 </section>
 <section id="erdős-problem-483" class="level3">
@@ -578,11 +589,11 @@ Six atoms in a <span class="math inline">|P| = 2</span> fiber. The first axis co
 \cdots</span>. They do not: <span class="math inline">2C = \{1,2,4\}</span> does not contain <span class="math inline">3 \in 1C</span>. The chain is nested for <span class="math inline">D = C - a_0</span>, which contains <span class="math inline">0</span>, and <span class="math inline">D</span> is the set the proof uses. The caption now states the growth in size (which holds by Cauchy–Davenport) and names the shift; the panels, which show <span class="math inline">\ell C</span> itself, were correct and are unchanged.</p>
 <p><strong>Section 6, the empirical count.</strong> The range <span class="math inline">2 \le m \le 30</span>, <span class="math inline">2 \le \ell \le m</span> has <span class="math inline">\sum_{m=2}^{30}(m-1) = 435</span> pairs; the paper said 414. All 435 agree with <span class="math inline">\min(\ell-1, \lfloor m/\ell \rfloor)</span> (recomputed for this page), so the error was in the count only; the paper now says 435.</p>
 <p><strong>Section 8, coordinate terminology.</strong> Atoms were said to carry one coordinate per <em>prime</em> <span class="math inline">g</span> in their support pattern. The labels are not always prime; the paper’s own axis tuples include <span class="math inline">121</span>, <span class="math inline">125</span>, and <span class="math inline">256</span>. The paper now says “axis label”.</p>
-<p><strong>Section 1, the formalization sentence.</strong> The paper said the main theorem, the <span class="math inline">k = 1</span> case, and the structural reductions of Section 8 are all formalized in Lean 4, and points to the public repository for the full development. The public repository carries the ten modules of the comparator import cone and nothing of Section 8; the four Section 8 modules the paper names are private and ungated (see <a href="#the-audit-boundary">the audit boundary</a>). The sentence now names the public repository’s ten-module import cone and says the Section 8 modules are private and ungated.</p>
+<p><strong>Section 1, the formalization sentence.</strong> The paper once said the main theorem, the <span class="math inline">k = 1</span> case, and the structural reductions of Section 8 were all in the public development. The 2026-08-24 paper revision narrowed that sentence to the ten-module comparator cone and called the Section 8 modules private and ungated. The 2026-08-29 Lean-only public release later distributed those modules, without changing the paper. They remain outside the comparator gate; the status record and <code>LEAN_STATUS.md</code> now carry the current boundary.</p>
 </section>
 <section id="reproduction" class="level2">
 <h2>Reproduction</h2>
-<p><strong>Lean.</strong> Toolchain <code>leanprover/lean4:v4.28.0</code>, Mathlib pinned in <code>lean/lake-manifest.json</code>.</p>
+<p><strong>Lean.</strong> Toolchain <code>leanprover/lean4:v4.33.0</code>, Mathlib pinned at <code>db584cd6</code> in <code>lean/lake-manifest.json</code>.</p>
 <pre><code>cd lean &amp;&amp; lake build</code></pre>
 <p><strong>Scans.</strong> Require <code>uv</code> and CaDiCaL; <code>drat-trim</code> for certificate checking. The headline computational claims map to these exact invocations:</p>
 <table>
@@ -630,7 +641,7 @@ Six atoms in a <span class="math inline">|P| = 2</span> fiber. The first axis co
 <footer class="page-footer">
   <p class="kicker">A. McKenna &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Apache-2.0</p>
   <p class="kicker"><a href="https://github.com/mysticflounder/modular-schur">https://github.com/mysticflounder/modular-schur</a></p>
-  <p class="kicker">Built 2026-08-25 from 0f001e8</p>
+  <p class="kicker">Built 2026-08-30 from eb089c9</p>
 </footer>
 
 </div>

@@ -1,0 +1,36 @@
+# Copyright (c) 2026 Adam McKenna. All rights reserved.
+# Released under Apache 2.0 license as described in the file LICENSE.
+# Author: Adam McKenna <adam@mysticflounder.ai>
+#
+# One flat ModularSchur module name per line. This is the authoritative module
+# allowlist for the curated public checkout. Every project import used by a
+# listed module must also occur in this file. Generated and generated-dependent
+# modules are deliberately absent.
+
+Basic
+SingletonSafety
+UniversalBound
+UnifiedValue
+UnifiedTheorem
+StableRange
+Partition
+IntegerBridge
+K1Theorem
+SigmaInfty
+TauClosure
+CoordinateUnion
+SameSupportFiber
+ResidueAxis
+AxisLabelledCover
+CanonicalBlocks
+CanonicalSeedCount
+CanonicalSeedTransport
+CanonicalResidualCoverTransport
+CanonicalCriticalCore
+AnchoredExactTransversal
+TwoAxisStructural
+TwoAxisAnchoredExactTransversal
+WholeAxisPID
+DeficitGrowthInvariant
+DeficitGrowthRestrictedAET
+DeficitGrowthCertificateShape

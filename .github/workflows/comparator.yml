@@ -10,7 +10,8 @@ name: comparator
 #                 two comparator modules (Challenge, Solution) and runs
 #                 lean/comparator/check-conformance.sh: both build, and no
 #                 Solution theorem depends on sorryAx or native_decide
-#                 (Lean.ofReduce*). That script is a blocklist, not a whitelist —
+#                 (legacy Lean.ofReduce* or current generated native axioms).
+#                 That script is a blocklist, not a whitelist —
 #                 a project-defined axiom would pass it. Statement identity AND
 #                 the permitted_axioms subset are enforced by the comparator job.
 #   comparator  — the authoritative leanprover/comparator run: statement identity
@@ -29,7 +30,6 @@ on:
       - 'lean/lakefile.toml'
       - 'lean/lake-manifest.json'
       - 'lean/lean-toolchain'
-      - 'scripts/lake-build.sh'
       - '.github/workflows/comparator.yml'
   pull_request:
   workflow_dispatch:
@@ -72,9 +72,9 @@ jobs:
         run: lake exe cache get
 
       - name: Build structural project + comparator modules, run axiom audit
-        # check-conformance.sh builds Challenge/Solution via scripts/lake-build.sh
-        # (which builds only the structural modules they import — not the
-        # native_decide scan tree) and checks each Solution theorem is axiom-clean.
+        # check-conformance.sh builds only the structural modules imported by
+        # Challenge/Solution, not the native_decide scan tree, and checks each
+        # Solution theorem is axiom-clean.
         run: lean/comparator/check-conformance.sh
 
   comparator:
@@ -110,11 +110,14 @@ jobs:
       - name: Print pinned dependency versions
         # The literals here must match the pins used by this job's steps
         # (actions/checkout, ELAN_* in the Install elan step,
-        # dtolnay/rust-toolchain, CMP_SHA in the build step).
+        # dtolnay/rust-toolchain, and the tool SHAs in the build step).
         run: |
           echo "actions/checkout: 11d5960a326750d5838078e36cf38b85af677262 (v4 = v4.4.0)"
           echo "dtolnay/rust-toolchain: 4360b52568e2003a75bf9bc1d59f33a8e3fc893c (stable, resolved 2026-08-24)"
-          echo "leanprover/comparator pinned commit (CMP_SHA): 7a0cae3df7a0200ff330c82420b8d88a51c9cac7 (tag v4.28.0)"
+          echo "leanprover/comparator pinned commit (CMP_SHA): 3927ad383f208ae977c340a91c48ac9b497d2097 (tag v4.33.0)"
+          echo "leanprover/lean4export comparator dependency: 15f6055e299ad5b89345e533cc2192f4cc00f659"
+          echo "Zouuup/landrun pinned commit: 811cfff51ceaf3d9843708aa6d22e9b84ccac8b4 (main, resolved 2026-08-25)"
+          echo "ammkrn/nanoda_lib pinned commit: 05055695879dfebb6628a67da88ceca6cd6b0421 (master, resolved 2026-08-25)"
           echo "elan: v4.2.3 elan-x86_64-unknown-linux-gnu.tar.gz sha256=df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2"
           echo "lean-toolchain: $(cat lean/lean-toolchain)"
           echo "lean --version: $(cd lean && lean --version)"
@@ -126,7 +129,8 @@ jobs:
       - name: Pre-build structural project + comparator modules
         # A pre-built .lake means the comparator does not rebuild Solution.lean,
         # so its guarantee no longer rests on landrun's sandbox.
-        run: ./scripts/lake-build.sh Challenge Solution
+        working-directory: lean
+        run: lake build Challenge Solution
 
       - name: Install Rust (for nanoda)
         uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable, resolved 2026-08-24
@@ -134,49 +138,48 @@ jobs:
       - name: Build landrun, comparator (+ matched lean4export), and nanoda
         run: |
           set -euo pipefail
-          # This comparator tag (= lean-toolchain) invokes `landrun`,
-          # `lean4export`, and `nanoda_bin` by NAME from PATH — it has no
+          # This comparator tag (= lean-toolchain) accepts explicit
           # COMPARATOR_LANDRUN / COMPARATOR_LEAN4EXPORT / COMPARATOR_NANODA
-          # overrides. So each built binary's directory goes on $GITHUB_PATH.
+          # overrides. This job instead puts each pinned binary on PATH.
           # Clone tools under RUNNER_TEMP so the clone does not collide with this
           # repo's own lean/comparator/ directory.
           # landrun keeps no Go files at its root and several packages under
           # ./..., so `-o <file>` is only legal against the main package path.
-          # Pinned, do not float to main: landrun moved to urfave/cli v3 on
-          # 2026-07-22, whose parser eats the bare `--` that comparator puts
-          # between the module and the constant list (its Main.lean:127).
-          # lean4export then reads the constants as modules and dies on
-          # `unknown module prefix 'Nat'`. 5ed4a3d is the last urfave/cli v2
-          # tree, and the one comparator's own CI was last green against.
+          # Comparator v4.33.0 requires landrun from main. Keep the resolved
+          # revision immutable so a later landrun change cannot alter the gate.
           git clone https://github.com/Zouuup/landrun "$RUNNER_TEMP/landrun"
-          git -C "$RUNNER_TEMP/landrun" checkout 5ed4a3db3a4ad930d577215c6b9abaa19df7f99f
+          git -C "$RUNNER_TEMP/landrun" checkout 811cfff51ceaf3d9843708aa6d22e9b84ccac8b4
           ( cd "$RUNNER_TEMP/landrun" && go build -o landrun ./cmd/landrun )
           echo "$RUNNER_TEMP/landrun" >> "$GITHUB_PATH"
           # comparator AT THE TAG matching this repo's lean-toolchain, so its
           # bundled lean4export builds against the SAME Lean as the project.
           TC="$(cut -d: -f2 lean/lean-toolchain)"
           git clone --branch "$TC" https://github.com/leanprover/comparator "$RUNNER_TEMP/cmp"
-          # The tag is mutable; the pin is the commit. v4.28.0 ==
-          # 7a0cae3df7a0200ff330c82420b8d88a51c9cac7 — update together with
+          # The tag is mutable; the pin is the commit. v4.33.0 ==
+          # 3927ad383f208ae977c340a91c48ac9b497d2097 — update together with
           # lean/lean-toolchain.
-          CMP_SHA=7a0cae3df7a0200ff330c82420b8d88a51c9cac7
+          CMP_SHA=3927ad383f208ae977c340a91c48ac9b497d2097
           [ "$(git -C "$RUNNER_TEMP/cmp" rev-parse HEAD)" = "$CMP_SHA" ] || {
             echo "comparator tag $TC does not point at pinned commit $CMP_SHA" >&2
+            exit 1
+          }
+          LEAN4EXPORT_SHA=15f6055e299ad5b89345e533cc2192f4cc00f659
+          ACTUAL_LEAN4EXPORT_SHA="$(
+            jq -r '.packages[] | select(.name == "lean4export") | .rev' \
+              "$RUNNER_TEMP/cmp/lake-manifest.json"
+          )"
+          [ "$ACTUAL_LEAN4EXPORT_SHA" = "$LEAN4EXPORT_SHA" ] || {
+            echo "comparator lean4export dependency is $ACTUAL_LEAN4EXPORT_SHA, expected $LEAN4EXPORT_SHA" >&2
             exit 1
           }
           ( cd "$RUNNER_TEMP/cmp" && lake build && lake build lean4export )
           echo "COMPARATOR_BIN=$RUNNER_TEMP/cmp/.lake/build/bin/comparator" >> "$GITHUB_ENV"
           echo "$RUNNER_TEMP/cmp/.lake/packages/lean4export/.lake/build/bin" >> "$GITHUB_PATH"
           # nanoda kernel (optional second kernel; config enable_nanoda = true).
-          # The v4.28.0 README tells you to build nanoda's `debug` branch. That
-          # instruction is wrong, and upstream deleted it four days after the
-          # tag (comparator fa8fd6d, shipped in v4.29.0-rc6). `debug` has not
-          # moved since 2025-10-26 and still parses the pre-ndjson 2.0.0 export
-          # format, while the lean4export this tag pins emits 3.1.0 — so it
-          # fails on line 1 with "invalid digit found in string". Use master,
-          # pinned; its parser accepts 3.1.0 <= v < 3.2.0.
+          # Comparator v4.33.0 requires a recent nanoda checkout. Pin the
+          # resolved master revision and validate it by replaying every theorem.
           git clone https://github.com/ammkrn/nanoda_lib "$RUNNER_TEMP/nanoda"
-          git -C "$RUNNER_TEMP/nanoda" checkout f58f2f6d535e189a40fcb02ede8eb95f97a92d37
+          git -C "$RUNNER_TEMP/nanoda" checkout 05055695879dfebb6628a67da88ceca6cd6b0421
           ( cd "$RUNNER_TEMP/nanoda" && cargo build --release )
           echo "$RUNNER_TEMP/nanoda/target/release" >> "$GITHUB_PATH"
 

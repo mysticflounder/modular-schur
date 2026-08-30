@@ -5,13 +5,15 @@ Comparator axiom audit. Prints the `#print axioms` closure for every theorem in
 `Solution.lean` that the comparator config lists in `theorem_names`. The
 comparator itself enforces `permitted_axioms` during its run; this file lets a
 reviewer (or CI) see the closure directly. Every report must be a subset of
-{propext, Classical.choice, Quot.sound} — no `sorryAx`, no custom axioms, no
-`Lean.ofReduceBool` — the structural comparator set uses no `native_decide`, so
-it is absent here (the repo's native_decide-backed scan tree is outside this
-gate; see comparator/README.md "audit boundary").
+{propext, Classical.choice, Quot.sound} — no `sorryAx`, no custom axioms, and
+no generated native-evaluation axiom such as
+`declaration._native.native_decide.ax_*` — the structural comparator set uses
+no `native_decide`, so it is absent here (the repo's native_decide-backed scan
+tree is outside this gate; see comparator/README.md "audit boundary").
 
-The 12 theorems live in the shared `Headline` namespace in `Solution.lean`, so
-the comparator finds them under the same qualified names listed in `config.json`.
+The current 12 theorems live in the shared `Headline` namespace in
+`Solution.lean`, so the comparator finds them under the same qualified names
+listed in `config.json`.
 
 Run (from the `lean/` directory): lake env lean comparator/axiom-audit.lean
 -/

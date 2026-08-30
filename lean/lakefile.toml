@@ -1,10 +1,16 @@
 name = "ModularSchur"
 defaultTargets = ["ModularSchur"]
 
+# Lake 5 invokes the toolchain's `lean` executable by absolute path, so a PATH
+# shim cannot enforce the global build wrapper's per-worker memory ceiling.
+# `weakLeanArgs` is Lake's supported resource-only channel and does not alter
+# build traces.
+weakLeanArgs = ["-M", "16384"]
+
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+rev = "db584cd6d46c92f209a44c0f1c829460d327499d"
 
 [[lean_lib]]
 name = "ModularSchur"
@@ -13,10 +19,12 @@ name = "ModularSchur"
 # Two out-of-tree modules under comparator/ (not in defaultTargets, so the normal
 # `lake build` is unaffected). Build them explicitly:
 #   lake build Challenge Solution
-# Challenge imports Mathlib only and states the 12 structural headline results as
-# `sorry` stubs; Solution imports the project and discharges them under identical
-# top-level (`Headline.`) names. The leanprover/comparator run checks statement
-# identity and axiom cleanliness across the two exports.
+# Challenge imports Mathlib only and states the 12 currently configured
+# structural results as `sorry` stubs; Solution imports the project and
+# discharges them under identical top-level (`Headline.`) names. The
+# leanprover/comparator run checks statement identity and axiom cleanliness
+# across the two exports. Pending project-wide packages are documented in
+# comparator/README.md and are not registered until both declarations exist.
 
 [[lean_lib]]
 name = "Challenge"
