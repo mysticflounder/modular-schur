@@ -153,7 +153,7 @@ problem used in the stable-threshold analysis. Let
 
 $$
 \kappa(n,\mathbf a)
-=\operatorname{axis\_cover}(\operatorname{canonicalExtensionalFamily}(n,\mathbf a)),
+=\mathrm{axis\_cover}(\mathrm{canonicalExtensionalFamily}(n,\mathbf a)),
 $$
 
 the minimum number of distinct canonical axis neighborhoods needed to cover
