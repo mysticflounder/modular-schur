@@ -17,12 +17,18 @@ project:
   description: >
     Lean 4 formalization of modular Schur numbers. For m ≥ 2 and ℓ ≥ 2, put
     n = m/gcd(m,ℓ-1). The main result proves the uniform closed form
-    S_m(k,ℓ) = n-1 for every k ≥ n-1. The development also proves the residue
-    formulation, universal and local obstructions, the exact k=1 formula for
-    2 ≤ ℓ ≤ m, and kernel-audited canonical-cover and critical-core reductions.
-    Twelve Mathlib-only headline statements are checked by the Palomar
-    Comparator configuration; the additional public project layer is audited
-    separately and is explicitly outside that statement-comparison gate.
+    S_m(k,ℓ) = n-1 for every k ≥ n-1. The development also proves the
+    integer-to-residue formulation and lossless N ≤ m-1 bound, singleton-safety
+    and zero-class obstructions, the complete piecewise one-color formula for
+    every ℓ ≥ 2, and the stated sigma-infinity coset-cardinality bound.
+    Mathlib-only Headline statements are checked by the Palomar Comparator
+    configuration. A separate public 27-module hand-written,
+    generated-independent project layer contains named canonical-cover seed
+    count, stable-prime transport and recurrence, prime-power, and unrestricted
+    exponent-truncation capstones; those capstones have a separate
+    transitive-axiom audit and are outside the Comparator's statement-comparison
+    gate. The earlier generated native_decide scan tree is excluded from the
+    public release and verification claims.
   authors: ["Adam McKenna"]                          # [required]
   responsible_maintainers: ["Adam McKenna"]          # [required by Palomar]
   license: "Apache-2.0"                              # [required]
