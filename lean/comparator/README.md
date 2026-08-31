@@ -18,7 +18,7 @@ Paper: *Prime-power structure of the stable regime for modular Schur numbers*
 |---|-------------|------|
 | 1 | `Challenge.lean` — **mathlib-only**, currently gated claims as `sorry` stubs | [`Challenge.lean`](Challenge.lean) (module `Challenge`, `import Mathlib`) |
 | 2 | `Solution.lean` — imports the project, discharges the stubs | [`Solution.lean`](Solution.lean) (module `Solution`, `import ModularSchur.*`) |
-| 3 | Comparator run in CI + axiom audit | [`config.json`](config.json) + [`../../.github/workflows/comparator.yml`](../../.github/workflows/comparator.yml) + [`axiom-audit.lean`](axiom-audit.lean) |
+| 3 | Comparator run in CI + comparator axiom audit | [`config.json`](config.json) + [`../../.github/workflows/comparator.yml`](../../.github/workflows/comparator.yml) + [`axiom-audit.lean`](axiom-audit.lean) |
 | 4 | `formalization.yaml` (mathlib-initiative spec) | [`../../formalization.yaml`](../../formalization.yaml) |
 
 Challenge and Solution declare the current 12 gated results in a shared
@@ -130,6 +130,20 @@ comparator at `/tmp/cfg.json`), or build
 [`ammkrn/nanoda_lib`](https://github.com/ammkrn/nanoda_lib) and put `nanoda_bin`
 on PATH. The statement-identity + Lean default-kernel legs run either way.
 
+The conformance workflow has a separate project-layer step that runs
+`lake build ModularSchur.PublicAxiomAudit`:
+
+```bash
+lake build ModularSchur.PublicAxiomAudit
+```
+
+`PublicAxiomAudit` consists of `#print axioms` commands. Building it elaborates
+the named project-only declarations and emits their transitive axiom closures
+in the log for review; the build does not automatically enforce a whitelist or
+fail on a custom axiom. This audit is independent of the Comparator/`nanoda`
+gate, whose configured scope remains exactly the current 12 `Headline`
+statements.
+
 ## What is in the gate: the current 12 mathlib-only structural claims
 
 These are the currently configured structural closed-form results whose
@@ -192,6 +206,8 @@ The public repository separately carries a hand-written,
 generated-independent project layer, including `ResidueAxis`, the canonical
 seed/transport/critical-core package, and several structural adapters. Those
 modules contain no `native_decide` and have their own capstone axiom audit in
-`ModularSchur/PublicAxiomAudit.lean`. They remain outside the twelve configured
-`Headline` declarations until complete mathlib-only statements and matching
-`Solution` wrappers are reviewed atomically.
+`ModularSchur/PublicAxiomAudit.lean`. Its build surfaces the transitive
+`#print axioms` closures but does not itself whitelist-fail on custom axioms.
+They remain outside the twelve configured `Headline` declarations until
+complete mathlib-only statements and matching `Solution` wrappers are reviewed
+atomically.

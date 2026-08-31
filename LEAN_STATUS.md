@@ -119,8 +119,13 @@ The public formalization consists of 27 hand-written modules plus
 
 The release runbook separately requires fresh builds of the public aggregate
 and both comparator modules, plus inspection of transitive `#print axioms`
-output for the named project-only capstones. Those build gates must pass before
-the staged public candidate is committed.
+output for the named project-only capstones. The conformance workflow now also
+runs `lake build ModularSchur.PublicAxiomAudit`: its `#print axioms` commands elaborate
+the named declarations and surface their transitive closures in the CI log for
+review. This target does not automatically whitelist-fail on custom axioms.
+It is independent of the Comparator/`nanoda` gate, which still checks exactly
+the twelve `Headline` declarations. Those build gates must pass before the
+staged public candidate is committed.
 
 `Challenge.lean` intentionally contains twelve `sorry` statement stubs. They
 are not proofs. `Solution.lean` supplies the proofs, and the comparator checks
@@ -149,7 +154,7 @@ From the public repository:
 cd lean
 lake build
 lake build Challenge Solution
-lake env lean ModularSchur/PublicAxiomAudit.lean
+lake build ModularSchur.PublicAxiomAudit
 comparator/check-conformance.sh
 ```
 

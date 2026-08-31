@@ -42,6 +42,16 @@ Lean-bearing public release passed statement comparison, the configured axiom
 policy, and replay through both the Lean and `nanoda` kernels in
 [run 33297349901](https://github.com/mysticflounder/modular-schur/actions/runs/33297349901).
 
+The conformance workflow also runs
+`lake build ModularSchur.PublicAxiomAudit`, which builds
+[`ModularSchur.PublicAxiomAudit`](lean/ModularSchur/PublicAxiomAudit.lean), a
+`#print axioms` module for the broader project-only layer. Building it
+elaborates the named declarations and surfaces their transitive axiom closures
+in the CI log for review; it does not automatically enforce an axiom whitelist
+or fail merely because a custom axiom appears. This is independent of the
+Comparator/`nanoda` gate, which still checks exactly the twelve declarations in
+the `Headline` namespace.
+
 A second, project-only layer develops exact-cover and canonical-axis machinery.
 Its audited capstones give the exact support-one seed count, stable-prime
 residual transport, the recurrence
@@ -74,20 +84,20 @@ $d=\gcd(12,\ell-1)$ and $n=12/d$. The pattern repeats under
 $\ell\mapsto\ell+12$, so $2\le\ell\le13$ is one complete period within the
 theorem's range:
 
-| $\ell$ | $\ell-1$ | $d$ | $n$ | Proved high-color value |
+| ℓ | ℓ − 1 | d | n | Proved high-color value |
 |---:|---:|---:|---:|---:|
-| 2 | 1 | 1 | 12 | $S_{12}(k,2)=11$ for $k\ge11$ |
-| 3 | 2 | 2 | 6 | $S_{12}(k,3)=5$ for $k\ge5$ |
-| 4 | 3 | 3 | 4 | $S_{12}(k,4)=3$ for $k\ge3$ |
-| 5 | 4 | 4 | 3 | $S_{12}(k,5)=2$ for $k\ge2$ |
-| 6 | 5 | 1 | 12 | $S_{12}(k,6)=11$ for $k\ge11$ |
-| 7 | 6 | 6 | 2 | $S_{12}(k,7)=1$ for $k\ge1$ |
-| 8 | 7 | 1 | 12 | $S_{12}(k,8)=11$ for $k\ge11$ |
-| 9 | 8 | 4 | 3 | $S_{12}(k,9)=2$ for $k\ge2$ |
-| 10 | 9 | 3 | 4 | $S_{12}(k,10)=3$ for $k\ge3$ |
-| 11 | 10 | 2 | 6 | $S_{12}(k,11)=5$ for $k\ge5$ |
-| 12 | 11 | 1 | 12 | $S_{12}(k,12)=11$ for $k\ge11$ |
-| 13 | 12 | 12 | 1 | $S_{12}(k,13)=0$ for $k\ge0$ |
+| 2 | 1 | 1 | 12 | `S₁₂(k, 2) = 11 for k ≥ 11` |
+| 3 | 2 | 2 | 6 | `S₁₂(k, 3) = 5 for k ≥ 5` |
+| 4 | 3 | 3 | 4 | `S₁₂(k, 4) = 3 for k ≥ 3` |
+| 5 | 4 | 4 | 3 | `S₁₂(k, 5) = 2 for k ≥ 2` |
+| 6 | 5 | 1 | 12 | `S₁₂(k, 6) = 11 for k ≥ 11` |
+| 7 | 6 | 6 | 2 | `S₁₂(k, 7) = 1 for k ≥ 1` |
+| 8 | 7 | 1 | 12 | `S₁₂(k, 8) = 11 for k ≥ 11` |
+| 9 | 8 | 4 | 3 | `S₁₂(k, 9) = 2 for k ≥ 2` |
+| 10 | 9 | 3 | 4 | `S₁₂(k, 10) = 3 for k ≥ 3` |
+| 11 | 10 | 2 | 6 | `S₁₂(k, 11) = 5 for k ≥ 5` |
+| 12 | 11 | 1 | 12 | `S₁₂(k, 12) = 11 for k ≥ 11` |
+| 13 | 12 | 12 | 1 | `S₁₂(k, 13) = 0 for k ≥ 0` |
 
 The displayed color bound is the sufficient range of the proved theorem. The
 table does not claim that it is the least possible $k$ in every row; determining
@@ -259,7 +269,12 @@ Finite computations retained in `TauClosure.lean` use kernel `decide`, including
 the scoped concrete sections for
 $d_0=110,220,440,880,1760,4400,8800$. Named project capstones have a transitive
 axiom audit in `PublicAxiomAudit.lean`; [`LEAN_STATUS.md`](LEAN_STATUS.md) records
-which consumers also received independent statement review.
+which consumers also received independent statement review. The module's
+`#print axioms` commands are elaborated by its build and emit each named
+declaration's transitive closure for review; the build itself does not
+automatically whitelist-fail on custom axioms. This project-only audit remains
+separate from the independent Comparator/`nanoda` gate for exactly twelve
+`Headline` statements.
 
 ### The open frontier
 
@@ -307,10 +322,10 @@ packages; its exact per-consumer audit boundary is maintained in
 | [`schurModResidue_le`](lean/comparator/Challenge.lean#L150) | `ModularSchur.schurModResidue_le` | Stable-regime upper bound |
 | [`le_schurModResidue`](lean/comparator/Challenge.lean#L163) | `ModularSchur.le_schurModResidue` | Stable-regime lower bound |
 | [`singleton_sumFree_iff`](lean/comparator/Challenge.lean#L176) | `ModularSchur.singleton_sumFree_iff` | Exact singleton-safety criterion |
-| [`unsafe_witness_residue`](lean/comparator/Challenge.lean#L184) | `ModularSchur.unsafe_witness_residue` | Arithmetic unsafe witness at $n=m/\gcd(m,\ell-1)$ |
+| [`unsafe_witness_residue`](lean/comparator/Challenge.lean#L184) | `ModularSchur.unsafe_witness_residue` | Arithmetic unsafe witness at `n = m / gcd(m, ℓ − 1)` |
 | [`not_sumFree_of_mem_zero`](lean/comparator/Challenge.lean#L190) | `ModularSchur.not_sumFree_of_mem_zero` | Any class containing zero is unsafe |
 | [`schurModResidue_k1`](lean/comparator/Challenge.lean#L197) | `ModularSchur.schurModResidue_k1` | Exact one-color formula |
-| [`sigmaInfty_le`](lean/comparator/Challenge.lean#L210) | `ModularSchur.sigmaInfty_le` | Coset cardinality bound $|C|≤m/\operatorname{minFac}(m)$ |
+| [`sigmaInfty_le`](lean/comparator/Challenge.lean#L210) | `ModularSchur.sigmaInfty_le` | Coset cardinality bound `card(C) ≤ m / minFac(m)` |
 
 ### Canonical-cover and critical-core results
 
@@ -319,8 +334,8 @@ packages; its exact per-consumer audit boundary is maintained in
 | Labelled support-one deletion | [`AxisLabelledCover`](lean/ModularSchur/AxisLabelledCover.lean) | Separates private labels from the residual cover exactly |
 | Arithmetic canonical blocks | [`CanonicalBlocks`](lean/ModularSchur/CanonicalBlocks.lean) | Identifies private labels with support-one seeds |
 | Closed seed count | [`CanonicalSeedCount`](lean/ModularSchur/CanonicalSeedCount.lean) | Computes the exact seed cardinality and seed-plus-residual decomposition |
-| Stable-prime point transport | [`CanonicalSeedTransport`](lean/ModularSchur/CanonicalSeedTransport.lean) | Carries seed-covered and residual point sets under $n\mapsto pn$ |
-| Residual cover transport | [`CanonicalResidualCoverTransport`](lean/ModularSchur/CanonicalResidualCoverTransport.lean) | For prime $p$, $n\ne0$, and $a_p\le v_p(n)$, preserves residual neighborhoods and yields $\kappa(pn,a)=\kappa(n,a)+(p-1)p^{a_p}$ |
+| Stable-prime point transport | [`CanonicalSeedTransport`](lean/ModularSchur/CanonicalSeedTransport.lean) | Carries seed-covered and residual point sets under `n ↦ pn` |
+| Residual cover transport | [`CanonicalResidualCoverTransport`](lean/ModularSchur/CanonicalResidualCoverTransport.lean) | For prime `p`, `n ≠ 0`, and `a_p ≤ v_p(n)`, preserves residual neighborhoods and yields `κ(pn,a) = κ(n,a) + (p−1)p^(a_p)` |
 | Prime powers and critical core | [`CanonicalCriticalCore`](lean/ModularSchur/CanonicalCriticalCore.lean) | Iterates the recurrence and removes every excess prime-exponent layer |
 
 The same public allowlist includes exact-cover dynamic programming,
@@ -352,8 +367,8 @@ lake build
 # Build the non-default Comparator modules.
 lake build Challenge Solution
 
-# Replay the named project-capstone axiom audit.
-lake env lean ModularSchur/PublicAxiomAudit.lean
+# Build the named project-capstone axiom audit.
+lake build ModularSchur.PublicAxiomAudit
 
 # Return to the repository root for the remaining commands.
 cd ..

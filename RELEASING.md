@@ -179,9 +179,15 @@ the older `--jobs` and `-j` flags. Control risk with focused targets, the global
 wrapper's per-worker memory ceiling, and host-load preflight rather than copying
 an obsolete jobs option into the command.
 
-`PublicAxiomAudit` must print only the repository-approved standard foundations
-for every named capstone: `propext`, `Classical.choice`, and `Quot.sound`. The
-comparator package has its own audit:
+`PublicAxiomAudit` is a module of `#print axioms` commands. Building it
+elaborates the named project-only declarations and surfaces their transitive
+axiom closures in the build log for review. The expected current closures are
+the repository-approved standard foundations `propext`, `Classical.choice`,
+and `Quot.sound`; this build target does not itself enforce a whitelist or fail
+automatically on a custom axiom. The conformance workflow runs
+`lake build ModularSchur.PublicAxiomAudit` as a separate step from the
+Comparator/`nanoda` gate, whose scope remains exactly
+the twelve `Headline` declarations. The comparator package has its own audit:
 
 ```bash
 lean/comparator/check-conformance.sh

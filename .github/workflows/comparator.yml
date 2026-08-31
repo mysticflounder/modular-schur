@@ -11,6 +11,8 @@ name: comparator
 #                 lean/comparator/check-conformance.sh: both build, and no
 #                 Solution theorem depends on sorryAx or native_decide
 #                 (legacy Lean.ofReduce* or current generated native axioms).
+#                 It also builds ModularSchur.PublicAxiomAudit so the broader
+#                 project-only capstone closures are emitted in the CI log.
 #                 That script is a blocklist, not a whitelist —
 #                 a project-defined axiom would pass it. Statement identity AND
 #                 the permitted_axioms subset are enforced by the comparator job.
@@ -76,6 +78,13 @@ jobs:
         # Challenge/Solution, not the native_decide scan tree, and checks each
         # Solution theorem is axiom-clean.
         run: lean/comparator/check-conformance.sh
+
+      - name: Build public project axiom audit
+        # This standalone module prints the transitive axiom closures of the
+        # broader public project-only capstones; it is outside the 12-statement
+        # independent comparator registry.
+        working-directory: lean
+        run: lake build ModularSchur.PublicAxiomAudit
 
   comparator:
     name: leanprover/comparator (nanoda + default kernel)

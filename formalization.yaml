@@ -90,8 +90,12 @@ status:
     The public repository also distributes a separate 27-module hand-written,
     generated-independent project layer, including the exact seed-count,
     stable-prime residual transport, recurrence, prime-power, and unrestricted
-    exponent-truncation capstones. Those declarations are built and axiom-audited
-    but are not among the 12 comparator entries. A separate, EARLIER generated
+    exponent-truncation capstones. Conformance CI runs
+    `lake build ModularSchur.PublicAxiomAudit` for their named capstones. The
+    `PublicAxiomAudit` module elaborates declarations and logs transitive
+    `#print axioms` closures for review; that build does not itself whitelist-fail
+    on custom axioms. Those declarations are built and axiom-audited but are not
+    among the 12 comparator entries. A separate, EARLIER generated
     computational scan tree remains private and verifies per-modulus tables via
     native_decide; it is not part of the public release or comparator gate. Its
     closure includes a generated per-computation native-evaluation axiom named
@@ -107,6 +111,11 @@ status:
     generated native-evaluation axiom. The public 27-module project allowlist
     has a separate named-capstone audit in
     lean/ModularSchur/PublicAxiomAudit.lean and contains no native_decide.
+    Conformance CI runs `lake build ModularSchur.PublicAxiomAudit` to elaborate the named
+    project-only declarations and surface their transitive closures for review;
+    the build does not automatically enforce a whitelist or fail on a custom
+    axiom. This remains independent of the Comparator/`nanoda` gate, whose
+    configured scope is exactly the 12 `Headline` declarations.
     First measured 2026-06-20 and independently confirmed against
     permitted_axioms by the comparator itself in CI. The expanded public
     release passed both comparator jobs in run 33297349901 at commit
@@ -233,7 +242,9 @@ review:
     statement identity for all 12, axiom-closure compliance, and replay through
     both kernels. The job is blocking. This remains "self-assessed" because no
     external human peer review has taken place; the comparator is a tool, not a
-    reviewer.
+    reviewer. The conformance workflow separately builds
+    ModularSchur.PublicAxiomAudit; its #print axioms output is surfaced for
+    review, but that build does not itself whitelist-fail on custom axioms.
 
 # editorial_review - material for Palomar Registry editorial review.
 editorial_review:
