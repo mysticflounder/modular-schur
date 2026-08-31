@@ -526,7 +526,7 @@ separate actions; [`RELEASING.md`](RELEASING.md) records the handoff checklist.
 
 ## Provenance and citation
 
-A. McKenna, *Prime-adic structure of the stable regime for modular Schur
+A. McKenna, *Prime-power structure of the stable regime for modular Schur
 numbers* (2026).
 
 Multiple AI-assisted workflows contributed under human direction: Claude

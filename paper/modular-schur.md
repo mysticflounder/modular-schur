@@ -1,5 +1,5 @@
 ---
-title: "Prime-adic structure of the stable regime for modular Schur numbers"
+title: "Prime-power structure of the stable regime for modular Schur numbers"
 author: Adam McKenna
 date: "June 2026, revised 30 August 2026"
 abstract: |
@@ -1070,6 +1070,7 @@ The paper closes three questions from the prior literature and opens several new
 - *2026-08-24.* Section \ref{sec:structural} restated for the stable-regime threshold $k_0^\infty$, which is now defined there; the earlier display $k_0(m,\ell) = K(d_0) + \tau(d_0)$ for the ordinary threshold is false ($(5,2)$ and $(5,3)$ share a cell with $k_0 = 2$ and $4$). The hypotheses $\ell \geq p - 1$ and $\ell \not\equiv 1 \pmod p$ added to the prime-threshold statements in the abstract and in the caption of Figure \ref{fig:coset-fill}, with the value attributed to D'orville et al., Corollary 8. Open problem 3 corrected. $n \geq 2$ added to Theorem \ref{thm:k0-lower-cov}; the gloss after Theorem \ref{thm:k0-upper} corrected at $n = 1$; the caption of Figure \ref{fig:coset-fill} no longer asserts $1C \subset 2C$; the one-color check count corrected from $414$ to $435$; "axis label" replaces "prime" for the atom coordinates; the Lean formalization sentence in the introduction narrowed to the public modules.
 - *2026-08-24, two-axis closure.* Open problem 1 now records the independently certified prose proof that every two-axis fiber admits an AET by finite bipartite matching, including parallel atoms and extensional duplicate cliques. Lean formalization remains open.
 - *2026-08-30.* Retitled *Prime-adic structure of the stable regime for modular Schur numbers*. No mathematical claim changed in this revision.
+- *2026-08-30 (title correction).* Retitled *Prime-power structure of the stable regime for modular Schur numbers* for terminological clarity. No mathematical claim changed in this revision.
 
 # References
 
