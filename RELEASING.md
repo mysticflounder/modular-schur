@@ -341,6 +341,7 @@ Use full scope only when the paper and complete website are authorized release
 targets:
 
 ```bash
+pandoc --number-sections paper/modular-schur.md -o paper/modular-schur.pdf
 scripts/build-site.sh
 node scripts/check-site-math.mjs site/build/index.html
 node scripts/check-site-math.mjs site/build/status.html

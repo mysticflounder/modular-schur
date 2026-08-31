@@ -6,8 +6,8 @@ Zulip, "AI authored projects"). The gate answers *"is this claim real, and is it
 exactly what you say it is?"* — it is **not** the bar for mathlib inclusion (that
 is a separate PR review).
 
-Paper: *A uniform closed form for modular Schur numbers `S_m(k,ℓ)`* (A. McKenna,
-2026). Headline result, Theorem 1.2:
+Paper: *Prime-adic structure of the stable regime for modular Schur numbers*
+(A. McKenna, 2026). Headline result, Theorem 1.2:
 
 > For every `m ≥ 2`, `ℓ ≥ 2`, and `k ≥ n-1` where `n := m / gcd(m, ℓ-1)`,
 > `S_m(k,ℓ) = n - 1 = m / gcd(m, ℓ-1) - 1`.

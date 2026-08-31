@@ -42,7 +42,7 @@ classification:
 
 # sources - what was formalized / extended.
 sources:                                             # [required]
-  - title: "A uniform closed form for modular Schur numbers S_m(k,ℓ)"
+  - title: "Prime-adic structure of the stable regime for modular Schur numbers"
     authors: ["Adam McKenna"]
     id: "McKenna 2026 (this project's paper; paper/modular-schur.pdf)"
     type: "original-proof"

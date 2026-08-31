@@ -67,17 +67,31 @@ package-by-package authority for the public Lean release.
 
 ---
 
-## A small modular example
+## One complete period at m = 12
 
-For $m=12$, the stable value depends on $\ell$ only through
-$d=\gcd(12,\ell-1)$ and $n=12/d$:
+For $m=12$, the proved high-color value depends on $\ell$ only through
+$d=\gcd(12,\ell-1)$ and $n=12/d$. The pattern repeats under
+$\ell\mapsto\ell+12$, so $2\le\ell\le13$ is one complete period within the
+theorem's range:
 
-| $\ell$ | $d$ | $n$ | Proved stable value |
-|---:|---:|---:|---:|
-| 2 | 1 | 12 | $S_{12}(k,2)=11$ for $k\ge11$ |
-| 4 | 3 | 4 | $S_{12}(k,4)=3$ for $k\ge3$ |
-| 5 | 4 | 3 | $S_{12}(k,5)=2$ for $k\ge2$ |
-| 8 | 1 | 12 | $S_{12}(k,8)=11$ for $k\ge11$ |
+| $\ell$ | $\ell-1$ | $d$ | $n$ | Proved high-color value |
+|---:|---:|---:|---:|---:|
+| 2 | 1 | 1 | 12 | $S_{12}(k,2)=11$ for $k\ge11$ |
+| 3 | 2 | 2 | 6 | $S_{12}(k,3)=5$ for $k\ge5$ |
+| 4 | 3 | 3 | 4 | $S_{12}(k,4)=3$ for $k\ge3$ |
+| 5 | 4 | 4 | 3 | $S_{12}(k,5)=2$ for $k\ge2$ |
+| 6 | 5 | 1 | 12 | $S_{12}(k,6)=11$ for $k\ge11$ |
+| 7 | 6 | 6 | 2 | $S_{12}(k,7)=1$ for $k\ge1$ |
+| 8 | 7 | 1 | 12 | $S_{12}(k,8)=11$ for $k\ge11$ |
+| 9 | 8 | 4 | 3 | $S_{12}(k,9)=2$ for $k\ge2$ |
+| 10 | 9 | 3 | 4 | $S_{12}(k,10)=3$ for $k\ge3$ |
+| 11 | 10 | 2 | 6 | $S_{12}(k,11)=5$ for $k\ge5$ |
+| 12 | 11 | 1 | 12 | $S_{12}(k,12)=11$ for $k\ge11$ |
+| 13 | 12 | 12 | 1 | $S_{12}(k,13)=0$ for $k\ge0$ |
+
+The displayed color bound is the sufficient range of the proved theorem. The
+table does not claim that it is the least possible $k$ in every row; determining
+that least-color threshold is the separate open problem discussed below.
 
 The header figure is the paper's diagram of this collapse. It illustrates the
 closed form; it isn't computational evidence for it.
@@ -124,9 +138,49 @@ Comparator-gated declarations.
 
 ### Exponent-truncated critical core: [`CanonicalCriticalCore`](lean/ModularSchur/CanonicalCriticalCore.lean#L255)
 
-> The canonical axis-cover number at $n$ is the corresponding cover number at
-> the exponent-truncated core plus the exact contribution of all removed prime
-> exponent layers.
+This is an exact prime-adic kernelization of the canonical finite set-cover
+problem used in the stable-threshold analysis. Let
+
+$$
+\kappa(n,\mathbf a)
+=\operatorname{axis\_cover}(\operatorname{canonicalExtensionalFamily}(n,\mathbf a)),
+$$
+
+the minimum number of distinct canonical axis neighborhoods needed to cover
+the terminal universe $\{1,\ldots,n-1\}$. For each prime $p\mid n$, write
+$b_p=v_p(n)$ and let $a_p$ be its prescribed active depth. The critical core
+keeps only the first $\min(b_p,a_p)$ valuation layers:
+
+$$
+n_{\mathrm{crit}}
+=\prod_{p\mid n}p^{\min(b_p,a_p)}.
+$$
+
+The number of removed $p$-layers is
+$e_p=b_p-\min(b_p,a_p)$. Each one has the same closed cover cost
+$(p-1)p^{a_p}$, and Lean proves, for every $n\ne0$ and every depth profile
+$\mathbf a$,
+
+$$
+\boxed{
+\kappa(n,\mathbf a)
+=\kappa(n_{\mathrm{crit}},\mathbf a)
++\sum_{p\mid n}e_p(p-1)p^{a_p}.
+}
+$$
+
+There are three useful boundary cases:
+
+- if $a_p\ge b_p$, that prime loses no layers and contributes zero;
+- if $0<a_p<b_p$, the core retains $p^{a_p}$ and removes the remaining
+  $b_p-a_p$ layers;
+- if $a_p=0$, the prime disappears from the core and contributes
+  $b_p(p-1)$.
+
+For example, take $n=72=2^3\cdot3^2$ with $a_2=a_3=1$. Then
+$n_{\mathrm{crit}}=2\cdot3=6$, the removed $2$-layers contribute $4$, and
+the removed $3$-layer contributes $6$. The theorem gives
+$\kappa(72,\mathbf a)=\kappa(6,\mathbf a)+10$.
 
 ```lean
 theorem axisCover_canonicalExtensionalFamily_eq_exponentTruncatedCore_add_excess_unrestricted
@@ -136,8 +190,17 @@ theorem axisCover_canonicalExtensionalFamily_eq_exponentTruncatedCore_add_excess
         excessExponentContribution n a
 ```
 
-This theorem belongs to the separately audited project layer. It isn't one of
-the statements currently compared against a Mathlib-only restatement.
+The word *critical* means that every prime-exponent tail outside this divisor
+has been evaluated in closed form; all remaining covering complexity is
+concentrated on $n_{\mathrm{crit}}$. The theorem does not evaluate that final
+core cover, compute the residual term universally, or determine the general
+least-color threshold $k_0(m,\ell)$. It is a theorem about the canonical cover
+family, not directly about $S_m(k,\ell)$.
+
+This final consumer is independently audited in the project-only layer, with
+axiom closure exactly `{propext, Classical.choice, Quot.sound}`. It isn't one
+of the twelve statements currently compared against a Mathlib-only
+restatement.
 
 ---
 
@@ -463,8 +526,8 @@ separate actions; [`RELEASING.md`](RELEASING.md) records the handoff checklist.
 
 ## Provenance and citation
 
-A. McKenna, *A uniform closed form for modular Schur numbers $S_m(k,\ell)$*
-(2026).
+A. McKenna, *Prime-adic structure of the stable regime for modular Schur
+numbers* (2026).
 
 Multiple AI-assisted workflows contributed under human direction: Claude
 (Anthropic) through Claude Code,
@@ -486,7 +549,7 @@ source-of-truth repository. A Lean-only release reuses the existing asset.
 The public Markdown snapshot can be rendered with Pandoc:
 
 ```bash
-pandoc paper/modular-schur.md -o paper/modular-schur.pdf
+pandoc --number-sections paper/modular-schur.md -o paper/modular-schur.pdf
 ```
 
 The canonical web build additionally compiles and inlines the TikZ figures so
