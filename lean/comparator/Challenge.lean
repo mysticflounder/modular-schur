@@ -42,23 +42,32 @@ self-contained:
 `Nat.findGreatest` needs `DecidablePred`; `open scoped Classical` supplies it, as
 in the project's own `noncomputable def`.
 
-## Audit boundary — what is and isn't here
+## Audit boundary — exact scope of the public claims
 
-The 12 theorems below are the currently configured **structural closed-form**
-results whose statements have been expressed with mathlib definitions alone and
-whose `#print axioms` closure is `{propext, Classical.choice, Quot.sound}`
-(sorry-free, no `native_decide`). They are the original paper's machine-verified
-content. Newer project-wide theorem packages are recorded as non-gated planning
-stubs in `comparator/README.md`; no declaration is added here until its complete
+The 12 declarations below are deliberate `sorry`-backed statement stubs; this
+file makes no proof claim by itself. The Comparator claim applies to the matching
+declarations in `Solution.lean`: the gate checks statement identity, and their
+measured `#print axioms` closure is exactly
+`{propext, Classical.choice, Quot.sound}` (no `sorryAx`, custom axiom, or native
+evaluation). These are the original paper's machine-verified structural results.
+Newer project-wide theorem packages are recorded as non-gated planning stubs in
+`comparator/README.md`; no declaration is added here until its complete
 mathlib-only statement and matching project proof are ready.
 
-The repository ALSO contains a large `native_decide`-backed computational scan
-tree (`ModularSchur/Generated/`, the residue-axis / deficit-growth / scanner
-machinery) which verifies per-modulus tables. That line is an older computational
-route subsumed by the structural proof; it is **not** part of this comparator
-gate (its closure includes a generated per-computation native-evaluation axiom
-named like `declaration._native.native_decide.ax_*`). The gate covers the
-mathlib-statable, kernel-axiom-clean structural surface only.
+The curated public snapshot also contains a 27-module hand-written,
+generated-independent project layer plus `ModularSchur/PublicAxiomAudit.lean`.
+That layer is outside the 12 Comparator declarations and has the separate build
+and transitive-axiom-audit status recorded in `LEAN_STATUS.md`.
+
+The private development checkout retains an older `native_decide`-backed
+computational scan tree at `ModularSchur/Generated/`, together with
+generated-dependent residue-axis, deficit-growth, and scanner modules. The
+release assembler omits that tree and those dependent modules: they are absent
+from the public repository snapshot, no public theorem depends on them, and they
+are outside both public verification claims described above. Their historical
+proof closures include generated per-computation native-evaluation axioms named
+like `declaration._native.native_decide.ax_*`, so they do not satisfy the public
+kernel-axiom boundary.
 -/
 
 open scoped Classical

@@ -8,8 +8,9 @@ reviewer (or CI) see the closure directly. Every report must be a subset of
 {propext, Classical.choice, Quot.sound} — no `sorryAx`, no custom axioms, and
 no generated native-evaluation axiom such as
 `declaration._native.native_decide.ax_*` — the structural comparator set uses
-no `native_decide`, so it is absent here (the repo's native_decide-backed scan
-tree is outside this gate; see comparator/README.md "audit boundary").
+no `native_decide`, so it is absent here. The private development checkout's
+historical native-backed scan tree is omitted from the public snapshot and is
+outside this gate; see comparator/README.md "audit boundary".
 
 The current 12 theorems live in the shared `Headline` namespace in
 `Solution.lean`, so the comparator finds them under the same qualified names
