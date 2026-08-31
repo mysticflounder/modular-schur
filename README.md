@@ -6,22 +6,16 @@ Author: Adam McKenna <adam@mysticflounder.ai>
 
 # Prime-power structure of the stable regime for modular Schur numbers
 
-<p align="center">
-  <img
-    src="docs/assets/fig/tikz-06.svg"
-    width="760"
-    alt="Proof schematic for Theorem 1.2 at m = 12 and ell = 4: singleton classes {1}, {2}, and {3} color [1, 3], while n = 4 is unsafe because 4 + 4 + 4 + 4 is congruent to 4 modulo 12; therefore S_12(k, 4) = 3 for every k at least 3.">
-</p>
-
-*Theorem 1.2 at $m=12$ and $\ell=4$: the safe singleton classes
-$\{1\},\{2\},\{3\}$ reach $N=3$, while $4$ is self-defeating because
-$4+4+4+4\equiv4\pmod {12}$. Thus $S_{12}(k,4)=3$ for every $k\ge3$.*
-
-This repository formalizes modular Schur numbers $S_m(k,\ell)$ in Lean 4. A
-coloring of $1,\ldots,N$ with $k$ colors is valid when no color class contains
-$x_1,\ldots,x_\ell,y$ satisfying
-$x_1+\cdots+x_\ell\equiv y\pmod m$. The modular Schur number is the greatest
-$N$ admitting such a coloring. Repeated summands are allowed.
+This repository provides a Lean 4 formalization of modular Schur numbers
+$S_m(k,\ell)$, the greatest $N$ admitting a $k$-coloring of $1,\ldots,N$ with
+no monochromatic solution of $x_1+\cdots+x_\ell\equiv y\pmod m$; repeated
+summands are allowed. For $m\ge2$ and $\ell\ge2$, with
+$n=m/\gcd(m,\ell-1)$, its main theorem proves
+$S_m(k,\ell)=n-1$ for every $k\ge n-1$. Comparator-gated Mathlib-only
+structural statements are distinct from the separately audited, hand-written,
+generated-independent public project layer. An earlier generated
+`native_decide` scan tree is absent from the public release and outside both
+verification scopes.
 
 Modular Schur numbers belong to **Ramsey theory**, **additive combinatorics**,
 and **combinatorial number theory**. The forbidden congruence concerns additive
