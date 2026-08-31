@@ -28,11 +28,8 @@ project:
   license: "Apache-2.0"                              # [required]
   repo: "https://github.com/mysticflounder/modular-schur"   # [required] canonical PUBLIC repo, and the Palomar submission target
 
-# Palomar submission is NOT YET COMPLETE. Select and submit an immutable
-# 40-character public commit SHA only after the candidate commit exists and its
-# current registry-layout and CI checks pass. A snapshot cannot reliably name
-# its own Git object, so the selected SHA belongs in the submission record and
-# release handoff rather than this file.
+# Palomar records the immutable submitted commit SHA in the submission record.
+# This metadata file intentionally does not self-reference its containing Git object.
 
 # This public repository contains the substantive Lean source. Omitting a
 # repository block is the v0.4 spelling for a substantive development.

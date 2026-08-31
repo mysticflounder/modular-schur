@@ -9,11 +9,11 @@ import Mathlib
 # Challenge.lean — comparator challenge module (mathlib-only)
 
 This file imports **mathlib only** and states the currently comparator-gated
-structural results from the *modular Schur number* project (paper: "A uniform
-closed form for modular Schur numbers `S_m(k,ℓ)`") as `sorry` stubs. A reviewer
-reads THIS file (not the repository) to see exactly what is being claimed, in
-formal language, with no need to trust any of the project's own definitions —
-every type and predicate below is from mathlib.
+structural results from the *modular Schur number* project (paper:
+"Prime-power structure of the stable regime for modular Schur numbers") as
+`sorry` stubs. A reviewer reads THIS file (not the repository) to see exactly
+what is being claimed, in formal language, with no need to trust any of the
+project's own definitions — every type and predicate below is from mathlib.
 
 `Solution.lean` (which `import`s the project) discharges each `sorry` with the
 real, axiom-clean project theorem, restating the **identical** signature under
