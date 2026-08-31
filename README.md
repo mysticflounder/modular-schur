@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Author: Adam McKenna <adam@mysticflounder.ai>
 -->
 
-# Modular Schur numbers: Lean 4 formalization
+# Prime-power structure of the stable regime for modular Schur numbers
 
 <picture>
   <img alt="Diagram showing how m and ell collapse through d = gcd(m, ell - 1) to n = m/d and the stable modular Schur value n - 1, with examples at m = 12." src="docs/assets/fig/tikz-03.svg">
@@ -40,7 +40,7 @@ using Mathlib vocabulary alone and checked by
 [`leanprover/comparator`](https://github.com/leanprover/comparator). The latest
 Lean-bearing public release passed statement comparison, the configured axiom
 policy, and replay through both the Lean and `nanoda` kernels in
-[run 33297349901](https://github.com/mysticflounder/modular-schur/actions/runs/33297349901).
+[run 33438151044](https://github.com/mysticflounder/modular-schur/actions/runs/33438151044).
 
 The conformance workflow also runs
 `lake build ModularSchur.PublicAxiomAudit`, which builds
@@ -179,6 +179,17 @@ $$
 }
 $$
 
+```mermaid
+flowchart LR
+    E["Prime exponents b_p = v_p(n)"] --> C["Cap at min(b_p, a_p)"]
+    C --> N["Critical core n_crit"]
+    E --> X["Excess layers e_p"]
+    N --> K["Core term kappa(n_crit, a)"]
+    X --> R["Closed tail sum of e_p (p - 1) p^(a_p)"]
+    K --> F["Full cover kappa(n, a)"]
+    R --> F
+```
+
 There are three useful boundary cases:
 
 - if $a_p\ge b_p$, that prime loses no layers and contributes zero;
@@ -244,6 +255,19 @@ The public release uses four status classes:
 discharges declarations with the same names and statements. The Comparator
 checks the elaborated statements; the stubs aren't part of the Solution axiom
 closure.
+
+```mermaid
+flowchart LR
+    C["Challenge.lean — Mathlib-only statements"] --> G["Comparator"]
+    S["Solution.lean — project proofs"] --> G
+    G --> I["Statement identity"]
+    G --> A["Permitted axiom closure"]
+    G --> K["NanoDa + Lean kernel replay"]
+    I --> V["12 Headline declarations verified"]
+    A --> V
+    K --> V
+    P["PublicAxiomAudit.lean — project-only capstones"] --> R["Separate transitive-closure report"]
+```
 
 CI runs this gate on every push that changes the Lean project, Comparator
 configuration, manifest/toolchain, or workflow. It rejects:
