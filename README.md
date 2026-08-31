@@ -6,9 +6,16 @@ Author: Adam McKenna <adam@mysticflounder.ai>
 
 # Prime-power structure of the stable regime for modular Schur numbers
 
-<picture>
-  <img alt="Diagram showing how m and ell collapse through d = gcd(m, ell - 1) to n = m/d and the stable modular Schur value n - 1, with examples at m = 12." src="docs/assets/fig/tikz-03.svg">
-</picture>
+<p align="center">
+  <img
+    src="docs/assets/fig/tikz-06.svg"
+    width="760"
+    alt="Proof schematic for Theorem 1.2 at m = 12 and ell = 4: singleton classes {1}, {2}, and {3} color [1, 3], while n = 4 is unsafe because 4 + 4 + 4 + 4 is congruent to 4 modulo 12; therefore S_12(k, 4) = 3 for every k at least 3.">
+</p>
+
+*Theorem 1.2 at $m=12$ and $\ell=4$: the safe singleton classes
+$\{1\},\{2\},\{3\}$ reach $N=3$, while $4$ is self-defeating because
+$4+4+4+4\equiv4\pmod {12}$. Thus $S_{12}(k,4)=3$ for every $k\ge3$.*
 
 This repository formalizes modular Schur numbers $S_m(k,\ell)$ in Lean 4. A
 coloring of $1,\ldots,N$ with $k$ colors is valid when no color class contains
@@ -31,6 +38,12 @@ $n=m/\gcd(m,\ell-1)$. The project proves
 $$
 S_m(k,\ell)=n-1\qquad\text{for every }k\ge n-1.
 $$
+
+Here *closed form* means exactly that one explicit expression produces the
+stable value directly from $m$ and $\ell$ in a fixed number of elementary
+steps: one gcd, one division, and one subtraction. It requires no search over
+colorings, no recursion, and no case split on $\ell\bmod m$; one rule replaces
+the earlier modulus-by-modulus tables.
 
 It also proves the exact one-color value
 $S_m(1,\ell)=\min(\ell-1,\lfloor m/\ell\rfloor)$ for $2\le\ell\le m$, the
@@ -581,9 +594,11 @@ bounded project account.
 ## Header figure and paper snapshot
 
 The header uses the synchronized paper asset
-[`docs/assets/fig/tikz-03.svg`](docs/assets/fig/tikz-03.svg). Its TikZ source is
-compiled and published only by an explicit full release from the
-source-of-truth repository. A Lean-only release reuses the existing asset.
+[`docs/assets/fig/tikz-06.svg`](docs/assets/fig/tikz-06.svg). It illustrates
+both halves of the stable theorem at $m=12$, $\ell=4$: the singleton lower
+bound through $n-1=3$ and the self-defeating upper-bound obstruction at $n=4$.
+Its TikZ source is compiled and published only by an explicit full release from
+the source-of-truth repository. A Lean-only release reuses the existing asset.
 
 The public Markdown snapshot can be rendered with Pandoc:
 
