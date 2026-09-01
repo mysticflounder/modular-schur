@@ -8,7 +8,7 @@
 #   1. Build the two comparator modules:
 #        Challenge — mathlib-only sorry stubs (must elaborate w/ Mathlib alone)
 #        Solution  — project proofs discharging each stub, under the SAME bare
-#                    (Headline.) theorem names the comparator config lists
+#                    (ComparatorClaims.) theorem names the comparator config lists
 #   2. Run the axiom audit: every Solution theorem's #print axioms closure must
 #      be a subset of {propext, Classical.choice, Quot.sound}.
 #

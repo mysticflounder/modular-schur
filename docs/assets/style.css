@@ -634,7 +634,7 @@ code, pre { font-family: var(--mono); }
 
 /* ══ The paper ═════════════════════════════════════════════════════════════
  *
- * index.html is paper/modular-schur.md rendered by site/theme/paper.lua. The
+ * index.html is docs/paper/modular-schur.md rendered by site/theme/paper.lua. The
  * paper's structure is LaTeX, so these rules dress what that filter emits:
  * theorem-family blocks, proofs, float figures holding a compiled TikZ SVG,
  * the bibliography, and the \ref and \cite links. Section headings here are

@@ -36,7 +36,7 @@ Always name the scope explicitly.
 
 | Scope | Command | May change | Protected |
 | --- | --- | --- | --- |
-| Lean and status | `--scope lean` | curated Lean, comparator files, metadata, CI, reproduction scripts, public README, `LEAN_STATUS.md`, `RELEASING.md`, `docs/status.html` | `paper/`, `docs/index.html`, `docs/paper/`, `docs/assets/` |
+| Lean and status | `--scope lean` | curated Lean, comparator files, metadata, CI, reproduction scripts, public README, `LEAN_STATUS.md`, `RELEASING.md`, `docs/status.html` | `docs/index.html`, `docs/paper/`, `docs/assets/` |
 | Full publication | `--scope full` | everything above plus the complete built site and paper snapshot | no paper guard; use only with explicit paper-release authority |
 
 The publisher has no default scope. It exits unless the caller supplies
@@ -66,7 +66,8 @@ scripts/lake-build.sh          # deletion only; deprecated local wrapper
 docs/status.html
 ```
 
-Full scope additionally owns `docs/**` and `paper/**`. The script never uses
+Full scope additionally owns `docs/**`; during the one-time layout migration
+it may also delete the superseded public `paper/**` tree. The script never uses
 `git add -A`. It starts from a clean public checkout, stages the allowlist, and
 fails if any staged path falls outside that scope.
 
@@ -116,18 +117,22 @@ destination mutation.
 
 ## 2. Record the paper guard
 
-For a Lean-scope release, record hashes before source publication work:
+After the initial full release has installed the `docs/paper/` layout, record
+these hashes before any later Lean-scope publication work. If any listed file
+is absent, do not perform a Lean-only release; run the explicitly authorized
+full publication first.
 
 ```bash
 shasum -a 256 \
-  /Users/adam/projects/math-projects/modular-schur-public-staging/paper/modular-schur.md \
-  /Users/adam/projects/math-projects/modular-schur-public-staging/paper/modular-schur.pdf \
   /Users/adam/projects/math-projects/modular-schur-public-staging/docs/index.html \
-  /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/modular-schur.pdf
+  /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/modular-schur.md \
+  /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/modular-schur.pdf \
+  /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/paper-i-endpoint-formulas-draft.md \
+  /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/paper-ii-stable-prime-power-structure-draft.md
 ```
 
 The hashes must match after assembly and after the public commit. Also require
-an empty Git status under `paper/`, `docs/index.html`, `docs/paper/`, and
+an empty Git status under `docs/index.html`, `docs/paper/`, and
 `docs/assets/`. The publisher enforces the Git guard; the explicit hashes make
 the release report independently checkable.
 
@@ -149,7 +154,7 @@ module name to `scripts/public-lean-modules.txt`. Every transitive
 generated-dependent bridges, or a module carrying an unapproved trust
 boundary merely to close imports.
 
-The twelve live comparator declarations are atomic. A future comparator
+The thirteen live comparator declarations are atomic. A future comparator
 expansion must update `Challenge.lean`, `Solution.lean`, `config.json`,
 `axiom-audit.lean`, and the documentation in one reviewed change. Planning
 rows in `lean/comparator/README.md` make no comparator claim.
@@ -187,7 +192,7 @@ and `Quot.sound`; this build target does not itself enforce a whitelist or fail
 automatically on a custom axiom. The conformance workflow runs
 `lake build ModularSchur.PublicAxiomAudit` as a separate step from the
 Comparator/`nanoda` gate, whose scope remains exactly
-the twelve `Headline` declarations. The comparator package has its own audit:
+the thirteen `ComparatorClaims` declarations. The comparator package has its own audit:
 
 ```bash
 lean/comparator/check-conformance.sh
@@ -200,8 +205,8 @@ Interpret the gates separately:
   boundaries in the curated project modules;
 - `#print axioms` establishes the transitive trust closure of the named
   capstones;
-- the comparator and `nanoda` CI jobs govern only the configured twelve
-  `Headline` declarations;
+- the comparator and `nanoda` CI jobs govern only the configured thirteen
+  `ComparatorClaims` declarations;
 - an independent review is required before a new theorem package is described
   as independently audited.
 
@@ -347,7 +352,7 @@ Use full scope only when the paper and complete website are authorized release
 targets:
 
 ```bash
-pandoc --number-sections paper/modular-schur.md -o paper/modular-schur.pdf
+pandoc --number-sections docs/paper/modular-schur.md -o docs/paper/modular-schur.pdf
 scripts/build-site.sh
 node scripts/check-site-math.mjs site/build/index.html
 node scripts/check-site-math.mjs site/build/status.html
@@ -355,7 +360,8 @@ scripts/publish-public.sh --scope full --dry-run
 scripts/publish-public.sh --scope full
 ```
 
-A full release replaces public `docs/` and `paper/`. It therefore requires an
+A full release replaces public `docs/` and removes the superseded root
+`paper/` tree if it is still present. It therefore requires an
 additional paper-source/PDF synchronization review, figure render checks, link
 checks, and explicit inspection of all shared assets. None of that authority is
 implied by a Lean-scope request.

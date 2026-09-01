@@ -7,8 +7,9 @@ Author: Adam McKenna <adam@mysticflounder.ai>
 # Lean theorem inventory
 
 This file records the Lean content distributed in the public repository as of
-2026-08-29. It separates the twelve externally comparator-gated declarations
-from the larger project-only theorem layer. The exact module allowlist is
+2026-08-29. It separates the thirteen declarations configured for the Comparator
+gate from the larger project-only theorem layer. A fresh Comparator CI run is
+required before this renamed configuration is released publicly. The exact module allowlist is
 [`lean/PUBLIC_MODULES.txt`](lean/PUBLIC_MODULES.txt).
 
 ## Status terms
@@ -20,27 +21,28 @@ from the larger project-only theorem layer. The exact module allowlist is
   fidelity, import reachability, a fresh build, and the named theorem's
   transitive axiom closure.
 - **Kernel-checked project theorem**: the declaration builds without a proof
-  placeholder. Its package is public, but it is not one of the twelve
+placeholder. Its package is public, but it is not one of the thirteen
   comparator declarations.
 - **Adapter only**: the displayed implication is proved, while a producer for
   one of its hypotheses remains open.
 
 ## Comparator-gated declarations
 
-The current gate contains twelve declarations under `Headline`:
+The current gate contains thirteen declarations under `ComparatorClaims`:
 
-1. `schurMod_eq`
-2. `schurMod_is_greatest`
-3. `no_valid_partition_of_ge_m`
-4. `schurMod_eq_schurModResidue`
-5. `schurModResidue_eq`
-6. `schurModResidue_le`
-7. `le_schurModResidue`
-8. `singleton_sumFree_iff`
-9. `unsafe_witness_residue`
-10. `not_sumFree_of_mem_zero`
-11. `schurModResidue_k1`
-12. `sigmaInfty_le`
+1. `schurMod_integerClosedForm`
+2. `schurMod_integerCap_isGreatest`
+3. `noValidIntegerPartition_of_ge_modulus`
+4. `schurMod_integer_eq_residue`
+5. `schurModResidue_closedForm`
+6. `schurModResidue_upperBound`
+7. `schurModResidue_lowerBound`
+8. `singleton_sumFree_iff_nonzeroMultiple`
+9. `criticalResidue_isUnsafe`
+10. `zeroMem_notSumFree`
+11. `schurModResidue_oneColorClosedForm_of_le_modulus`
+12. `schurModResidue_oneColorClosedForm`
+13. `sigmaInfty_card_le_minFacQuotient`
 
 Their project import closure is the ten-module structural package from
 `Basic.lean` through `SigmaInfty.lean`. The gate permits only `propext`,
@@ -49,7 +51,7 @@ CI. `lean/comparator/README.md` gives the exact statement-to-project mapping.
 
 ## Independently audited project-only packages
 
-These packages are now distributed but remain outside the twelve-declaration
+These packages are now distributed but remain outside the thirteen-declaration
 comparator configuration.
 
 | Package | Main modules | Named capstones |
@@ -124,10 +126,10 @@ runs `lake build ModularSchur.PublicAxiomAudit`: its `#print axioms` commands el
 the named declarations and surface their transitive closures in the CI log for
 review. This target does not automatically whitelist-fail on custom axioms.
 It is independent of the Comparator/`nanoda` gate, which still checks exactly
-the twelve `Headline` declarations. Those build gates must pass before the
+the thirteen `ComparatorClaims` declarations. Those build gates must pass before the
 staged public candidate is committed.
 
-`Challenge.lean` intentionally contains twelve `sorry` statement stubs. They
+`Challenge.lean` intentionally contains thirteen `sorry` statement stubs. They
 are not proofs. `Solution.lean` supplies the proofs, and the comparator checks
 the two exported statement sets.
 

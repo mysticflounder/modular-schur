@@ -161,18 +161,16 @@ def exact_k0_inf(m: int, c: int) -> int:
 
         best = remaining.bit_count()
         ordered: list[tuple[int, int]] = []
-        max_cover = 1
         assert best_choices is not None
 
         for subset in best_choices:
             cover = (subset & remaining).bit_count()
             if cover == 0:
                 continue
-            if cover > max_cover:
-                max_cover = cover
             ordered.append((cover, subset))
 
         ordered.sort(key=lambda item: (-item[0], item[1]))
+        max_cover = max((mask & remaining).bit_count() for mask in masks)
         lower_bound = math.ceil(remaining.bit_count() / max_cover)
 
         for cover, subset in ordered:

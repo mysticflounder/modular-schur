@@ -81,8 +81,8 @@ jobs:
 
       - name: Build public project axiom audit
         # This standalone module prints the transitive axiom closures of the
-        # broader public project-only capstones; it is outside the 12-statement
-        # independent comparator registry.
+        # broader public project-only capstones; it is outside the 13-declaration
+        # independent ComparatorClaims registry.
         working-directory: lean
         run: lake build ModularSchur.PublicAxiomAudit
 
@@ -94,7 +94,8 @@ jobs:
     # sandbox and the nanoda + Lean default kernel legs on a runner — first
     # public green run 30211804373 (2026-07-26); current public green run
     # 32621310205 (commit cf59f78, 2026-08-23).
-    # A failure here is either a real regression in the 12 gated theorems or
+    # A failure here is either a real regression in the 13 gated ComparatorClaims
+    # declarations or
     # drift in one of the pinned tool revisions below — both worth stopping for.
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4 (v4.4.0)
@@ -192,7 +193,7 @@ jobs:
           ( cd "$RUNNER_TEMP/nanoda" && cargo build --release )
           echo "$RUNNER_TEMP/nanoda/target/release" >> "$GITHUB_PATH"
 
-      - name: Run comparator on the 12 headline theorems
+      - name: Run comparator on the 13 ComparatorClaims declarations
         working-directory: lean
         run: |
           set -euo pipefail

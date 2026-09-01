@@ -4,18 +4,26 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
 import ModularSchur.CanonicalCriticalCore
+import ModularSchur.CanonicalBlockMonotonicity
+import ModularSchur.AllButOneAxisCover
+import ModularSchur.AxisBlockCount
+import ModularSchur.AllButOneAxisCount
 import ModularSchur.DeficitGrowthCertificateShape
+import ModularSchur.K1IntegerTheorem
+import ModularSchur.PairSupportGraph
 import ModularSchur.WholeAxisPID
 
 /-!
 # Public project-only dependency audit
 
 This module prints the transitive dependency closure of the named capstones in the
-curated public project-only layer. The twelve comparator declarations have a
+curated public project-only layer. The thirteen comparator declarations have a
 separate audit in `comparator/axiom-audit.lean`.
 -/
 
 namespace ModularSchur
+
+#print axioms schurMod_k1_all
 
 #print axioms TauClosure.tauDPRec_characterization
 #print axioms TauClosure.costDP_eq_tauDPRec
@@ -31,10 +39,23 @@ namespace ModularSchur
 #print axioms WholeAxisPID.axis_cover_coordCliques_eq_card_of_singleton_pattern
 
 #print axioms AxisLabelledCover.axis_cover_extensionalImage_eq_privateLabels_add_residual
+#print axioms PairSupportGraph.maxPacking_eq_indepNum
 
 namespace CanonicalBlocks
 
 #print axioms canonicalPrivateLabels_eq_supportOneSeedLabels
+#print axioms axisCover_canonicalPrefixExtensionalFamily_mono
+#print axioms axisCover_canonicalExtensionalFamily_factorization_mono
+#print axioms supportedPrimes_card_ge_two_of_mem_canonicalSeedResidualPoints
+#print axioms allButOneAxis_isLabelCover
+#print axioms axisCover_canonicalExtensionalFamily_le_seed_add_residualLabelsExceptAxis
+#print axioms card_axisLayerLabels_eq_min
+#print axioms card_axisLabels_eq_sum_layers
+#print axioms card_seedLabelsOnAxis_eq_axisSeedCountFormula
+#print axioms card_residualAxisLabels_eq_card_axisLabels_sub_axisSeedCountFormula
+#print axioms card_residualLabelsExceptAxis_eq_sum_residualAxisCountFormula
+#print axioms axisCover_canonicalExtensionalFamily_le_seed_add_sum_residualAxisCountFormula
+#print axioms axisCover_canonicalExtensionalFamily_le_seed_add_sum_residualAxisCountFormula_sub_max
 #print axioms card_supportOneSeedLabels_eq_seedCountFormula
 #print axioms axisCover_canonicalExtensionalFamily_eq_seedCountFormula_add_residual
 #print axioms canonicalSeedResidualPoints_mul_eq_image

@@ -17,6 +17,14 @@ generated-independent public project layer. An earlier generated
 `native_decide` scan tree is absent from the public release and outside both
 verification scopes.
 
+The proposed publication split is available as two standalone drafts:
+[Paper I, *Endpoint formulas for modular Schur numbers, with a correction to a
+prime-power formula*](docs/paper/paper-i-endpoint-formulas-draft.md), and
+[Paper II, *Prime-power structure of the stable regime for modular Schur
+numbers*](docs/paper/paper-ii-stable-prime-power-structure-draft.md). These are
+draft manuscripts; the rendered site currently continues to use the legacy
+combined manuscript.
+
 Modular Schur numbers belong to **Ramsey theory**, **additive combinatorics**,
 and **combinatorial number theory**. The forbidden congruence concerns additive
 structure and sum-free sets in the finite cyclic group $\mathbb Z/m\mathbb Z$;
@@ -42,12 +50,14 @@ the earlier modulus-by-modulus tables.
 It also proves the exact one-color value
 $S_m(1,\ell)=\min(\ell-1,\lfloor m/\ell\rfloor)$ for $2\le\ell\le m$, the
 integer-to-residue bridge, the matching upper and lower bounds, and the
-$\sigma_\infty$ coset-cardinality bound. Twelve of these results are restated
-using Mathlib vocabulary alone and checked by
+$\sigma_\infty$ coset-cardinality bound. Thirteen of these results are staged
+as Mathlib-only declarations for
 [`leanprover/comparator`](https://github.com/leanprover/comparator). The latest
 Lean-bearing public release passed statement comparison, the configured axiom
-policy, and replay through both the Lean and `nanoda` kernels in
+policy, and replay through both the Lean and `nanoda` kernels for its preceding
+12-claim configuration in
 [run 33438151044](https://github.com/mysticflounder/modular-schur/actions/runs/33438151044).
+This source snapshot requires a fresh Comparator CI run before it is released.
 
 The conformance workflow also runs
 `lake build ModularSchur.PublicAxiomAudit`, which builds
@@ -56,8 +66,8 @@ The conformance workflow also runs
 elaborates the named declarations and surfaces their transitive axiom closures
 in the CI log for review; it does not automatically enforce an axiom whitelist
 or fail merely because a custom axiom appears. This is independent of the
-Comparator/`nanoda` gate, which still checks exactly the twelve declarations in
-the `Headline` namespace.
+Comparator/`nanoda` gate, which checks exactly the thirteen declarations in
+the `ComparatorClaims` namespace.
 
 A second, project-only layer develops exact-cover and canonical-axis machinery.
 Its audited capstones give the exact support-one seed count, stable-prime
@@ -65,7 +75,7 @@ residual transport, the recurrence
 $\kappa(pn,a)=\kappa(n,a)+(p-1)p^{a_p}$ for a prime $p$, $n\ne0$, and
 $a_p\le v_p(n)$, prime-power iteration, and the unrestricted reduction to an
 exponent-truncated critical core. Those results are kernel checked and publicly
-packaged, but they aren't silently included in the twelve-statement Comparator
+packaged, but they aren't silently included in the thirteen-statement Comparator
 configuration.
 
 The main closed form is complete. The general least-color threshold
@@ -118,7 +128,7 @@ closed form; it isn't computational evidence for it.
 ## What is formalized
 
 The project-facing declarations use the definitions in `ModularSchur`. The
-Comparator-facing declarations under `Headline` expand those definitions into
+Comparator-facing declarations under `ComparatorClaims` expand those definitions into
 Mathlib terms, allowing a reviewer to inspect the claimed statements without
 trusting a project-defined abbreviation.
 
@@ -135,8 +145,8 @@ theorem schurMod_eq (m k ℓ : ℕ) (hm : 2 ≤ m) (hℓ : 2 ≤ ℓ)
 ```
 
 The Mathlib-only statement is
-[`Headline.schurMod_eq`](lean/comparator/Challenge.lean#L72). The companion
-theorem `schurMod_is_greatest` proves that the bounded `Nat.findGreatest`
+[`ComparatorClaims.schurMod_integerClosedForm`](lean/comparator/Challenge.lean#L72).
+The companion claim `schurMod_integerCap_isGreatest` proves that the bounded `Nat.findGreatest`
 presentation used there still expresses the unbounded greatest-$N$ definition.
 
 ### One-color closed form: [`ModularSchur.schurModResidue_k1`](lean/ModularSchur/K1Theorem.lean#L173)
@@ -150,7 +160,7 @@ theorem schurModResidue_k1 (m ℓ : ℕ) (hm : 2 ≤ m)
     schurModResidue m 1 ℓ = min (ℓ - 1) (m / ℓ)
 ```
 
-This resolves D'orville–Sim–Wong–Ho Problem 1.3 and is one of the twelve
+This resolves D'orville–Sim–Wong–Ho Problem 1.3 and is one of the thirteen
 Comparator-gated declarations.
 
 ### Exponent-truncated critical core: [`CanonicalCriticalCore`](lean/ModularSchur/CanonicalCriticalCore.lean#L255)
@@ -227,14 +237,14 @@ family, not directly about $S_m(k,\ell)$.
 
 This final consumer is independently audited in the project-only layer, with
 axiom closure exactly `{propext, Classical.choice, Quot.sound}`. It isn't one
-of the twelve statements currently compared against a Mathlib-only
+of the thirteen statements currently compared against a Mathlib-only
 restatement.
 
 ---
 
 ## Proof status
 
-The stable closed form and all twelve published Comparator statements are
+The stable closed form and all thirteen configured Comparator statements are
 proved without `sorryAx`, custom axioms, `native_decide`, or an unsafe/external
 implementation boundary. Their transitive axiom closure is contained in, and
 for the named headline results measured as, exactly
@@ -257,7 +267,7 @@ The public release uses four status classes:
 ### Comparator-gated layer
 
 [`lean/comparator/Challenge.lean`](lean/comparator/Challenge.lean) imports only
-`Mathlib` and contains the twelve claims as deliberate `sorry` stubs.
+`Mathlib` and contains the thirteen claims as deliberate `sorry` stubs.
 [`Solution.lean`](lean/comparator/Solution.lean) imports the project proofs and
 discharges declarations with the same names and statements. The Comparator
 checks the elaborated statements; the stubs aren't part of the Solution axiom
@@ -270,7 +280,7 @@ flowchart LR
     G --> I["Statement identity"]
     G --> A["Permitted axiom closure"]
     G --> K["NanoDa + Lean kernel replay"]
-    I --> V["12 Headline declarations verified"]
+    I --> V["13 ComparatorClaims declarations verified"]
     A --> V
     K --> V
     P["PublicAxiomAudit.lean — project-only capstones"] --> R["Separate transitive-closure report"]
@@ -304,8 +314,8 @@ which consumers also received independent statement review. The module's
 `#print axioms` commands are elaborated by its build and emit each named
 declaration's transitive closure for review; the build itself does not
 automatically whitelist-fail on custom axioms. This project-only audit remains
-separate from the independent Comparator/`nanoda` gate for exactly twelve
-`Headline` statements.
+separate from the independent Comparator/`nanoda` gate for exactly thirteen
+`ComparatorClaims` statements.
 
 ### The open frontier
 
@@ -334,29 +344,30 @@ absent from this public repository and from the structural verification claim.
 
 ---
 
-## Headline theorems
+## Comparator-gated theorems
 
-All twelve declarations in the first table are independently gated through
+All thirteen declarations in the first table are independently gated through
 Mathlib-only statements. The second table records the principal project-only
 packages; its exact per-consumer audit boundary is maintained in
 [`LEAN_STATUS.md`](LEAN_STATUS.md).
 
 ### Comparator-gated structural results
 
-| Theorem under `Headline` | Project theorem | Statement or role |
+| Theorem under `ComparatorClaims` | Project theorem | Statement or role |
 |---|---|---|
-| [`schurMod_eq`](lean/comparator/Challenge.lean#L72) | `ModularSchur.schurMod_eq` | Main stable closed form, integer definition |
-| [`schurMod_is_greatest`](lean/comparator/Challenge.lean#L87) | `ModularSchur.schurMod_is_greatest` | The `N ≤ m-1` search cap is lossless |
-| [`no_valid_partition_of_ge_m`](lean/comparator/Challenge.lean#L105) | `ModularSchur.no_valid_partition_of_ge_m` | No valid partition exists once `N ≥ m` |
-| [`schurMod_eq_schurModResidue`](lean/comparator/Challenge.lean#L117) | `ModularSchur.schurMod_eq_schurModResidue` | Integer-to-residue reduction |
-| [`schurModResidue_eq`](lean/comparator/Challenge.lean#L136) | `ModularSchur.schurModResidue_eq` | Main stable closed form, residue definition |
-| [`schurModResidue_le`](lean/comparator/Challenge.lean#L150) | `ModularSchur.schurModResidue_le` | Stable-regime upper bound |
-| [`le_schurModResidue`](lean/comparator/Challenge.lean#L163) | `ModularSchur.le_schurModResidue` | Stable-regime lower bound |
-| [`singleton_sumFree_iff`](lean/comparator/Challenge.lean#L176) | `ModularSchur.singleton_sumFree_iff` | Exact singleton-safety criterion |
-| [`unsafe_witness_residue`](lean/comparator/Challenge.lean#L184) | `ModularSchur.unsafe_witness_residue` | Arithmetic unsafe witness at `n = m / gcd(m, ℓ − 1)` |
-| [`not_sumFree_of_mem_zero`](lean/comparator/Challenge.lean#L190) | `ModularSchur.not_sumFree_of_mem_zero` | Any class containing zero is unsafe |
-| [`schurModResidue_k1`](lean/comparator/Challenge.lean#L197) | `ModularSchur.schurModResidue_k1` | Exact one-color formula |
-| [`sigmaInfty_le`](lean/comparator/Challenge.lean#L210) | `ModularSchur.sigmaInfty_le` | Coset cardinality bound `card(C) ≤ m / minFac(m)` |
+| [`schurMod_integerClosedForm`](lean/comparator/Challenge.lean) | `ModularSchur.schurMod_eq` | Main stable closed form, integer definition |
+| [`schurMod_integerCap_isGreatest`](lean/comparator/Challenge.lean) | `ModularSchur.schurMod_is_greatest` | The `N ≤ m-1` search cap is lossless |
+| [`noValidIntegerPartition_of_ge_modulus`](lean/comparator/Challenge.lean) | `ModularSchur.no_valid_partition_of_ge_m` | No valid partition exists once `N ≥ m` |
+| [`schurMod_integer_eq_residue`](lean/comparator/Challenge.lean) | `ModularSchur.schurMod_eq_schurModResidue` | Integer-to-residue reduction |
+| [`schurModResidue_closedForm`](lean/comparator/Challenge.lean) | `ModularSchur.schurModResidue_eq` | Main stable closed form, residue definition |
+| [`schurModResidue_upperBound`](lean/comparator/Challenge.lean) | `ModularSchur.schurModResidue_le` | Stable-regime upper bound |
+| [`schurModResidue_lowerBound`](lean/comparator/Challenge.lean) | `ModularSchur.le_schurModResidue` | Stable-regime lower bound |
+| [`singleton_sumFree_iff_nonzeroMultiple`](lean/comparator/Challenge.lean) | `ModularSchur.singleton_sumFree_iff` | Exact singleton-safety criterion |
+| [`criticalResidue_isUnsafe`](lean/comparator/Challenge.lean) | `ModularSchur.unsafe_witness_residue` | Arithmetic unsafe witness at `n = m / gcd(m, ℓ − 1)` |
+| [`zeroMem_notSumFree`](lean/comparator/Challenge.lean) | `ModularSchur.not_sumFree_of_mem_zero` | Any class containing zero is unsafe |
+| [`schurModResidue_oneColorClosedForm_of_le_modulus`](lean/comparator/Challenge.lean) | `ModularSchur.schurModResidue_k1` | Exact one-color formula for `2 ≤ ℓ ≤ m` |
+| [`schurModResidue_oneColorClosedForm`](lean/comparator/Challenge.lean) | `ModularSchur.schurModResidue_k1_all` | Complete one-color formula for every `ℓ ≥ 2` |
+| [`sigmaInfty_card_le_minFacQuotient`](lean/comparator/Challenge.lean) | `ModularSchur.sigmaInfty_le` | Coset cardinality bound `card(C) ≤ m / minFac(m)` |
 
 ### Canonical-cover and critical-core results
 
@@ -463,8 +474,8 @@ driver. These scans aren't dependencies of `schurMod_eq`.
 │   ├── lakefile.toml
 │   ├── lake-manifest.json
 │   └── lean-toolchain
-├── docs/                      published paper site and living status record
-├── paper/                     synchronized paper source/PDF snapshot
+├── docs/                      published paper site, sources/PDF, and living status record
+│   └── paper/                 legacy source/PDF plus split-paper drafts
 ├── scripts/                   public scan drivers
 ├── LEAN_STATUS.md             theorem/package/trust-boundary authority
 ├── RELEASING.md               source-to-public release and paper guards
@@ -472,7 +483,7 @@ driver. These scans aren't dependencies of `schurMod_eq`.
 └── LICENSE                    Apache-2.0
 ```
 
-Lean-only releases preserve `paper/`, `docs/index.html`, `docs/paper/`, and
+Lean-only releases preserve `docs/index.html`, `docs/paper/`, and
 `docs/assets/` byte for byte. [`RELEASING.md`](RELEASING.md) documents the
 source-first/public-second procedure and its exact path guards.
 
@@ -483,7 +494,7 @@ source-first/public-second procedure and its exact path guards.
 ### Start here: the audited statement surface
 
 Read [`lean/comparator/Challenge.lean`](lean/comparator/Challenge.lean) first.
-It imports only Mathlib and is the shortest precise account of the twelve gated
+It imports only Mathlib and is the shortest precise account of the thirteen gated
 claims. [`lean/comparator/README.md`](lean/comparator/README.md) maps each claim
 to its project theorem and explains the two bridge lemmas.
 
@@ -632,7 +643,7 @@ the source-of-truth repository. A Lean-only release reuses the existing asset.
 The public Markdown snapshot can be rendered with Pandoc:
 
 ```bash
-pandoc --number-sections paper/modular-schur.md -o paper/modular-schur.pdf
+pandoc --number-sections docs/paper/modular-schur.md -o docs/paper/modular-schur.pdf
 ```
 
 The canonical web build additionally compiles and inlines the TikZ figures so

@@ -16,15 +16,17 @@ rev = "db584cd6d46c92f209a44c0f1c829460d327499d"
 name = "ModularSchur"
 
 # ── Comparator auditability gate (Zulip submission standard) ─────────────────
-# Two out-of-tree modules under comparator/ (not in defaultTargets, so the normal
-# `lake build` is unaffected). Build them explicitly:
+# Three out-of-tree modules under comparator/ (not in defaultTargets, so the normal
+# `lake build` is unaffected). Build the live gate explicitly:
 #   lake build Challenge Solution
-# Challenge imports Mathlib only and states the 12 currently configured
+# Challenge imports Mathlib only and states the 13 currently configured
 # structural results as `sorry` stubs; Solution imports the project and
-# discharges them under identical top-level (`Headline.`) names. The
+# discharges them under identical top-level (`ComparatorClaims.`) names. The
 # leanprover/comparator run checks statement identity and axiom cleanliness
-# across the two exports. Pending project-wide packages are documented in
-# comparator/README.md and are not registered until both declarations exist.
+# across the two exports. StrategySketch is a mathlib-only, declaration-free
+# Paper II planning module and is not part of the Comparator configuration.
+# Pending project-wide packages are documented in comparator/README.md and are
+# not registered until both declarations exist.
 
 [[lean_lib]]
 name = "Challenge"
@@ -32,4 +34,8 @@ srcDir = "comparator"
 
 [[lean_lib]]
 name = "Solution"
+srcDir = "comparator"
+
+[[lean_lib]]
+name = "StrategySketch"
 srcDir = "comparator"

@@ -114,10 +114,10 @@ The hatched residues are the ones <span class="math inline">\ell - 1</span> anni
 </section>
 <section id="formalization-status" class="level2">
 <h2>Formalization status</h2>
-<p>Twelve structural results are machine-checked in Lean 4, on toolchain <code>leanprover/lean4:v4.33.0</code> with Mathlib pinned at <code>db584cd6</code>.</p>
-<p>They are checked through a <strong>comparator gate</strong>, which exists to stop a formalization from proving something weaker than it appears to. Each theorem is stated twice: once in <code>comparator/Challenge.lean</code> using only Mathlib definitions, with the proof left as <code>sorry</code>, and once in <code>comparator/Solution.lean</code> where it is proved from this project’s development. The comparator checks that the two elaborated declarations carry the same statement, so the Lean statement cannot quietly drift toward the project’s own convenient definitions. It then checks the permitted declaration and axiom boundary and replays the proof exports through the configured kernels. The source files are not byte-identical, and nothing compares them as bytes. The <code>sorry</code>s in <code>Challenge.lean</code> are the design: they are the twelve holes the gate fills.</p>
-<p>The conformance workflow also runs <code>lake build ModularSchur.PublicAxiomAudit</code>, which builds <code>ModularSchur.PublicAxiomAudit</code>, a <code>#print axioms</code> module for the broader project-only layer. That build elaborates the named declarations and surfaces their transitive axiom closures in the CI log for review; it does not automatically enforce a whitelist or fail merely because a custom axiom appears. This is independent of the Comparator/<code>nanoda</code> gate, whose scope remains exactly the twelve <code>Headline</code> declarations.</p>
-<p><span class="st st-proven">Verified</span> The expanded gate passed on public commit <a href="https://github.com/mysticflounder/modular-schur/commit/6fcb3470d0f22776694bd44ee2a28c87184b953d"><code>6fcb347</code></a> (<a href="https://github.com/mysticflounder/modular-schur/actions/runs/33297349901">run 33297349901</a>, 2026-08-30 UTC). That run exercised the current 12-declaration comparator package, Lean 4.33 toolchain, pinned workflow, and both configured kernels. Later metadata-only commits may cite it only while the <code>lean/</code> tree and workflow bytes remain unchanged. The build stamp in the page footer is the commit of the private source tree the public tree is synced from, not a public-repository SHA. The gate fails the build on any of: a <code>sorryAx</code> in the closure, an axiom outside <code>{propext, Classical.choice, Quot.sound}</code>, a generated native-evaluation axiom such as <code>declaration._native.native_decide.ax_*</code>, or a Challenge/Solution statement mismatch. A second job replays the proofs through the independent <code>nanoda</code> kernel.</p>
+<p>Thirteen structural results are configured for the Comparator gate in Lean 4, on toolchain <code>leanprover/lean4:v4.33.0</code> with Mathlib pinned at <code>db584cd6</code>.</p>
+<p>They are checked through a <strong>comparator gate</strong>, which exists to stop a formalization from proving something weaker than it appears to. Each theorem is stated twice: once in <code>comparator/Challenge.lean</code> using only Mathlib definitions, with the proof left as <code>sorry</code>, and once in <code>comparator/Solution.lean</code> where it is proved from this project’s development. The comparator checks that the two elaborated declarations carry the same statement, so the Lean statement cannot quietly drift toward the project’s own convenient definitions. It then checks the permitted declaration and axiom boundary and replays the proof exports through the configured kernels. The source files are not byte-identical, and nothing compares them as bytes. The <code>sorry</code>s in <code>Challenge.lean</code> are the design: they are the thirteen holes the gate fills.</p>
+<p>The conformance workflow also runs <code>lake build ModularSchur.PublicAxiomAudit</code>, which builds <code>ModularSchur.PublicAxiomAudit</code>, a <code>#print axioms</code> module for the broader project-only layer. That build elaborates the named declarations and surfaces their transitive axiom closures in the CI log for review; it does not automatically enforce a whitelist or fail merely because a custom axiom appears. This is independent of the Comparator/<code>nanoda</code> gate, whose scope remains exactly the thirteen <code>ComparatorClaims</code> declarations.</p>
+<p><span class="st st-proven">Verified</span> The preceding 12-declaration gate passed on public commit <a href="https://github.com/mysticflounder/modular-schur/commit/6fcb3470d0f22776694bd44ee2a28c87184b953d"><code>6fcb347</code></a> (<a href="https://github.com/mysticflounder/modular-schur/actions/runs/33297349901">run 33297349901</a>, 2026-08-30 UTC). That run exercised the then-current 12-declaration comparator package, Lean 4.33 toolchain, pinned workflow, and both configured kernels. The current thirteen-declaration source configuration requires a fresh Comparator CI run before public release. The build stamp in the page footer is the commit of the private source tree the public tree is synced from, not a public-repository SHA. The gate fails the build on any of: a <code>sorryAx</code> in the closure, an axiom outside <code>{propext, Classical.choice, Quot.sound}</code>, a generated native-evaluation axiom such as <code>declaration._native.native_decide.ax_*</code>, or a Challenge/Solution statement mismatch. A second job replays the proofs through the independent <code>nanoda</code> kernel.</p>
 <p>The comparator runs at its tag <code>v4.33.0</code> (commit <code>3927ad383f208ae977c340a91c48ac9b497d2097</code>), matched to the Lean toolchain and pinned by commit in CI. The gate here is a self-audit of the project’s own trusted source, not a hostile-submission contest: CI hands the comparator a fully pre-built <code>.lake</code>, so the guarantee rests on the statement-identity, axiom-boundary, and kernel-replay checks rather than on the sandbox that exists to contain a malicious solution author. One open upstream issue questions that sandbox’s process containment (<a href="https://github.com/leanprover/comparator/issues/77">leanprover/comparator#77</a>); it does not touch the checks this gate relies on.</p>
 <figure>
 <div class="fig-head">
@@ -215,62 +215,67 @@ The gate exists to stop a formalization from proving something weaker than it ap
 </thead>
 <tbody>
 <tr>
-<td><code>schurMod_eq</code></td>
+<td><code>ComparatorClaims.schurMod_integerClosedForm</code></td>
 <td>the main theorem, over <span class="math inline">\mathbb{N}</span></td>
 <td><code>IntegerBridge.lean</code></td>
 </tr>
 <tr>
-<td><code>schurModResidue_eq</code></td>
-<td>the main theorem, residue form</td>
-<td><code>Partition.lean</code></td>
-</tr>
-<tr>
-<td><code>schurMod_eq_schurModResidue</code></td>
-<td>the two forms agree</td>
+<td><code>ComparatorClaims.schurMod_integerCap_isGreatest</code></td>
+<td>maximality of the bounded integer search</td>
 <td><code>IntegerBridge.lean</code></td>
 </tr>
 <tr>
-<td><code>schurModResidue_le</code></td>
-<td>upper bound</td>
-<td><code>Partition.lean</code></td>
-</tr>
-<tr>
-<td><code>le_schurModResidue</code></td>
-<td>lower bound</td>
-<td><code>Partition.lean</code></td>
-</tr>
-<tr>
-<td><code>schurMod_is_greatest</code></td>
-<td>maximality of the witness</td>
-<td><code>IntegerBridge.lean</code></td>
-</tr>
-<tr>
-<td><code>no_valid_partition_of_ge_m</code></td>
+<td><code>ComparatorClaims.noValidIntegerPartition_of_ge_modulus</code></td>
 <td>nothing survives at <span class="math inline">N \ge m</span></td>
 <td><code>IntegerBridge.lean</code></td>
 </tr>
 <tr>
-<td><code>singleton_sumFree_iff</code></td>
+<td><code>ComparatorClaims.schurMod_integer_eq_residue</code></td>
+<td>integer-to-residue reduction</td>
+<td><code>IntegerBridge.lean</code></td>
+</tr>
+<tr>
+<td><code>ComparatorClaims.schurModResidue_closedForm</code></td>
+<td>the main theorem, residue form</td>
+<td><code>Partition.lean</code></td>
+</tr>
+<tr>
+<td><code>ComparatorClaims.schurModResidue_upperBound</code></td>
+<td>upper bound</td>
+<td><code>Partition.lean</code></td>
+</tr>
+<tr>
+<td><code>ComparatorClaims.schurModResidue_lowerBound</code></td>
+<td>lower bound</td>
+<td><code>Partition.lean</code></td>
+</tr>
+<tr>
+<td><code>ComparatorClaims.singleton_sumFree_iff_nonzeroMultiple</code></td>
 <td>singleton safety criterion</td>
 <td><code>SingletonSafety.lean</code></td>
 </tr>
 <tr>
-<td><code>not_sumFree_of_mem_zero</code></td>
-<td>the zero residue is never safe</td>
-<td><code>UniversalBound.lean</code></td>
-</tr>
-<tr>
-<td><code>unsafe_witness_residue</code></td>
+<td><code>ComparatorClaims.criticalResidue_isUnsafe</code></td>
 <td>the residue <span class="math inline">n</span> is itself unsafe</td>
 <td><code>UnifiedValue.lean</code></td>
 </tr>
 <tr>
-<td><code>schurModResidue_k1</code></td>
+<td><code>ComparatorClaims.zeroMem_notSumFree</code></td>
+<td>the zero residue is never safe</td>
+<td><code>UniversalBound.lean</code></td>
+</tr>
+<tr>
+<td><code>ComparatorClaims.schurModResidue_oneColorClosedForm_of_le_modulus</code></td>
 <td><span class="math inline">k=1</span>, for <span class="math inline">2 \le \ell \le m</span>: <span class="math inline">\min(\ell-1, \lfloor m/\ell \rfloor)</span></td>
 <td><code>K1Theorem.lean</code></td>
 </tr>
 <tr>
-<td><code>sigmaInfty_le</code></td>
+<td><code>ComparatorClaims.schurModResidue_oneColorClosedForm</code></td>
+<td>complete <span class="math inline">k=1</span> formula for every <span class="math inline">\ell \ge 2</span></td>
+<td><code>K1Theorem.lean</code></td>
+</tr>
+<tr>
+<td><code>ComparatorClaims.sigmaInfty_card_le_minFacQuotient</code></td>
 <td>if every pairwise difference in <span class="math inline">C</span> is divisible by one <span class="math inline">g \ge 2</span> dividing <span class="math inline">m</span>, then <span class="math inline">\lvert C\rvert \le m/\mathrm{minFac}(m)</span></td>
 <td><code>SigmaInfty.lean</code></td>
 </tr>
@@ -278,7 +283,7 @@ The gate exists to stop a formalization from proving something weaker than it ap
 </table>
 <p>One boundary note on <code>sigmaInfty_le</code>: the paper-side theorem that places every stable safe set of size at least <span class="math inline">2</span> under that divisibility hypothesis (Theorem 8.1) is prose, not Lean; its formalization is deferred, and the Lean statement carries the hypothesis explicitly.</p>
 <p>The main theorem as Lean sees it, with no project-specific definitions in the statement:</p>
-<pre class="lean"><code>theorem schurMod_eq (m k ℓ : ℕ) (hm : 2 ≤ m) (hℓ : 2 ≤ ℓ)
+<pre class="lean"><code>theorem ComparatorClaims.schurMod_integerClosedForm (m k ℓ : ℕ) (hm : 2 ≤ m) (hℓ : 2 ≤ ℓ)
     (hk : m / Nat.gcd m (ℓ - 1) - 1 ≤ k) :
     Nat.findGreatest
       (fun N =&gt; ∃ P : Fin k → Finset ℕ,
@@ -289,20 +294,20 @@ The gate exists to stop a formalization from proving something weaker than it ap
       (m - 1) = m / Nat.gcd m (ℓ - 1) - 1</code></pre>
 <section id="current-project-only-research-layer" class="level3">
 <h3>Current project-only research layer</h3>
-<p><span class="st st-proven">Verified</span> Separate from the twelve-theorem comparator gate, the curated public <code>ModularSchur</code> aggregate now imports the canonical-block, support-one seed, residual-transport, and critical-core modules. Independent theorem-closing audits certify the seed-count package and the final recurrence, fresh-prime, prime-power, and unrestricted critical-core consumers. Their axiom closures contain only <code>propext</code>, <code>Classical.choice</code>, and <code>Quot.sound</code>. The generalized transport helpers compile and feed that consumer chain; they did not each receive a separate statement-fidelity audit. The public project-only module closure contains no proof placeholder, custom axiom, <code>native_decide</code>, unsafe or partial declaration, or external implementation.</p>
+<p><span class="st st-proven">Verified</span> Separate from the thirteen-theorem comparator gate, the curated public <code>ModularSchur</code> aggregate now imports the canonical-block, support-one seed, residual-transport, and critical-core modules. Independent theorem-closing audits certify the seed-count package and the final recurrence, fresh-prime, prime-power, and unrestricted critical-core consumers. Their axiom closures contain only <code>propext</code>, <code>Classical.choice</code>, and <code>Quot.sound</code>. The generalized transport helpers compile and feed that consumer chain; they did not each receive a separate statement-fidelity audit. The public project-only module closure contains no proof placeholder, custom axiom, <code>native_decide</code>, unsafe or partial declaration, or external implementation.</p>
 <p>The resulting project-only theorem packages prove:</p>
 <ul>
 <li>the closed cardinality <code>K_seed(n,a)</code> of the support-one seed labels and the exact decomposition of the canonical cover into that seed count plus the residual cover;</li>
 <li>for <code>n ≠ 0</code>, a prime <code>p</code>, and <code>a_p ≤ v_p(n)</code>, exact transport of residual points and nonempty residual neighborhoods under <code>n → pn</code>, invariance of the residual cover number, and <code>κ(pn,a) = κ(n,a) + (p−1)p^(a_p)</code>; a fresh prime is the depth-zero case and contributes <code>p−1</code>;</li>
 <li>for every <code>n ≠ 0</code> and arbitrary depth data, the unrestricted reduction to the exponent-truncated critical core together with the closed contribution from all removed exponent layers.</li>
 </ul>
-<p>These packages are <strong>not</strong> among the twelve comparator declarations. They are distributed and axiom-audited as a separate project-only layer; the comparator does not compare their statements. They close the exponent-tail bookkeeping, not the universal <code>tau</code> problem. The remaining frontier is the cover theory on the exponent-truncated critical domain: the first missing two-axis producer constructs <code>TwoAxisCertificateShape cell P</code> from <code>P.card = 2</code>; genuinely multi-axis obstructions remain after that.</p>
+<p>These packages are <strong>not</strong> among the thirteen comparator declarations. They are distributed and axiom-audited as a separate project-only layer; the comparator does not compare their statements. They close the exponent-tail bookkeeping, not the universal <code>tau</code> problem. The remaining frontier is the cover theory on the exponent-truncated critical domain: the first missing two-axis producer constructs <code>TwoAxisCertificateShape cell P</code> from <code>P.card = 2</code>; genuinely multi-axis obstructions remain after that.</p>
 </section>
 <section id="the-audit-boundary" class="level3">
 <h3>The audit boundary</h3>
 <p>An earlier computational route to some of these results lives in a generated tree of 7,585 Lean files (36 MB), of which 1,735 use <code>native_decide</code>. That route is <strong>excluded from the gate</strong> and is not part of the verification claim above: <code>native_decide</code> trusts the compiler rather than the kernel, so its closure carries a generated per-computation native-evaluation axiom named like <code>declaration._native.native_decide.ax_*</code>.</p>
-<p><span class="st st-proven">Verified</span> The twelve theorems do not depend on that tree. <code>Solution.lean</code> imports only <code>IntegerBridge</code>, <code>K1Theorem</code>, and <code>SigmaInfty</code>; the resulting import cone reaches <code>Basic</code>, <code>Partition</code>, <code>SingletonSafety</code>, <code>UniversalBound</code>, <code>UnifiedValue</code>, <code>UnifiedTheorem</code>, and <code>StableRange</code>, and contains zero occurrences of <code>native_decide</code>. The structural proof subsumes the computational one; the generated tree is retained as history, not as evidence.</p>
-<p>The public repository carries that ten-module comparator cone and a separate project-only allowlist of hand-written, generated-independent modules. The second layer now includes <code>SameSupportFiber.lean</code>, <code>CoordinateUnion.lean</code>, <code>WholeAxisPID.lean</code>, <code>AnchoredExactTransversal.lean</code>, and the canonical seed/transport/critical-core package. These modules are distributed and have a separate axiom audit, but they are not inside the twelve-declaration comparator gate. The gate claim remains confined to the import cone above. The conformance workflow runs <code>lake build ModularSchur.PublicAxiomAudit</code> to elaborate the project-only declarations and log their transitive <code>#print axioms</code> closures for review; that build does not itself whitelist-fail on custom axioms. On 2026-08-24 the author ran <code>#print axioms</code> for the five Section 8 declarations <code>SameSupportFiber.coordinateUnionEdgeRule_on_normalizedCell</code>, <code>WholeAxisPID.axis_cover_coordCliques_eq_card_of_forall_PID</code>, <code>AnchoredExactTransversal.axis_cover_eq_maxPacking_of_hasCarrierAET</code>, <code>TauClosure.tau_capstone</code>, and <code>TauClosure.tauDPRec_characterization</code>; each closes to <code>{propext, Classical.choice, Quot.sound}</code>. That measurement was made by the author’s tooling on the private tree, is not part of the public gate, and leaves the Certificate label this page gives the Section 8 results unchanged. See the <a href="#errata-in-the-paper">errata</a>.</p>
+<p><span class="st st-proven">Verified</span> The thirteen theorems do not depend on that tree. <code>Solution.lean</code> imports only <code>IntegerBridge</code>, <code>K1Theorem</code>, and <code>SigmaInfty</code>; the resulting import cone reaches <code>Basic</code>, <code>Partition</code>, <code>SingletonSafety</code>, <code>UniversalBound</code>, <code>UnifiedValue</code>, <code>UnifiedTheorem</code>, and <code>StableRange</code>, and contains zero occurrences of <code>native_decide</code>. The structural proof subsumes the computational one; the generated tree is retained as history, not as evidence.</p>
+<p>The public repository carries that ten-module comparator cone and a separate project-only allowlist of hand-written, generated-independent modules. The second layer now includes <code>SameSupportFiber.lean</code>, <code>CoordinateUnion.lean</code>, <code>WholeAxisPID.lean</code>, <code>AnchoredExactTransversal.lean</code>, and the canonical seed/transport/critical-core package. These modules are distributed and have a separate axiom audit, but they are not inside the thirteen-declaration comparator gate. The gate claim remains confined to the import cone above. The conformance workflow runs <code>lake build ModularSchur.PublicAxiomAudit</code> to elaborate the project-only declarations and log their transitive <code>#print axioms</code> closures for review; that build does not itself whitelist-fail on custom axioms. On 2026-08-24 the author ran <code>#print axioms</code> for the five Section 8 declarations <code>SameSupportFiber.coordinateUnionEdgeRule_on_normalizedCell</code>, <code>WholeAxisPID.axis_cover_coordCliques_eq_card_of_forall_PID</code>, <code>AnchoredExactTransversal.axis_cover_eq_maxPacking_of_hasCarrierAET</code>, <code>TauClosure.tau_capstone</code>, and <code>TauClosure.tauDPRec_characterization</code>; each closes to <code>{propext, Classical.choice, Quot.sound}</code>. That measurement was made by the author’s tooling on the private tree, is not part of the public gate, and leaves the Certificate label this page gives the Section 8 results unchanged. See the <a href="#errata-in-the-paper">errata</a>.</p>
 <figure>
 <div class="fig-head">
 <p class="kicker">
@@ -405,7 +410,7 @@ The two routes reach some of the same results. Only the left one is claimed. The
 <section id="the-residual-frontier-program" class="level3">
 <h3>The residual frontier program</h3>
 <p>Beyond the stabilized law, the project computes the threshold in the stable regime. For <span class="math inline">\ell \ge m-1</span> the safety of a class depends only on <span class="math inline">c = \ell \bmod m</span> (the large-<span class="math inline">\ell</span> coset criterion, the prose Theorem 8.1 named under <code>sigmaInfty_le</code> above), so <span class="math inline">k_0(m,\ell)</span> is a function of <span class="math inline">(m,c)</span> there; write <span class="math inline">k_0^\infty(m,c)</span> for that value. It is this stable threshold, not the ordinary <span class="math inline">k_0(m,\ell)</span>, that is a function of the normalized cell; the paper’s Section 8 has stated the schema for <span class="math inline">k_0^\infty</span> since its 2026-08-24 revision (the earlier form is recorded in the <a href="#errata-in-the-paper">errata</a>). The method caps each prime exponent of <span class="math inline">d</span>, collapsing infinitely many moduli onto finitely many normalized cells, so an infinite family closes by a finite check.</p>
-<p><strong>Certificate-backed computation; public audit incomplete.</strong> The two results below rest on solver certificates and certificate theorems that live in the private working tree. They are not among the twelve gated theorems, the artifacts are not distributed, and the certificate sweep has not passed the axiom audit, so they carry the Certificate label, not Proven.</p>
+<p><strong>Certificate-backed computation; public audit incomplete.</strong> The two results below rest on solver certificates and certificate theorems that live in the private working tree. They are not among the thirteen gated theorems, the artifacts are not distributed, and the certificate sweep has not passed the axiom audit, so they carry the Certificate label, not Proven.</p>
 <p><span class="st st-cert">Certificate</span> <strong>By finite normalized-cell reduction.</strong> 56 fixed-quotient lines (<span class="math inline">n = 36</span> through <span class="math inline">n = 345</span>), each with per-cell certificates, governed by three capstone theorems. Stable laws for the families <span class="math inline">m = 36t</span> (<span class="math inline">d=6</span>), <span class="math inline">72t</span> (<span class="math inline">d=12</span>), <span class="math inline">72t</span> (<span class="math inline">d=6t</span>), <span class="math inline">100t</span> (<span class="math inline">d=10</span>), <span class="math inline">144t</span>, <span class="math inline">196t</span>, <span class="math inline">216t</span>, <span class="math inline">252t</span>, <span class="math inline">360t</span>, computationally reproduced to <span class="math inline">t \le 500</span>.</p>
 <p><span class="st st-cert">Certificate</span> <strong>By explicit certificate.</strong> The rows those families do not cover are handled individually: 40 packing-gap rows for <span class="math inline">8 \le m \le 60</span>, then residual covers at successive frontiers.</p>
 <blockquote>
@@ -415,7 +420,7 @@ The two routes reach some of the same results. Only the left one is claimed. The
 </section>
 <section id="verification-debt" class="level3">
 <h3>Verification debt</h3>
-<p>Not everything computed is machine-checked to the standard of the twelve gated theorems. The certificate-theorem sweep over the <span class="math inline">m \le 5500</span> frontier has not been run through the axiom audit. <code>tauDPRec_characterization</code> has one recorded axiom closure, the author’s 2026-08-24 measurement on the private tree (<code>{propext, Classical.choice, Quot.sound}</code>; see <a href="#the-audit-boundary">the audit boundary</a>); the public gate has not measured it. Those results rest on their solver certificates, not on a kernel-checked Lean proof. The coverage manifest names, for each frontier row, the rule or phase that discharged it, but nothing public maps a row to a replayed certificate: no row-to-certificate manifest exists.</p>
+<p>Not everything computed is machine-checked to the standard of the thirteen gated theorems. The certificate-theorem sweep over the <span class="math inline">m \le 5500</span> frontier has not been run through the axiom audit. <code>tauDPRec_characterization</code> has one recorded axiom closure, the author’s 2026-08-24 measurement on the private tree (<code>{propext, Classical.choice, Quot.sound}</code>; see <a href="#the-audit-boundary">the audit boundary</a>); the public gate has not measured it. Those results rest on their solver certificates, not on a kernel-checked Lean proof. The coverage manifest names, for each frontier row, the rule or phase that discharged it, but nothing public maps a row to a replayed certificate: no row-to-certificate manifest exists.</p>
 </section>
 </section>
 <section id="open-questions" class="level2">
@@ -644,7 +649,7 @@ lake build ModularSchur.PublicAxiomAudit</code></pre>
 <footer class="page-footer">
   <p class="kicker">A. McKenna &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Apache-2.0</p>
   <p class="kicker"><a href="https://github.com/mysticflounder/modular-schur">https://github.com/mysticflounder/modular-schur</a></p>
-  <p class="kicker">Built 2026-08-31 from 8be47de</p>
+  <p class="kicker">Built 2026-09-01 from 34ee1a7</p>
 </footer>
 
 </div>

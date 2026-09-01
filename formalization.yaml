@@ -21,8 +21,8 @@ project:
     integer-to-residue formulation and lossless N ≤ m-1 bound, singleton-safety
     and zero-class obstructions, the exact one-color formula for 2 ≤ ℓ ≤ m,
     and the stated sigma-infinity coset-cardinality bound.
-    Mathlib-only Headline statements are checked by the Palomar Comparator
-    configuration. A separate public 27-module hand-written,
+    Thirteen Mathlib-only ComparatorClaims statements are configured for the
+    Palomar Comparator gate. A separate public 27-module hand-written,
     generated-independent project layer contains named canonical-cover seed
     count, stable-prime transport and recurrence, prime-power, and unrestricted
     exponent-truncation capstones; those capstones have a separate
@@ -47,7 +47,7 @@ classification:
 sources:                                             # [required]
   - title: "Prime-power structure of the stable regime for modular Schur numbers"
     authors: ["Adam McKenna"]
-    id: "McKenna 2026 (this project's paper; paper/modular-schur.pdf)"
+    id: "McKenna 2026 (this project's paper; docs/paper/modular-schur.pdf)"
     type: "original-proof"
     location: "Theorem 1.2 and its accompanying Lean formalization"
     relationship: "other"
@@ -88,7 +88,7 @@ status:
   scope: >
     Structural theory of the modular Schur number S_m(k,ℓ) plus computational
     scans. The STRUCTURAL closed-form proof (the paper) is mathlib-only, sorry-free,
-    and kernel-axiom-clean (no project axioms, no native_decide): 12 headline
+    and kernel-axiom-clean (no project axioms, no native_decide): 13 named
     theorems are packaged for the leanprover/comparator gate (see lean/comparator/).
     The public repository also distributes a separate 27-module hand-written,
     generated-independent project layer, including the exact seed-count,
@@ -98,17 +98,17 @@ status:
     `PublicAxiomAudit` module elaborates declarations and logs transitive
     `#print axioms` closures for review; that build does not itself whitelist-fail
     on custom axioms. Those declarations are built and axiom-audited but are not
-    among the 12 comparator entries. A separate, EARLIER generated
+    among the 13 comparator entries. A separate, EARLIER generated
     computational scan tree remains private and verifies per-modulus tables via
     native_decide; it is not part of the public release or comparator gate. Its
     closure includes a generated per-computation native-evaluation axiom named
     like declaration._native.native_decide.ax_*. See LEAN_STATUS.md and
     lean/comparator/README.md.
-  sorry_count: 0                # the 27 public project modules are sorry-free; Challenge.lean's 12 statement stubs are intentional and discharged by Solution.lean
+  sorry_count: 0                # the 27 public project modules are sorry-free; Challenge.lean's 13 statement stubs are intentional and discharged by Solution.lean
   sorry_in_definitions: 0
-  axioms: ["propext", "Classical.choice", "Quot.sound"]   # verified axiom closure of all 12 comparator headline results
+  axioms: ["propext", "Classical.choice", "Quot.sound"]   # verified axiom closure of all 13 comparator claims
   axioms_note: >
-    Verified via `#print axioms` on each of the 12 Headline theorems
+    Verified via `#print axioms` on each of the 13 ComparatorClaims theorems
     (lean/comparator/axiom-audit.lean): closure is exactly {propext,
     Classical.choice, Quot.sound}: no sorryAx, no custom axioms, no
     generated native-evaluation axiom. The public 27-module project allowlist
@@ -118,19 +118,21 @@ status:
     project-only declarations and surface their transitive closures for review;
     the build does not automatically enforce a whitelist or fail on a custom
     axiom. This remains independent of the Comparator/`nanoda` gate, whose
-    configured scope is exactly the 12 `Headline` declarations.
+    configured scope is exactly the 13 `ComparatorClaims` declarations.
     First measured 2026-06-20 and independently confirmed against
-    permitted_axioms by the comparator itself in CI. The expanded public
-    release passed both comparator jobs in run 33297349901 at commit
-    6fcb3470d0f22776694bd44ee2a28c87184b953d on 2026-08-30.
+    permitted_axioms by the comparator itself in CI. The preceding public
+    12-claim configuration passed both comparator jobs in run 33297349901 at
+    commit 6fcb3470d0f22776694bd44ee2a28c87184b953d on 2026-08-30. This
+    renamed 13-claim configuration requires a fresh Comparator CI run before
+    public release.
   main_results:
-  - declaration: "Headline.schurMod_eq"
+  - declaration: "ComparatorClaims.schurMod_integerClosedForm"
     file: "lean/comparator/Solution.lean"
     sorry_count: 0
     axioms: ["propext", "Classical.choice", "Quot.sound"]
     comparator_config: "lean/comparator/config.json"
-    note: "Theorem 1.2 in the Mathlib-only comparator surface; the same config checks 12 headline declarations."
-  - declaration: "Headline.schurModResidue_k1"
+    note: "The high-color closed form in the Mathlib-only comparator surface; the same config checks 13 named claims."
+  - declaration: "ComparatorClaims.schurModResidue_oneColorClosedForm_of_le_modulus"
     file: "lean/comparator/Solution.lean"
     sorry_count: 0
     axioms: ["propext", "Classical.choice", "Quot.sound"]
@@ -214,7 +216,7 @@ automation:                                          # [required]
 # fidelity
 fidelity:
   divergences: >
-    The comparator gate covers the 12 mathlib-statable, kernel-axiom-clean
+    The comparator gate covers the 13 mathlib-statable, kernel-axiom-clean
     STRUCTURAL results. To state them with mathlib definitions alone, the project's
     validity-partition structures (IsValidPartition / IsValidPartitionNat) are
     unbundled into their four fields, and schurMod / schurModResidue are spelled out
@@ -232,17 +234,17 @@ review:
   reviewers: []
   notes: >
     Self-audit: lean/comparator/check-conformance.sh builds Challenge + Solution and
-    checks no Headline theorem depends on sorryAx or native evaluation
+    checks no ComparatorClaims theorem depends on sorryAx or native evaluation
     (including generated names like declaration._native.native_decide.ax_*).
     It is a blocklist, not a whitelist; a project-defined axiom would pass it.
-    lean/comparator/axiom-audit.lean prints the #print axioms closure for all 12
+    lean/comparator/axiom-audit.lean prints the #print axioms closure for all 13
     without asserting anything about it. The authoritative external check is a
     leanprover/comparator run that verifies statement identity and axiom compliance and
     re-runs the nanoda + Lean default kernels (CI:
     .github/workflows/comparator.yml). The expanded public release passed both
     jobs in run 33297349901 at commit
     6fcb3470d0f22776694bd44ee2a28c87184b953d on 2026-08-30, covering
-    statement identity for all 12, axiom-closure compliance, and replay through
+    statement identity for the then-current 12-claim configuration, axiom-closure compliance, and replay through
     both kernels. The job is blocking. This remains "self-assessed" because no
     external human peer review has taken place; the comparator is a tool, not a
     reviewer. The conformance workflow separately builds
@@ -252,63 +254,68 @@ review:
 # editorial_review - material for Palomar Registry editorial review.
 editorial_review:
 
-  # A plain-language account of each of the 12 theorems the comparator checks.
+  # A plain-language account of each of the 13 theorems the comparator checks.
   # Throughout, n := m/gcd(m, l-1), and a class is "l-sum-free mod m" when no l
   # of its elements (repeats allowed) sum to an element of that same class mod m.
   compared_theorems:
-    - name: "Headline.schurMod_eq"
+    - name: "ComparatorClaims.schurMod_integerClosedForm"
       plain: >
         The main result, stated over the natural numbers. Once you have at least
         n-1 colours, the largest N whose colouring can succeed is exactly n-1.
         One formula covers every modulus and every length.
-    - name: "Headline.schurMod_is_greatest"
+    - name: "ComparatorClaims.schurMod_integerCap_isGreatest"
       plain: >
         A soundness check on the formal definition rather than a mathematical
         step. Any N that admits a valid partition is at most the value the
         definition computes. With the m-1 bound below, this shows the capped
         search really does compute the unbounded "greatest N" of the paper's
         definition, and not some weaker capped quantity.
-    - name: "Headline.no_valid_partition_of_ge_m"
+    - name: "ComparatorClaims.noValidIntegerPartition_of_ge_modulus"
       plain: >
         Nothing survives at or beyond N = m. Whichever class contains m fails
         immediately, because l copies of m sum to 0, which is m itself modulo m.
         This is what makes the capped search lossless.
-    - name: "Headline.schurMod_eq_schurModResidue"
+    - name: "ComparatorClaims.schurMod_integer_eq_residue"
       plain: >
         Working with integers and working with residues give the same number.
         This licences the rest of the development to argue inside Z/m.
-    - name: "Headline.schurModResidue_eq"
+    - name: "ComparatorClaims.schurModResidue_closedForm"
       plain: >
         The main result again, stated over residues. It is the conjunction of the
         upper and lower bounds that follow.
-    - name: "Headline.schurModResidue_le"
+    - name: "ComparatorClaims.schurModResidue_upperBound"
       plain: >
         The upper bound. The value is at most n-1, because the residue n cannot
         sit safely even by itself, so once N reaches n the class holding n fails.
-    - name: "Headline.le_schurModResidue"
+    - name: "ComparatorClaims.schurModResidue_lowerBound"
       plain: >
         The lower bound. When you have at least n-1 colours, n-1 is reachable.
         The witness is the simplest possible one: give each of 1 through n-1 its
         own colour.
-    - name: "Headline.singleton_sumFree_iff"
+    - name: "ComparatorClaims.singleton_sumFree_iff_nonzeroMultiple"
       plain: >
         The criterion that drives both bounds. A one-element class {r} is
         l-sum-free exactly when (l-1)*r is nonzero modulo m.
-    - name: "Headline.unsafe_witness_residue"
+    - name: "ComparatorClaims.criticalResidue_isUnsafe"
       plain: >
         The arithmetic heart of the paper. The residue n satisfies
         (l-1)*n = 0 modulo m, so l copies of n sum back to n. This is the single
         self-defeating value that forces the upper bound.
-    - name: "Headline.not_sumFree_of_mem_zero"
+    - name: "ComparatorClaims.zeroMem_notSumFree"
       plain: >
         Zero is never safe: l copies of 0 sum to 0. This is why the count runs
         over 1 through N and not from 0.
-    - name: "Headline.schurModResidue_k1"
+    - name: "ComparatorClaims.schurModResidue_oneColorClosedForm_of_le_modulus"
       plain: >
         The one-colour case in closed form: the answer is the smaller of l-1 and
         the floor of m/l. This settles Problem 1.3 of D'orville, Sim, Wong, and
         Ho.
-    - name: "Headline.sigmaInfty_le"
+    - name: "ComparatorClaims.schurModResidue_oneColorClosedForm"
+      plain: >
+        The all-length one-colour formula. For lengths at most the modulus it
+        agrees with the bounded formula above; beyond the modulus it is zero
+        when l is one modulo m and one otherwise.
+    - name: "ComparatorClaims.sigmaInfty_card_le_minFacQuotient"
       plain: >
         A counting bound used in the threshold theory. If every pairwise
         difference within a set lies in a proper subgroup, the set has at most
@@ -353,7 +360,7 @@ editorial_review:
       automated gate, not a reviewer, and a green run is not a referee report.
 
   limitations: >
-    Scope of the gate. The 12 theorems above are the whole comparator-checked
+    Scope of the gate. The 13 theorems above are the whole comparator-checked
     claim. The public repository also carries project-only kernel proofs listed
     in LEAN_STATUS.md; those have a separate capstone axiom audit and no
     statement-comparison claim. The project also contains an earlier
@@ -387,7 +394,7 @@ editorial_review:
 
 # alignment - source statements ↦ formal declarations.
 alignment:
-  namespace: "ModularSchur (project); Headline (comparator restatements)"
+  namespace: "ModularSchur (project); ComparatorClaims (comparator restatements)"
   statements:
     - source: "Theorem 1.2: S_m(k,ℓ) = m/gcd(m,ℓ-1) - 1 for m≥2, ℓ≥2, k ≥ n-1"
       lean: "ModularSchur.schurMod_eq"
