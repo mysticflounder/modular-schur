@@ -18,12 +18,18 @@ generated-independent public project layer. An earlier generated
 verification scopes.
 
 The proposed publication split is available as two standalone drafts:
-[Paper I, *Endpoint formulas for modular Schur numbers, with a correction to a
-prime-power formula*](docs/paper/paper-i-endpoint-formulas-draft.md), and
-[Paper II, *Prime-power structure of the stable regime for modular Schur
-numbers*](docs/paper/paper-ii-stable-prime-power-structure-draft.md). These are
-draft manuscripts; the rendered site currently continues to use the legacy
-combined manuscript.
+
+- **Paper I, *Endpoint formulas for modular Schur numbers, with a correction
+  to a prime-power formula*:**
+  [PDF](docs/paper/paper-i-endpoint-formulas-draft.pdf) ·
+  [Markdown source](docs/paper/paper-i-endpoint-formulas-draft.md)
+- **Paper II, *Prime-power structure of the stable regime for modular Schur
+  numbers*:**
+  [PDF](docs/paper/paper-ii-stable-prime-power-structure-draft.pdf) ·
+  [Markdown source](docs/paper/paper-ii-stable-prime-power-structure-draft.md)
+
+These are draft manuscripts; the rendered site currently continues to use the
+legacy combined manuscript.
 
 Modular Schur numbers belong to **Ramsey theory**, **additive combinatorics**,
 and **combinatorial number theory**. The forbidden congruence concerns additive
