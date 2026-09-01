@@ -585,6 +585,41 @@ file. The `Provenance` section of the [status
 page](https://mysticflounder.github.io/modular-schur/status.html) gives the
 bounded project account.
 
+## References
+
+- T. Achim, A. Best, A. Bietti, K. Der, M. Fédérico, S. Gukov, D.
+  Halpern-Leistner, K. Henningsgard, Y. Kudryashov, A. Meiburg, M. Michelsen,
+  R. Patterson, E. Rodriguez, L. Scharff, V. Shanker, V. Sicca, H.
+  Sowrirajan, A. Swope, M. Tamas, V. Tenev, J. Thomm, H. Williams, and L. Wu,
+  *Aristotle: IMO-level Automated Theorem Proving*, 2025.
+  [arXiv:2510.01346](https://arxiv.org/abs/2510.01346).
+
+- A. Beutelspacher and W. Brestovansky, *Generalized Schur numbers*, in
+  *Combinatorial Theory* (Schloß Rauischholzhausen, 1982), Lecture Notes in
+  Mathematics **969**, Springer, 1982, pp. 30–38.
+
+- A. L. Cauchy, *Recherches sur les nombres*, *J. École Polytech.* **9**
+  (1813), 99–116.
+
+- J. Chappelon, M. P. Revuelta Marchena, and M. I. Sanz Domínguez, *Modular
+  Schur numbers*, *Electron. J. Combin.* **20**(2) (2013), #P61.
+  [Publisher](https://www.combinatorics.org/ojs/index.php/eljc/article/view/v20i2p61),
+  [DOI](https://doi.org/10.37236/2374), and
+  [arXiv:1306.5635](https://arxiv.org/abs/1306.5635).
+
+- H. Davenport, *On the addition of residue classes*, *J. London Math. Soc.*
+  **10** (1935), 30–32.
+
+- J. D'orville, K. A. Sim, K. B. Wong, and C. K. Ho, *Modular generalizations
+  of Schur numbers*, *Integers* **25** (2025), #A62.
+  [Publisher PDF](https://math.colgate.edu/~integers/z62/z62.pdf).
+
+- M. J. H. Heule, *Schur number five*, *Proceedings of AAAI 2018*, 6598–6606.
+  [arXiv:1711.08076](https://arxiv.org/abs/1711.08076).
+
+- B. M. Landman and A. Robertson, *Ramsey Theory on the Integers*, 2nd ed.,
+  Student Mathematical Library **73**, American Mathematical Society, 2014.
+
 ## Header figure and paper snapshot
 
 The header uses the synchronized paper asset
