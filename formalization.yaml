@@ -22,7 +22,7 @@ project:
     and zero-class obstructions, the exact one-color formula for 2 ≤ ℓ ≤ m,
     and the stated sigma-infinity coset-cardinality bound.
     Thirteen Mathlib-only ComparatorClaims statements are configured for the
-    Palomar Comparator gate. A separate public 27-module hand-written,
+    Palomar Comparator gate. A separate public 33-module hand-written,
     generated-independent project layer contains named canonical-cover seed
     count, stable-prime transport and recurrence, prime-power, and unrestricted
     exponent-truncation capstones; those capstones have a separate
@@ -90,7 +90,7 @@ status:
     scans. The STRUCTURAL closed-form proof (the paper) is mathlib-only, sorry-free,
     and kernel-axiom-clean (no project axioms, no native_decide): 13 named
     theorems are packaged for the leanprover/comparator gate (see lean/comparator/).
-    The public repository also distributes a separate 27-module hand-written,
+    The public repository also distributes a separate 33-module hand-written,
     generated-independent project layer, including the exact seed-count,
     stable-prime residual transport, recurrence, prime-power, and unrestricted
     exponent-truncation capstones. Conformance CI runs
@@ -104,14 +104,14 @@ status:
     closure includes a generated per-computation native-evaluation axiom named
     like declaration._native.native_decide.ax_*. See LEAN_STATUS.md and
     lean/comparator/README.md.
-  sorry_count: 0                # the 27 public project modules are sorry-free; Challenge.lean's 13 statement stubs are intentional and discharged by Solution.lean
+  sorry_count: 0                # the 33 public project modules are sorry-free; Challenge.lean's 13 statement stubs are intentional and discharged by Solution.lean
   sorry_in_definitions: 0
   axioms: ["propext", "Classical.choice", "Quot.sound"]   # verified axiom closure of all 13 comparator claims
   axioms_note: >
     Verified via `#print axioms` on each of the 13 ComparatorClaims theorems
     (lean/comparator/axiom-audit.lean): closure is exactly {propext,
     Classical.choice, Quot.sound}: no sorryAx, no custom axioms, no
-    generated native-evaluation axiom. The public 27-module project allowlist
+    generated native-evaluation axiom. The public 33-module project allowlist
     has a separate named-capstone audit in
     lean/ModularSchur/PublicAxiomAudit.lean and contains no native_decide.
     Conformance CI runs `lake build ModularSchur.PublicAxiomAudit` to elaborate the named
@@ -121,10 +121,13 @@ status:
     configured scope is exactly the 13 `ComparatorClaims` declarations.
     First measured 2026-06-20 and independently confirmed against
     permitted_axioms by the comparator itself in CI. The preceding public
-    12-claim configuration passed both comparator jobs in run 33297349901 at
-    commit 6fcb3470d0f22776694bd44ee2a28c87184b953d on 2026-08-30. This
-    renamed 13-claim configuration requires a fresh Comparator CI run before
-    public release.
+    12-claim configuration most recently passed both comparator jobs in run
+    33447037510 at commit 315337d6a318a4465cf272073bf54d9f0ed233bb on
+    2026-08-31. The renamed 13-claim Comparator job passed in run 33534800665
+    at commit 5ca1063ec835e7f65d937395e7c227833f0a89ce on 2026-09-01, but the
+    companion conformance job failed while building
+    ModularSchur.PublicAxiomAudit. Repair that failure and rerun the complete
+    workflow before public release.
   main_results:
   - declaration: "ComparatorClaims.schurMod_integerClosedForm"
     file: "lean/comparator/Solution.lean"
@@ -221,7 +224,7 @@ fidelity:
     validity-partition structures (IsValidPartition / IsValidPartitionNat) are
     unbundled into their four fields, and schurMod / schurModResidue are spelled out
     as the full Nat.findGreatest expression (see lean/comparator/Challenge.lean and
-    the two bridge lemmas in Solution.lean). The 27-module project-only public
+    the two bridge lemmas in Solution.lean). The 33-module project-only public
     layer is separately built and axiom-audited but not statement-compared by
     the gate. The earlier native_decide-backed per-modulus scan tree
     (`lean/ModularSchur/Generated/` and generated-dependent concrete bridges)
@@ -242,10 +245,13 @@ review:
     leanprover/comparator run that verifies statement identity and axiom compliance and
     re-runs the nanoda + Lean default kernels (CI:
     .github/workflows/comparator.yml). The expanded public release passed both
-    jobs in run 33297349901 at commit
-    6fcb3470d0f22776694bd44ee2a28c87184b953d on 2026-08-30, covering
+    jobs in run 33447037510 at commit
+    315337d6a318a4465cf272073bf54d9f0ed233bb on 2026-08-31, covering
     statement identity for the then-current 12-claim configuration, axiom-closure compliance, and replay through
-    both kernels. The job is blocking. This remains "self-assessed" because no
+    both kernels. The renamed 13-claim Comparator job then passed in run
+    33534800665 at commit 5ca1063ec835e7f65d937395e7c227833f0a89ce on
+    2026-09-01, while the companion conformance job failed when it built
+    ModularSchur.PublicAxiomAudit. The workflow is blocking. This remains "self-assessed" because no
     external human peer review has taken place; the comparator is a tool, not a
     reviewer. The conformance workflow separately builds
     ModularSchur.PublicAxiomAudit; its #print axioms output is surfaced for

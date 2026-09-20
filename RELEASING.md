@@ -130,7 +130,9 @@ shasum -a 256 \
   /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/paper-i-endpoint-formulas-draft.md \
   /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/paper-i-endpoint-formulas-draft.pdf \
   /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/paper-ii-stable-prime-power-structure-draft.md \
-  /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/paper-ii-stable-prime-power-structure-draft.pdf
+  /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/paper-ii-stable-prime-power-structure-draft.pdf \
+  /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/dswh25-prime-power-correction-note-draft.md \
+  /Users/adam/projects/math-projects/modular-schur-public-staging/docs/paper/dswh25-prime-power-correction-note-draft.pdf
 ```
 
 The hashes must match after assembly and after the public commit. Also require

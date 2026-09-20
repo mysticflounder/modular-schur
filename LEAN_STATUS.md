@@ -6,10 +6,16 @@ Author: Adam McKenna <adam@mysticflounder.ai>
 
 # Lean theorem inventory
 
-This file records the Lean content distributed in the public repository as of
-2026-08-29. It separates the thirteen declarations configured for the Comparator
-gate from the larger project-only theorem layer. A fresh Comparator CI run is
-required before this renamed configuration is released publicly. The exact module allowlist is
+This file records the Lean content selected for the next public repository
+release as of 2026-09-14. It separates the thirteen declarations configured
+for the Comparator gate from the larger project-only theorem layer. The most
+recent successful public Comparator run, run `33447037510` at commit
+`315337d6a318a4465cf272073bf54d9f0ed233bb`, covered the preceding 12-declaration
+configuration. The renamed thirteen-declaration Comparator job passed in run
+`33534800665` at commit `5ca1063ec835e7f65d937395e7c227833f0a89ce`, but
+the companion conformance job failed while building
+`ModularSchur.PublicAxiomAudit`. That failure must be repaired and the complete
+workflow rerun before release. The exact module allowlist is
 [`lean/PUBLIC_MODULES.txt`](lean/PUBLIC_MODULES.txt).
 
 ## Status terms
@@ -85,8 +91,14 @@ consumers; they did not each receive a separate statement-fidelity review.
 ## Other public kernel-checked theory
 
 The public allowlist also carries the hand-written, generated-independent
-modules needed to state and check the broader cover theory:
+modules needed to state and check the integer-level one-colour value and the
+broader cover theory:
 
+- `K1IntegerTheorem`: the integer-level one-colour value `schurMod m 1 ℓ` for
+  every `m ≥ 2` and `ℓ ≥ 2`, obtained from the residue-level formula through
+  the reduction bridge. Its single capstone `schurMod_k1_all` is audited by
+  `PublicAxiomAudit.lean`. It covers the regime `m < ℓ`, which the paper does
+  not treat.
 - `TauClosure`: atomization, exact set-cover dynamic programming, executable
   recurrence, cost-only compression, and the scoped `n=220` package. The named
   DP capstones are audited by `PublicAxiomAudit.lean`.
@@ -100,6 +112,20 @@ modules needed to state and check the broader cover theory:
 - `TwoAxisStructural` and `TwoAxisAnchoredExactTransversal`: coverage and
   certificate-to-transversal adapters. These do **not** construct the matching
   certificate from the assumption that the support has cardinality two.
+- `PairSupportGraph`: the pair-support conflict graph, with
+  `maxPacking_eq_indepNum` identifying maximum axis packing with the graph's
+  independence number.
+- `CanonicalBlockMonotonicity`: monotonicity and congruence of the canonical
+  restricted, prefix, and factorization extensional cover families under
+  label coarsening.
+- `AllButOneAxisCover`: the all-but-one-axis residual label cover
+  (`allButOneAxis_isLabelCover`) and the resulting bound of the canonical
+  extensional axis cover by the seed count plus the off-axis residual labels.
+- `AxisBlockCount`: closed counts on one axis -- the per-layer label count
+  `card_axisLayerLabels_eq_min`, the axis total as a sum over layers, the
+  on-axis seed count, and the residual axis count as their difference.
+- `AllButOneAxisCount`: the off-axis residual labels summed over axes in closed
+  form, and the two resulting bounds on the canonical extensional axis cover.
 - `DeficitGrowthInvariant`, `DeficitGrowthRestrictedAET`, and
   `DeficitGrowthCertificateShape`: implication and certificate-shape lemmas
   surviving the refuted universal AET route. They do not revive that route.
@@ -107,13 +133,19 @@ modules needed to state and check the broader cover theory:
 The exact statements live in the Lean sources. Descriptions here do not add
 hypotheses or conclusions to them.
 
+The working research tree has also closed and independently audited the shared
+AS/FD-6 window layer W0 (`SemiprimeWindow.lean`) and support layer W1
+(`SemiprimeSupport.lean`). Those modules are not in this release's public
+allowlist and are not Comparator targets. W2 is the next working-tree
+obligation; W3 is the highest-risk bridge, and W4/A1--A3/F1--F3 remain open.
+
 ## Trust boundary
 
-The public formalization consists of 27 hand-written modules plus
+The public formalization consists of 33 hand-written modules plus
 `PublicAxiomAudit.lean`. The static assembly checker enforces:
 
 - no `ModularSchur/Generated/` directory or generated-dependent module;
-- no proof-placeholder use in the 27 project modules;
+- no proof-placeholder use in the 33 project modules;
 - no project `axiom`, `native_decide`, `Lean.ofReduceBool`,
   `Lean.ofReduceNat`, `Lean.trustCompiler`, `unsafe`, `partial`, `extern`, or
   `implemented_by` boundary in those modules;

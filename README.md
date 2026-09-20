@@ -28,6 +28,20 @@ The proposed publication split is available as two standalone drafts:
   [PDF](docs/paper/paper-ii-stable-prime-power-structure-draft.pdf) ·
   [Markdown source](docs/paper/paper-ii-stable-prime-power-structure-draft.md)
 
+A third document supports Paper I:
+
+- **Correction note, *A correction to a prime-power formula for modular Schur
+  numbers*:**
+  [PDF](docs/paper/dswh25-prime-power-correction-note-draft.pdf) ·
+  [Markdown source](docs/paper/dswh25-prime-power-correction-note-draft.md)
+
+  It reconstructs the published proof of Theorem 8 of D'orville, Sim, Wong and
+  Ho, *Integers* 25 (2025) #A62, shows that the middle branch of that theorem
+  is false at $S_8(3,8)$, locates the failed inference in their Lemma 2(2), and
+  proves a replacement result: $S_{p^i}(k,\ell)=p^i-1$ for every $k\ge i(p-1)$
+  when $p\nmid(\ell-1)$. The note is a prose argument. It is **not** formalized
+  and is not part of the Lean layer described below.
+
 These are draft manuscripts; the rendered site currently continues to use the
 legacy combined manuscript.
 
@@ -62,8 +76,13 @@ as Mathlib-only declarations for
 Lean-bearing public release passed statement comparison, the configured axiom
 policy, and replay through both the Lean and `nanoda` kernels for its preceding
 12-claim configuration in
-[run 33438151044](https://github.com/mysticflounder/modular-schur/actions/runs/33438151044).
-This source snapshot requires a fresh Comparator CI run before it is released.
+[run 33447037510](https://github.com/mysticflounder/modular-schur/actions/runs/33447037510)
+at public commit `315337d6a318a4465cf272073bf54d9f0ed233bb`.
+The renamed 13-declaration Comparator job subsequently passed in
+[run 33534800665](https://github.com/mysticflounder/modular-schur/actions/runs/33534800665)
+at public commit `5ca1063ec835e7f65d937395e7c227833f0a89ce`, but its companion
+conformance job failed while building `ModularSchur.PublicAxiomAudit`. That
+failure must be repaired and the complete workflow rerun before release.
 
 The conformance workflow also runs
 `lake build ModularSchur.PublicAxiomAudit`, which builds
@@ -303,7 +322,7 @@ configuration, manifest/toolchain, or workflow. It rejects:
 
 ### Project-only public layer
 
-The curated public project layer contains 27 hand-written,
+The curated public project layer contains 33 hand-written,
 generated-independent modules plus
 [`PublicAxiomAudit.lean`](lean/ModularSchur/PublicAxiomAudit.lean). The exact
 allowlist is [`lean/PUBLIC_MODULES.txt`](lean/PUBLIC_MODULES.txt). The release
@@ -332,6 +351,12 @@ exponent range, but it doesn't by itself prove a universal incidence-width
 bound. Likewise, the two-axis modules turn an explicit matching certificate
 into a transversal theorem; they don't construct that certificate from support
 size two alone.
+
+Outside this public package, the working research tree has closed and
+independently audited the shared AS/FD-6 window layer W0 and support layer W1.
+W2 is next, W3 is the highest-risk modular-unit relabeling bridge, and
+W4/A1--A3/F1--F3 remain open. The W0/W1 modules are not in this release's
+public-module roster and are not Comparator targets.
 
 These are mathematical and formalization frontiers, not hidden placeholders in
 the published stable closed-form proof.
@@ -474,14 +499,14 @@ driver. These scans aren't dependencies of `schurMod_eq`.
 ```text
 .
 ├── lean/
-│   ├── ModularSchur/          27 public project modules + axiom audit
+│   ├── ModularSchur/          33 public project modules + axiom audit
 │   ├── comparator/            Mathlib-only Challenge, Solution, config, audit
 │   ├── PUBLIC_MODULES.txt     exact curated module allowlist
 │   ├── lakefile.toml
 │   ├── lake-manifest.json
 │   └── lean-toolchain
 ├── docs/                      published paper site, sources/PDF, and living status record
-│   └── paper/                 legacy source/PDF plus split-paper drafts
+│   └── paper/                 legacy source/PDF, split-paper drafts, correction note
 ├── scripts/                   public scan drivers
 ├── LEAN_STATUS.md             theorem/package/trust-boundary authority
 ├── RELEASING.md               source-to-public release and paper guards

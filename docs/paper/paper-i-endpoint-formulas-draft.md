@@ -381,6 +381,10 @@ which has no solution: the left side is even and the right side is odd. The
 counterexample therefore identifies the failed case directly, rather than
 only showing that the final formula is numerically inaccurate.
 
+The separate [DSWH25 correction note](dswh25-prime-power-correction-note-draft.md)
+reconstructs the published proof line by line, audits the downstream scope,
+and proves a general valuation-layer replacement theorem for prime powers.
+
 # 8. Formal verification and trust boundary
 
 The high-color theorem, the integer-to-residue bridge, the universal cap, the
