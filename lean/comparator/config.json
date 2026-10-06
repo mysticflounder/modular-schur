@@ -19,7 +19,6 @@
     "ComparatorClaims.criticalResidue_isUnsafe",
     "ComparatorClaims.zeroMem_notSumFree",
     "ComparatorClaims.schurModResidue_oneColorClosedForm_of_le_modulus",
-    "ComparatorClaims.schurModResidue_oneColorClosedForm",
-    "ComparatorClaims.sigmaInfty_card_le_minFacQuotient"
+    "ComparatorClaims.schurModResidue_oneColorClosedForm"
   ]
 }

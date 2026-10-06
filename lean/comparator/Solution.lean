@@ -8,7 +8,6 @@ module
 
 public import ModularSchur.IntegerBridge
 public import ModularSchur.K1Theorem
-public import ModularSchur.SigmaInfty
 
 /-!
 # Solution.lean — comparator solution module
@@ -198,11 +197,5 @@ theorem schurModResidue_oneColorClosedForm (m ℓ : ℕ) (hm : 2 ≤ m) (hℓ : 
         if ℓ ≤ m then min (ℓ - 1) (m / ℓ) else if ℓ % m = 1 then 0 else 1 := by
   rw [← schurModResidue_bridge]
   exact ModularSchur.schurModResidue_k1_all m ℓ hm hℓ
-
-theorem sigmaInfty_card_le_minFacQuotient (m : ℕ) (hm : 2 ≤ m) (C : Finset (ZMod m))
-    (h : ∃ g : ℕ, g ∣ m ∧ 2 ≤ g ∧
-           ∀ a b, a ∈ C → b ∈ C → g ∣ ((b - a : ZMod m).val)) :
-    C.card ≤ m / m.minFac :=
-  ModularSchur.sigmaInfty_le m hm C h
 
 end ComparatorClaims

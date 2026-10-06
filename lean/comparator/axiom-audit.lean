@@ -16,7 +16,7 @@ no `native_decide`, so it is absent here. The private development checkout's
 historical native-backed scan tree is omitted from the public snapshot and is
 outside this gate; see comparator/README.md "audit boundary".
 
-The current 13 theorems live in the shared `ComparatorClaims` namespace in
+The current 12 theorems live in the shared `ComparatorClaims` namespace in
 `Solution.lean`, so the comparator finds them under the same qualified names
 listed in `config.json`.
 
@@ -35,4 +35,3 @@ Run (from the `lean/` directory): lake env lean comparator/axiom-audit.lean
 #print axioms ComparatorClaims.zeroMem_notSumFree
 #print axioms ComparatorClaims.schurModResidue_oneColorClosedForm_of_le_modulus
 #print axioms ComparatorClaims.schurModResidue_oneColorClosedForm
-#print axioms ComparatorClaims.sigmaInfty_card_le_minFacQuotient

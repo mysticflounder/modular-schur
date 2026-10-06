@@ -69,10 +69,12 @@ the earlier modulus-by-modulus tables.
 
 It also proves the exact one-color value
 $S_m(1,\ell)=\min(\ell-1,\lfloor m/\ell\rfloor)$ for $2\le\ell\le m$, the
-integer-to-residue bridge, the matching upper and lower bounds, and the
-$\sigma_\infty$ coset-cardinality bound. Thirteen of these results are staged
-as Mathlib-only declarations for
-[`leanprover/comparator`](https://github.com/leanprover/comparator). The latest
+integer-to-residue bridge, and the matching upper and lower bounds. Twelve of
+these results are staged as Mathlib-only declarations for
+[`leanprover/comparator`](https://github.com/leanprover/comparator). The
+project also proves the $\sigma_\infty$ coset-cardinality bound; on 2026-10-06
+it was removed from the compared set at the Palomar review's request, and it
+remains a project-only result. The latest
 Lean-bearing public release passed statement comparison, the configured axiom
 policy, and replay through both the Lean and `nanoda` kernels for its preceding
 12-claim configuration in
@@ -86,6 +88,8 @@ failure must be repaired and the complete workflow rerun before release.
 These runs used leanprover/comparator built from a pinned tag. The workflow now
 runs the `lake comparator` that ships with the pinned Lean toolchain, with the
 Lean, `nanoda` and `con-ron` kernels; no public run of it is recorded here yet.
+The current twelve-declaration set differs from that preceding 12-claim
+configuration.
 
 The conformance workflow also runs
 `lake build ModularSchur.PublicAxiomAudit`, which builds
@@ -94,7 +98,7 @@ The conformance workflow also runs
 elaborates the named declarations and surfaces their transitive axiom closures
 in the CI log for review; it does not automatically enforce an axiom whitelist
 or fail merely because a custom axiom appears. This is independent of the
-Comparator/`nanoda` gate, which checks exactly the thirteen declarations in
+Comparator/`nanoda` gate, which checks exactly the twelve declarations in
 the `ComparatorClaims` namespace.
 
 A second, project-only layer develops exact-cover and canonical-axis machinery.
@@ -103,7 +107,7 @@ residual transport, the recurrence
 $\kappa(pn,a)=\kappa(n,a)+(p-1)p^{a_p}$ for a prime $p$, $n\ne0$, and
 $a_p\le v_p(n)$, prime-power iteration, and the unrestricted reduction to an
 exponent-truncated critical core. Those results are kernel checked and publicly
-packaged, but they aren't silently included in the thirteen-statement Comparator
+packaged, but they aren't silently included in the twelve-statement Comparator
 configuration.
 
 The main closed form is complete. The general least-color threshold
@@ -188,7 +192,7 @@ theorem schurModResidue_k1 (m ℓ : ℕ) (hm : 2 ≤ m)
     schurModResidue m 1 ℓ = min (ℓ - 1) (m / ℓ)
 ```
 
-This resolves D'orville–Sim–Wong–Ho Problem 1.3 and is one of the thirteen
+This resolves D'orville–Sim–Wong–Ho Problem 1.3 and is one of the twelve
 Comparator-gated declarations.
 
 ### Exponent-truncated critical core: [`CanonicalCriticalCore`](lean/ModularSchur/CanonicalCriticalCore.lean#L255)
@@ -265,14 +269,14 @@ family, not directly about $S_m(k,\ell)$.
 
 This final consumer is independently audited in the project-only layer, with
 axiom closure exactly `{propext, Classical.choice, Quot.sound}`. It isn't one
-of the thirteen statements currently compared against a Mathlib-only
+of the twelve statements currently compared against a Mathlib-only
 restatement.
 
 ---
 
 ## Proof status
 
-The stable closed form and all thirteen configured Comparator statements are
+The stable closed form and all twelve configured Comparator statements are
 proved without `sorryAx`, custom axioms, `native_decide`, or an unsafe/external
 implementation boundary. Their transitive axiom closure is contained in, and
 for the named headline results measured as, exactly
@@ -295,7 +299,7 @@ The public release uses four status classes:
 ### Comparator-gated layer
 
 [`lean/comparator/Challenge.lean`](lean/comparator/Challenge.lean) imports only
-`Mathlib` and contains the thirteen claims as deliberate `sorry` stubs.
+`Mathlib` and contains the twelve claims as deliberate `sorry` stubs.
 [`Solution.lean`](lean/comparator/Solution.lean) imports the project proofs and
 discharges declarations with the same names and statements. The Comparator
 checks the elaborated statements; the stubs aren't part of the Solution axiom
@@ -308,7 +312,7 @@ flowchart LR
     G --> I["Statement identity"]
     G --> A["Permitted axiom closure"]
     G --> K["Lean kernel + nanoda + con-ron replay"]
-    I --> V["13 ComparatorClaims declarations verified"]
+    I --> V["12 ComparatorClaims declarations verified"]
     A --> V
     K --> V
     P["PublicAxiomAudit.lean — project-only capstones"] --> R["Separate transitive-closure report"]
@@ -342,7 +346,7 @@ which consumers also received independent statement review. The module's
 `#print axioms` commands are elaborated by its build and emit each named
 declaration's transitive closure for review; the build itself does not
 automatically whitelist-fail on custom axioms. This project-only audit remains
-separate from the independent Comparator/`nanoda` gate for exactly thirteen
+separate from the independent Comparator/`nanoda` gate for exactly twelve
 `ComparatorClaims` statements.
 
 ### The open frontier
@@ -380,7 +384,7 @@ absent from this public repository and from the structural verification claim.
 
 ## Comparator-gated theorems
 
-All thirteen declarations in the first table are independently gated through
+All twelve declarations in the first table are independently gated through
 Mathlib-only statements. The second table records the principal project-only
 packages; its exact per-consumer audit boundary is maintained in
 [`LEAN_STATUS.md`](LEAN_STATUS.md).
@@ -401,7 +405,10 @@ packages; its exact per-consumer audit boundary is maintained in
 | [`zeroMem_notSumFree`](lean/comparator/Challenge.lean) | `ModularSchur.not_sumFree_of_mem_zero` | Any class containing zero is unsafe |
 | [`schurModResidue_oneColorClosedForm_of_le_modulus`](lean/comparator/Challenge.lean) | `ModularSchur.schurModResidue_k1` | Exact one-color formula for `2 ≤ ℓ ≤ m` |
 | [`schurModResidue_oneColorClosedForm`](lean/comparator/Challenge.lean) | `ModularSchur.schurModResidue_k1_all` | Complete one-color formula for every `ℓ ≥ 2` |
-| [`sigmaInfty_card_le_minFacQuotient`](lean/comparator/Challenge.lean) | `ModularSchur.sigmaInfty_le` | Coset cardinality bound `card(C) ≤ m / minFac(m)` |
+
+The coset cardinality bound `ModularSchur.sigmaInfty_le`
+(`card(C) ≤ m / minFac(m)`) is no longer in this table; it remains a
+project-only result in [`SigmaInfty`](lean/ModularSchur/SigmaInfty.lean).
 
 ### Canonical-cover and critical-core results
 
@@ -530,7 +537,7 @@ source-first/public-second procedure and its exact path guards.
 ### Start here: the audited statement surface
 
 Read [`lean/comparator/Challenge.lean`](lean/comparator/Challenge.lean) first.
-It imports only Mathlib and is the shortest precise account of the thirteen gated
+It imports only Mathlib and is the shortest precise account of the twelve gated
 claims. [`lean/comparator/README.md`](lean/comparator/README.md) maps each claim
 to its project theorem and explains the two bridge lemmas.
 
@@ -547,9 +554,9 @@ Basic
   → IntegerBridge
 ```
 
-`K1Theorem` proves the one-color formula, and `SigmaInfty` contains the coset
-cardinality bound. These ten structural modules form the import closure behind
-the Comparator Solution.
+`K1Theorem` proves the one-color formula. These nine structural modules form
+the import closure behind the Comparator Solution. `SigmaInfty`, which contains
+the coset cardinality bound, is a project-only module outside that closure.
 
 ### Canonical-cover spine
 

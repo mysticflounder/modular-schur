@@ -15,12 +15,13 @@ public import ModularSchur.DeficitGrowthCertificateShape
 public import ModularSchur.K1IntegerTheorem
 public import ModularSchur.PairSupportGraph
 public import ModularSchur.WholeAxisPID
+public import ModularSchur.SigmaInfty
 
 /-!
 # Public project-only dependency audit
 
 This module prints the transitive dependency closure of the named capstones in the
-curated public project-only layer. The thirteen comparator declarations have a
+curated public project-only layer. The twelve comparator declarations have a
 separate audit in `comparator/axiom-audit.lean`.
 -/
 
@@ -29,6 +30,8 @@ separate audit in `comparator/axiom-audit.lean`.
 namespace ModularSchur
 
 #print axioms schurMod_k1_all
+
+#print axioms sigmaInfty_le
 
 #print axioms TauClosure.tauDPRec_characterization
 #print axioms TauClosure.costDP_eq_tauDPRec

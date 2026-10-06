@@ -7,8 +7,10 @@ Author: Adam McKenna <adam@mysticflounder.ai>
 # Lean theorem inventory
 
 This file records the Lean content selected for the next public repository
-release as of 2026-09-14. It separates the thirteen declarations configured
-for the Comparator gate from the larger project-only theorem layer. The most
+release as of 2026-09-14. It separates the twelve declarations configured
+for the Comparator gate from the larger project-only theorem layer. On
+2026-10-06 the coset-cardinality claim was removed from the compared set at
+the Palomar review's request; it remains a project-only result. The most
 recent successful public Comparator run, run `33447037510` at commit
 `315337d6a318a4465cf272073bf54d9f0ed233bb`, covered the preceding 12-declaration
 configuration. The renamed thirteen-declaration Comparator job passed in run
@@ -19,7 +21,9 @@ workflow rerun before release. Those runs used leanprover/comparator built from
 a pinned tag on Lean 4.33. The Lean tree is now on
 `leanprover/lean4:v4.35.0-rc3` with Mathlib `v4.35.0-rc3`, and the Comparator
 job runs that toolchain's `lake comparator` with the Lean, `nanoda` and
-`con-ron` kernels; no run of it is recorded here yet. The exact module
+`con-ron` kernels; no run of it is recorded here yet. The current
+twelve-declaration set differs from the preceding 12-declaration
+configuration. The exact module
 allowlist is [`lean/PUBLIC_MODULES.txt`](lean/PUBLIC_MODULES.txt).
 
 ## Status terms
@@ -31,14 +35,14 @@ allowlist is [`lean/PUBLIC_MODULES.txt`](lean/PUBLIC_MODULES.txt).
   fidelity, import reachability, a fresh build, and the named theorem's
   transitive axiom closure.
 - **Kernel-checked project theorem**: the declaration builds without a proof
-placeholder. Its package is public, but it is not one of the thirteen
+placeholder. Its package is public, but it is not one of the twelve
   comparator declarations.
 - **Adapter only**: the displayed implication is proved, while a producer for
   one of its hypotheses remains open.
 
 ## Comparator-gated declarations
 
-The current gate contains thirteen declarations under `ComparatorClaims`:
+The current gate contains twelve declarations under `ComparatorClaims`:
 
 1. `schurMod_integerClosedForm`
 2. `schurMod_integerCap_isGreatest`
@@ -52,16 +56,15 @@ The current gate contains thirteen declarations under `ComparatorClaims`:
 10. `zeroMem_notSumFree`
 11. `schurModResidue_oneColorClosedForm_of_le_modulus`
 12. `schurModResidue_oneColorClosedForm`
-13. `sigmaInfty_card_le_minFacQuotient`
 
-Their project import closure is the ten-module structural package from
-`Basic.lean` through `SigmaInfty.lean`. The gate permits only `propext`,
+Their project import closure is the nine-module structural package from
+`Basic.lean` through `K1Theorem.lean`. The gate permits only `propext`,
 `Classical.choice`, and `Quot.sound`; the independent kernel replay is part of
 CI. `lean/comparator/README.md` gives the exact statement-to-project mapping.
 
 ## Independently audited project-only packages
 
-These packages are now distributed but remain outside the thirteen-declaration
+These packages are now distributed but remain outside the twelve-declaration
 comparator configuration.
 
 | Package | Main modules | Named capstones |
@@ -103,6 +106,11 @@ broader cover theory:
   the reduction bridge. Its single capstone `schurMod_k1_all` is audited by
   `PublicAxiomAudit.lean`. It covers the regime `m < ℓ`, which the paper does
   not treat.
+- `SigmaInfty`: the coset cardinality bound `sigmaInfty_le`. For `m ≥ 2`, a
+  set of residues mod `m` whose pairwise differences are all divisible by one
+  `g ∣ m` with `g ≥ 2` has at most `m / minFac m` elements. It was a
+  Comparator declaration until 2026-10-06; since then `PublicAxiomAudit.lean`
+  audits it.
 - `TauClosure`: atomization, exact set-cover dynamic programming, executable
   recurrence, cost-only compression, and the scoped `n=220` package. The named
   DP capstones are audited by `PublicAxiomAudit.lean`.
@@ -161,11 +169,11 @@ output for the named project-only capstones. The conformance workflow now also
 runs `lake build ModularSchur.PublicAxiomAudit`: its `#print axioms` commands elaborate
 the named declarations and surface their transitive closures in the CI log for
 review. This target does not automatically whitelist-fail on custom axioms.
-It is independent of the Comparator/`nanoda` gate, which still checks exactly
-the thirteen `ComparatorClaims` declarations. Those build gates must pass before the
+It is independent of the Comparator/`nanoda` gate, which checks exactly
+the twelve `ComparatorClaims` declarations. Those build gates must pass before the
 staged public candidate is committed.
 
-`Challenge.lean` intentionally contains thirteen `sorry` statement stubs. They
+`Challenge.lean` intentionally contains twelve `sorry` statement stubs. They
 are not proofs. `Solution.lean` supplies the proofs, and the comparator checks
 the two exported statement sets.
 

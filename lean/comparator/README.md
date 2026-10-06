@@ -22,7 +22,7 @@ headline result is:
 | 3 | Comparator run in CI + comparator axiom audit | [`config.json`](config.json) + [`../../.github/workflows/comparator.yml`](../../.github/workflows/comparator.yml) + [`axiom-audit.lean`](axiom-audit.lean) |
 | 4 | `formalization.yaml` (mathlib-initiative spec) | [`../../formalization.yaml`](../../formalization.yaml) |
 
-Challenge and Solution declare the current 13 gated results in a shared
+Challenge and Solution declare the current 12 gated results in a shared
 `ComparatorClaims` namespace (so `config.json` lists
 `ComparatorClaims.schurMod_integerClosedForm`, …). The
 comparator looks up each name in *both* exports, so they must agree on the
@@ -31,7 +31,7 @@ colliding with the project's own top-level theorem names.
 
 ## Paper II comparator sections — SKETCH — NOT PROMOTABLE
 
-Paper I is the current 13-declaration gate. The structural programme belongs
+Paper I is the current 12-declaration gate. The structural programme belongs
 to a later Paper II only after its interfaces are ready.  Its five section
 boundaries are recorded in the mathlib-only, declaration-free
 [`StrategySketch.lean`](StrategySketch.lean): stable semantics and canonical
@@ -70,7 +70,7 @@ Promotion is atomic: only after an exact statement, a project proof with a
 reachable final consumer, and the required trust audit exist should one add the
 `Challenge` theorem, the matching proved `Solution` theorem, the `config.json`
 name, and the corresponding `axiom-audit.lean` entry in the same change. Until
-then, the live gate remains the current 13-theorem set.
+then, the live gate remains the current 12-theorem set.
 
 The universal residual-cover quantity `tau` and the three-or-more-active-axis
 case are **OPEN**. They are intentionally absent from Sections A--E and have no
@@ -139,15 +139,15 @@ lake build ModularSchur.PublicAxiomAudit
 the named project-only declarations and emits their transitive axiom closures
 in the log for review; the build does not automatically enforce a whitelist or
 fail on a custom axiom. This audit is independent of the Comparator/`nanoda`
-gate, whose configured scope remains exactly the current 13 `ComparatorClaims`
+gate, whose configured scope is exactly the current 12 `ComparatorClaims`
 statements.
 
-## What is in the gate: the current 13 mathlib-only structural claims
+## What is in the gate: the current 12 mathlib-only structural claims
 
 These are the currently configured structural closed-form results whose
 statements have already been expressed with mathlib definitions alone, so a
 reviewer can read `Challenge.lean` without trusting any project definition.
-They are not an exhaustive project-wide ranking. All 13 are axiom-clean: their
+They are not an exhaustive project-wide ranking. All 12 are axiom-clean: their
 `#print axioms` closure ⊆ `{propext, Classical.choice, Quot.sound}` (no
 `sorryAx`, no custom axioms, **no `native_decide`**).
 
@@ -165,7 +165,13 @@ They are not an exhaustive project-wide ranking. All 13 are axiom-clean: their
 | `zeroMem_notSumFree` | `ModularSchur.not_sumFree_of_mem_zero` | §2 — any class containing `0` is not `ℓ`-sum-free |
 | `schurModResidue_oneColorClosedForm_of_le_modulus` | `ModularSchur.schurModResidue_k1` | repo result: D'orville–Sim–Wong–Ho **Problem 1.3** (`k=1` closed form `min(ℓ-1, ⌊m/ℓ⌋)`) |
 | `schurModResidue_oneColorClosedForm` | `ModularSchur.schurModResidue_k1_all` | complete one-color formula for every `m ≥ 2`, `ℓ ≥ 2`, including the `0/1` branches when `m < ℓ` |
-| `sigmaInfty_card_le_minFacQuotient` | `ModularSchur.sigmaInfty_le` | repo result: σ∞ coset cardinality bound (`|C| ≤ m/minFac m`) |
+
+On 2026-10-06 the coset-cardinality claim `sigmaInfty_card_le_minFacQuotient`
+(project theorem `ModularSchur.sigmaInfty_le`, `|C| ≤ m/minFac m`) was removed
+from the compared set at the Palomar review's request. Its `Challenge` stub,
+`Solution` proof, `config.json` name, and `axiom-audit.lean` entry were removed
+together; the project theorem remains in `ModularSchur.SigmaInfty` as a
+project-only result.
 
 ### How the gate is satisfied: the bridge
 
@@ -207,6 +213,6 @@ seed/transport/critical-core package, and several structural adapters. Those
 modules contain no `native_decide` and have their own capstone axiom audit in
 `ModularSchur/PublicAxiomAudit.lean`. Its build surfaces the transitive
 `#print axioms` closures but does not itself whitelist-fail on custom axioms.
-They remain outside the thirteen configured `ComparatorClaims` declarations until
+They remain outside the twelve configured `ComparatorClaims` declarations until
 complete mathlib-only statements and matching `Solution` wrappers are reviewed
 atomically.

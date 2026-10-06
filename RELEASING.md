@@ -166,7 +166,7 @@ module name to `scripts/public-lean-modules.txt`. Every transitive
 generated-dependent bridges, or a module carrying an unapproved trust
 boundary merely to close imports.
 
-The thirteen live comparator declarations are atomic. A future comparator
+The twelve live comparator declarations are atomic. A future comparator
 expansion must update `Challenge.lean`, `Solution.lean`, `config.json`,
 `axiom-audit.lean`, and the documentation in one reviewed change. Planning
 rows in `lean/comparator/README.md` make no comparator claim.
@@ -203,8 +203,8 @@ the repository-approved standard foundations `propext`, `Classical.choice`,
 and `Quot.sound`; this build target does not itself enforce a whitelist or fail
 automatically on a custom axiom. The conformance workflow runs
 `lake build ModularSchur.PublicAxiomAudit` as a separate step from the
-Comparator/`nanoda` gate, whose scope remains exactly
-the thirteen `ComparatorClaims` declarations. The comparator package has its own audit:
+Comparator/`nanoda` gate, whose scope is exactly
+the twelve `ComparatorClaims` declarations. The comparator package has its own audit:
 
 ```bash
 lean/comparator/check-conformance.sh
@@ -218,7 +218,7 @@ Interpret the gates separately:
 - `#print axioms` establishes the transitive trust closure of the named
   capstones;
 - the `lake comparator` CI job (the pinned toolchain's comparator, with the
-  Lean, `nanoda` and `con-ron` kernels) governs only the configured thirteen
+  Lean, `nanoda` and `con-ron` kernels) governs only the configured twelve
   `ComparatorClaims` declarations;
 - an independent review is required before a new theorem package is described
   as independently audited.

@@ -32,15 +32,16 @@ project:
     own. The formalization also proves the one-colour closed form
     S_m(1,ℓ) = min(ℓ − 1, ⌊m/ℓ⌋) for 2 ≤ ℓ ≤ m, which answers Problem 1.3
     of D'orville et al.; the bound S_m(k,ℓ) ≤ m − 1 of Chappelon et al.;
-    the reduction from integers to residues modulo m; and the bound
-    m/p, with p the least prime factor of m, on the size of a set of
-    residues whose pairwise differences all lie in a proper subgroup of
-    ℤ/m. Thirteen theorems with Mathlib-only statements are compared by
+    and the reduction from integers to residues modulo m. Twelve theorems
+    with Mathlib-only statements are compared by
     lake comparator (statement identity, permitted axioms, and replay
     through the Lean, nanoda and con-ron kernels); their only axioms are
     propext, Classical.choice and Quot.sound. The 33 project modules also
     contain further results, listed in LEAN_STATUS.md, that are proved and
-    axiom-audited but are not compared. An earlier computational part of
+    axiom-audited but are not compared, among them the bound m/p, with p
+    the least prime factor of m, on the size of a set of residues whose
+    pairwise differences all lie in a proper subgroup of ℤ/m. An earlier
+    computational part of
     the project, which uses native_decide, is not in this repository and
     is not part of these results. The informal proofs, the Lean
     formalization and the paper were produced with AI systems (Claude,
@@ -119,7 +120,7 @@ status:
   scope: >
     Structural theory of the modular Schur number S_m(k,ℓ) plus computational
     scans. The STRUCTURAL closed-form proof (the paper) is mathlib-only, sorry-free,
-    and kernel-axiom-clean (no project axioms, no native_decide): 13 named
+    and kernel-axiom-clean (no project axioms, no native_decide): 12 named
     theorems are packaged for the leanprover/comparator gate (see lean/comparator/).
     The public repository also distributes a separate 33-module hand-written,
     generated-independent project layer, including the exact seed-count,
@@ -129,17 +130,17 @@ status:
     `PublicAxiomAudit` module elaborates declarations and logs transitive
     `#print axioms` closures for review; that build does not itself whitelist-fail
     on custom axioms. Those declarations are built and axiom-audited but are not
-    among the 13 comparator entries. A separate, EARLIER generated
+    among the 12 comparator entries. A separate, EARLIER generated
     computational scan tree remains private and verifies per-modulus tables via
     native_decide; it is not part of the public release or comparator gate. Its
     closure includes a generated per-computation native-evaluation axiom named
     like declaration._native.native_decide.ax_*. See LEAN_STATUS.md and
     lean/comparator/README.md.
-  sorry_count: 0                # the 33 public project modules are sorry-free; Challenge.lean's 13 statement stubs are intentional and discharged by Solution.lean
+  sorry_count: 0                # the 33 public project modules are sorry-free; Challenge.lean's 12 statement stubs are intentional and discharged by Solution.lean
   sorry_in_definitions: 0
-  axioms: ["propext", "Classical.choice", "Quot.sound"]   # verified axiom closure of all 13 comparator claims
+  axioms: ["propext", "Classical.choice", "Quot.sound"]   # verified axiom closure of all 12 comparator claims
   axioms_note: >
-    Verified via `#print axioms` on each of the 13 ComparatorClaims theorems
+    Verified via `#print axioms` on each of the 12 ComparatorClaims theorems
     (lean/comparator/axiom-audit.lean): closure is exactly {propext,
     Classical.choice, Quot.sound}: no sorryAx, no custom axioms, no
     generated native-evaluation axiom. The public 33-module project allowlist
@@ -149,7 +150,7 @@ status:
     project-only declarations and surface their transitive closures for review;
     the build does not automatically enforce a whitelist or fail on a custom
     axiom. This remains independent of the Comparator/`nanoda` gate, whose
-    configured scope is exactly the 13 `ComparatorClaims` declarations.
+    configured scope is exactly the 12 `ComparatorClaims` declarations.
     First measured 2026-06-20 and independently confirmed against
     permitted_axioms by the comparator itself in CI. The preceding public
     12-claim configuration most recently passed both comparator jobs in run
@@ -158,14 +159,16 @@ status:
     at commit 5ca1063ec835e7f65d937395e7c227833f0a89ce on 2026-09-01, but the
     companion conformance job failed while building
     ModularSchur.PublicAxiomAudit. Repair that failure and rerun the complete
-    workflow before public release.
+    workflow before public release. The current 12-claim configuration
+    (2026-10-06, without the coset-cardinality claim) differs from that
+    earlier 12-claim one, and no CI run of it is recorded yet.
   main_results:
   - declaration: "ComparatorClaims.schurMod_integerClosedForm"
     file: "lean/comparator/Solution.lean"
     sorry_count: 0
     axioms: ["propext", "Classical.choice", "Quot.sound"]
     comparator_config: "lean/comparator/config.json"
-    note: "The high-color closed form in the Mathlib-only comparator surface; the same config checks 13 named claims."
+    note: "The high-color closed form in the Mathlib-only comparator surface; the same config checks 12 named claims."
   - declaration: "ComparatorClaims.schurModResidue_oneColorClosedForm_of_le_modulus"
     file: "lean/comparator/Solution.lean"
     sorry_count: 0
@@ -250,7 +253,7 @@ automation:                                          # [required]
 # fidelity
 fidelity:
   divergences: >
-    The comparator gate covers the 13 mathlib-statable, kernel-axiom-clean
+    The comparator gate covers the 12 mathlib-statable, kernel-axiom-clean
     STRUCTURAL results. To state them with mathlib definitions alone, the project's
     validity-partition structures (IsValidPartition / IsValidPartitionNat) are
     unbundled into their four fields, and schurMod / schurModResidue are spelled out
@@ -271,7 +274,7 @@ review:
     checks no ComparatorClaims theorem depends on sorryAx or native evaluation
     (including generated names like declaration._native.native_decide.ax_*).
     It is a blocklist, not a whitelist; a project-defined axiom would pass it.
-    lean/comparator/axiom-audit.lean prints the #print axioms closure for all 13
+    lean/comparator/axiom-audit.lean prints the #print axioms closure for all 12
     without asserting anything about it. The authoritative external check is a
     `lake comparator` run (the comparator bundled with the pinned Lean toolchain,
     leanprover/lean4:v4.35.0-rc3) that verifies statement identity and axiom
@@ -294,7 +297,7 @@ review:
 # editorial_review - material for Palomar Registry editorial review.
 editorial_review:
 
-  # A plain-language account of each of the 13 theorems the comparator checks.
+  # A plain-language account of each of the 12 theorems the comparator checks.
   # Throughout, n := m/gcd(m, l-1), and a class is "l-sum-free mod m" when no l
   # of its elements (repeats allowed) sum to an element of that same class mod m.
   compared_theorems:
@@ -355,14 +358,6 @@ editorial_review:
         The all-length one-colour formula. For lengths at most the modulus it
         agrees with the bounded formula above; beyond the modulus it is zero
         when l is one modulo m and one otherwise.
-    - name: "ComparatorClaims.sigmaInfty_card_le_minFacQuotient"
-      plain: >
-        A counting bound used in the threshold theory. If every pairwise
-        difference within a set lies in a proper subgroup, the set has at most
-        m/minFac(m) elements. The Lean statement carries that hypothesis
-        explicitly; the paper-side bridge putting every stable safe set of
-        size at least 2 under it (Theorem 8.1) is prose only, its
-        formalization deferred (see lean/ModularSchur/SigmaInfty.lean).
 
   originality: >
     To the author's knowledge, the uniform closed form
@@ -403,7 +398,7 @@ editorial_review:
       automated gate, not a reviewer, and a green run is not a referee report.
 
   limitations: >
-    Scope of the gate. The 13 theorems above are the whole comparator-checked
+    Scope of the gate. The 12 theorems above are the whole comparator-checked
     claim. The public repository also carries project-only kernel proofs listed
     in LEAN_STATUS.md; those have a separate capstone axiom audit and no
     statement-comparison claim. The project also contains an earlier

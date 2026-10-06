@@ -47,7 +47,7 @@ in the project's own `noncomputable def`.
 
 ## Audit boundary — exact scope of the public claims
 
-The 13 declarations below are deliberate `sorry`-backed statement stubs; this
+The 12 declarations below are deliberate `sorry`-backed statement stubs; this
 file makes no proof claim by itself. The Comparator claim applies to the matching
 declarations in `Solution.lean`: the gate checks statement identity, and their
 measured `#print axioms` closure is exactly
@@ -59,7 +59,7 @@ mathlib-only statement and matching project proof are ready.
 
 The curated public snapshot also contains a 27-module hand-written,
 generated-independent project layer plus `ModularSchur/PublicAxiomAudit.lean`.
-That layer is outside the 13 Comparator declarations and has the separate build
+That layer is outside the 12 Comparator declarations and has the separate build
 and transitive-axiom-audit status recorded in `LEAN_STATUS.md`.
 
 The private development checkout retains an older `native_decide`-backed
@@ -230,15 +230,6 @@ theorem schurModResidue_oneColorClosedForm (m ℓ : ℕ) (hm : 2 ≤ m) (hℓ : 
         (∀ i, ∀ f : Fin ℓ → ZMod m, (∀ a, f a ∈ P i) → ∀ y ∈ P i, (∑ a, f a) ≠ y))
       (m - 1) =
         if ℓ ≤ m then min (ℓ - 1) (m / ℓ) else if ℓ % m = 1 then 0 else 1 :=
-  sorry
-
-/-- **σ∞ coset cardinality bound.** If the pairwise differences of `C ⊆ ZMod m`
-all lie in a proper subgroup (divisible by some `g ∣ m`, `g ≥ 2`), then
-`|C| ≤ m / minFac m`. -/
-theorem sigmaInfty_card_le_minFacQuotient (m : ℕ) (hm : 2 ≤ m) (C : Finset (ZMod m))
-    (h : ∃ g : ℕ, g ∣ m ∧ 2 ≤ g ∧
-           ∀ a b, a ∈ C → b ∈ C → g ∣ ((b - a : ZMod m).val)) :
-    C.card ≤ m / m.minFac :=
   sorry
 
 end ComparatorClaims

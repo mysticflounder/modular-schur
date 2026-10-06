@@ -19,7 +19,7 @@ name = "ModularSchur"
 # Three out-of-tree modules under comparator/ (not in defaultTargets, so the normal
 # `lake build` is unaffected). Build the live gate explicitly:
 #   lake build Challenge Solution
-# Challenge imports Mathlib only and states the 13 currently configured
+# Challenge imports Mathlib only and states the 12 currently configured
 # structural results as `sorry` stubs; Solution imports the project and
 # discharges them under identical top-level (`ComparatorClaims.`) names. The
 # `lake comparator` run checks statement identity and axiom cleanliness

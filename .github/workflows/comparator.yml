@@ -88,7 +88,7 @@ jobs:
 
       - name: Build public project axiom audit
         # This standalone module prints the transitive axiom closures of the
-        # broader public project-only capstones; it is outside the 13-declaration
+        # broader public project-only capstones; it is outside the 12-declaration
         # independent ComparatorClaims registry.
         working-directory: lean
         run: lake build ModularSchur.PublicAxiomAudit
@@ -97,7 +97,7 @@ jobs:
     name: lake comparator (Lean kernel + nanoda + con-ron)
     runs-on: ubuntu-24.04
     timeout-minutes: 60
-    # Blocking. A failure here is either a real regression in the 13 gated
+    # Blocking. A failure here is either a real regression in the 12 gated
     # ComparatorClaims declarations or a change in the toolchain named by
     # lean/lean-toolchain — both worth stopping for.
     steps:
@@ -143,7 +143,7 @@ jobs:
         working-directory: lean
         run: lake exe cache get
 
-      - name: Run lake comparator on the 13 ComparatorClaims declarations
+      - name: Run lake comparator on the 12 ComparatorClaims declarations
         working-directory: lean
         run: |
           set -euo pipefail
