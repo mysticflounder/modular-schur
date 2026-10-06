@@ -1,4 +1,8 @@
-import Solution
+module
+
+public import Solution
+
+@[expose] public section
 
 /-
 Comparator axiom audit. Prints the `#print axioms` closure for every theorem in

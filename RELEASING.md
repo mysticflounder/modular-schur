@@ -54,6 +54,7 @@ The publisher may stage only these paths in Lean scope:
 
 ```text
 .github/workflows/comparator.yml
+.github/workflows/palomar-preflight.yml
 LICENSE
 README.md
 LEAN_STATUS.md
@@ -81,7 +82,11 @@ untouched.
 - Use the global `lake-build` wrapper for maintainer Lake builds. Do not restore
   or use `scripts/lake-build.sh`.
 - The source toolchain is pinned by `lean/lean-toolchain`; Mathlib is pinned by
-  `lean/lakefile.toml` and `lean/lake-manifest.json`.
+  `lean/lakefile.toml` and `lean/lake-manifest.json`. The public
+  `lean/lakefile.toml` is written by `scripts/public-lakefile.py`: it drops the
+  part between the `private-only` marker lines (the ClassicalSchur libraries,
+  whose sources are not published) and `"ClassicalSchur"` from
+  `defaultTargets`, and keeps every other line.
 - `pandoc` is required for the status page. A full site build additionally
   needs Node, the TikZ toolchain, and the vendored page assets.
 - The public checkout must be on `main`, point exactly at
@@ -149,6 +154,9 @@ belong in:
 - `site/public-lean-status.md`, exported as public `LEAN_STATUS.md`;
 - `site/content/index.md`, rendered as public `docs/status.html`;
 - this runbook, exported as public `RELEASING.md`;
+- `site/public-palomar-preflight.yml`, exported as public
+  `.github/workflows/palomar-preflight.yml` (a manually started Palomar
+  preflight; it is not an active workflow in this repository);
 - `formalization.yaml`, for formalization and registry metadata;
 - `lean/comparator/README.md`, for comparator scope and planning-only stubs.
 
@@ -183,7 +191,7 @@ lake-build ModularSchur.PublicAxiomAudit
 lake-build Challenge Solution
 ```
 
-This checkout's Lean 4.33 toolchain ships Lake 5, whose `build` command rejects
+This checkout's Lean 4.35 toolchain ships Lake 5, whose `build` command rejects
 the older `--jobs` and `-j` flags. Control risk with focused targets, the global
 wrapper's per-worker memory ceiling, and host-load preflight rather than copying
 an obsolete jobs option into the command.
@@ -209,7 +217,8 @@ Interpret the gates separately:
   boundaries in the curated project modules;
 - `#print axioms` establishes the transitive trust closure of the named
   capstones;
-- the comparator and `nanoda` CI jobs govern only the configured thirteen
+- the `lake comparator` CI job (the pinned toolchain's comparator, with the
+  Lean, `nanoda` and `con-ron` kernels) governs only the configured thirteen
   `ComparatorClaims` declarations;
 - an independent review is required before a new theorem package is described
   as independently audited.
@@ -257,7 +266,8 @@ The dry run:
 2. renders only the status page;
 3. assembles an export in a temporary directory;
 4. validates the exact module set, project-import closure, comparator
-   artifacts, maintainer docs, and source-level trust guards;
+   artifacts, maintainer docs, source-level trust guards, and Palomar's Lean
+   source requirements (every Lean file a module, at most 10,000 lines);
 5. reports file-level differences;
 6. leaves the public index and worktree unchanged.
 
@@ -408,12 +418,18 @@ Before selecting that SHA:
    GitHub dependencies pinned to full lowercase SHAs, and one matching root
    licence;
 3. validate the Challenge size/import boundary, comparator keys, statements,
-   permitted axioms, and both kernel replays;
+   permitted axioms, and every kernel replay (Lean, `nanoda`, `con-ron`);
+   Palomar requires Lean `v4.35.0-rc2` or later, every Lean source file to
+   begin with the `module` header, and at most 10,000 lines per file
+   (`scripts/check-public-release.sh` runs `scripts/check-lean-sources.py`
+   on the assembled tree for the last two);
 4. validate `formalization.yaml` against both the upstream schema and Palomar's
    stricter provenance/classification contract;
 5. ensure the checked-out snapshot stays below Palomar's current size limit;
 6. wait for public CI and verify that its commit or an unchanged-gated-path
-   ancestor is the one being relied on;
+   ancestor is the one being relied on; start the public
+   `Palomar predictive preflight` workflow by hand on that commit and require
+   its `mechanical-report-<request_id>` artifact to say `status: pass`;
 7. select the final 40-character public commit SHA;
 8. submit that immutable SHA only after explicit submission authority.
 

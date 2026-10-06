@@ -1,5 +1,7 @@
-import ModularSchur.UnifiedValue
-import ModularSchur.SingletonSafety
+module
+
+public import ModularSchur.UnifiedValue
+public import ModularSchur.SingletonSafety
 
 /-!
 # Phase 7 Unified Theorem — upper bound for S_m(k,ℓ)
@@ -15,6 +17,8 @@ class containing it to fail the ℓ-sum-free condition.
 The partition-level upper bound follows from this residue-level statement
 via Lemma 2.1 (residue reduction).
 -/
+
+@[expose] public section
 
 namespace ModularSchur
 

@@ -3,15 +3,18 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.CanonicalCriticalCore
-import ModularSchur.CanonicalBlockMonotonicity
-import ModularSchur.AllButOneAxisCover
-import ModularSchur.AxisBlockCount
-import ModularSchur.AllButOneAxisCount
-import ModularSchur.DeficitGrowthCertificateShape
-import ModularSchur.K1IntegerTheorem
-import ModularSchur.PairSupportGraph
-import ModularSchur.WholeAxisPID
+
+module
+
+public import ModularSchur.CanonicalCriticalCore
+public import ModularSchur.CanonicalBlockMonotonicity
+public import ModularSchur.AllButOneAxisCover
+public import ModularSchur.AxisBlockCount
+public import ModularSchur.AllButOneAxisCount
+public import ModularSchur.DeficitGrowthCertificateShape
+public import ModularSchur.K1IntegerTheorem
+public import ModularSchur.PairSupportGraph
+public import ModularSchur.WholeAxisPID
 
 /-!
 # Public project-only dependency audit
@@ -20,6 +23,8 @@ This module prints the transitive dependency closure of the named capstones in t
 curated public project-only layer. The thirteen comparator declarations have a
 separate audit in `comparator/axiom-audit.lean`.
 -/
+
+@[expose] public section
 
 namespace ModularSchur
 

@@ -1,4 +1,6 @@
-import ModularSchur.TauClosure
+module
+
+public import ModularSchur.TauClosure
 
 /-!
 # Residue-axis cover certificates
@@ -14,6 +16,8 @@ certificates.  The computational certificates provide:
 The theorem below says that these two certificates meet by weak duality, so the
 axis-cover number is exactly the size of the occupied coordinate projection.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.ResidueAxis
 

@@ -3,8 +3,13 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.IntegerBridge
-import ModularSchur.K1Theorem
+
+module
+
+public import ModularSchur.IntegerBridge
+public import ModularSchur.K1Theorem
+
+@[expose] public section
 
 namespace ModularSchur
 

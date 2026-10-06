@@ -1,9 +1,11 @@
-import ModularSchur.Basic
-import ModularSchur.SingletonSafety
-import ModularSchur.UniversalBound
-import ModularSchur.UnifiedValue
-import ModularSchur.UnifiedTheorem
-import ModularSchur.StableRange
+module
+
+public import ModularSchur.Basic
+public import ModularSchur.SingletonSafety
+public import ModularSchur.UniversalBound
+public import ModularSchur.UnifiedValue
+public import ModularSchur.UnifiedTheorem
+public import ModularSchur.StableRange
 
 /-!
 # Modular Schur number `S_m(k,ℓ)` — partition framework
@@ -16,6 +18,8 @@ admits a `k`-partition into `ℓ`-sum-free classes of `ZMod m`.
 
 This file defines the object and states the main unified theorem.
 -/
+
+@[expose] public section
 
 namespace ModularSchur
 

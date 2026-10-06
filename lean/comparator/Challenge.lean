@@ -3,7 +3,10 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import Mathlib
+
+module
+
+public import Mathlib
 
 /-!
 # Challenge.lean — comparator challenge module (mathlib-only)
@@ -17,7 +20,7 @@ project's own definitions — every type and predicate below is from mathlib.
 
 `Solution.lean` (which `import`s the project) discharges each `sorry` with the
 real, axiom-clean project theorem, restating the **identical** signature under
-the same `ComparatorClaims.` name. The leanprover/comparator run checks that the two
+the same `ComparatorClaims.` name. The `lake comparator` run checks that the two
 modules' statements are identical (and the proofs axiom-clean), so statement
 drift between the two files cannot pass silently.
 
@@ -69,6 +72,8 @@ proof closures include generated per-computation native-evaluation axioms named
 like `declaration._native.native_decide.ax_*`, so they do not satisfy the public
 kernel-axiom boundary.
 -/
+
+@[expose] public section
 
 open scoped Classical
 

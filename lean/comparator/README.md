@@ -88,63 +88,45 @@ comparator toolchain needed):
 lean/comparator/check-conformance.sh
 ```
 
-The authoritative check is the real
-[leanprover/comparator](https://github.com/leanprover/comparator) run
-(requirement 3): it re-exports both modules through `lean4export`, checks
-statement identity and axiom compliance, then re-runs **both** the `nanoda`
-kernel and the Lean default kernel, ending in `Your solution is okay!`. It is
-wired in CI; to run it locally:
+The authoritative check is the `lake comparator` run (requirement 3): the
+comparator that ships with the Lean toolchain since v4.35.0-rc2 (earlier runs
+of this gate used the standalone
+[leanprover/comparator](https://github.com/leanprover/comparator) built from a
+pinned tag). The comparator, the exporter (`leanexport`) and the kernels all
+come from `lean/lean-toolchain` (currently `leanprover/lean4:v4.35.0-rc3`).
+It builds and exports `Challenge` and `Solution` inside a `bwrap`
+(bubblewrap) sandbox, checks statement identity and axiom compliance, then
+replays the solution through Lean's kernel and every configured external
+kernel. It exits 0 and ends with `Your solution is okay!` on acceptance. It is
+wired in CI
+([`../../.github/workflows/comparator.yml`](../../.github/workflows/comparator.yml)).
+
+The committed [`config.json`](config.json) names no `external_kernels`: the
+Palomar Registry rejects that field in a submitted configuration and registers
+the toolchain's bundled kernels itself. The CI step does the same. It writes a
+copy of `config.json` without `enable_nanoda` (which `lake comparator` refuses
+together with `external_kernels`) and with the toolchain's `nanoda_bin` and
+`con-ron` registered as external kernels, then runs `lake comparator` on that
+copy. To run it the same way on Linux with `bubblewrap` installed:
 
 ```bash
 cd lean
-# Build the comparator at the tag matching this repo's lean-toolchain, so its
-# bundled lean4export is built against the SAME Lean as the project.
-TC="$(cut -d: -f2 lean-toolchain)"           # v4.33.0
-# CI pins this tag to comparator commit 3927ad383f208ae977c340a91c48ac9b497d2097.
-git clone --branch "$TC" https://github.com/leanprover/comparator /tmp/cmp
-( cd /tmp/cmp && lake build && lake build lean4export )   # comparator + matched lean4export
-
-# Build the project's Challenge/Solution first. A pre-built .lake means the
-# comparator does not rebuild Solution, so its guarantee no longer rests on the
-# sandbox (comparator README assumption: "obtained a fully pre-built .lake").
-lake-build Challenge Solution
-
-# Comparator v4.33.0 accepts COMPARATOR_LANDRUN / COMPARATOR_LEAN4EXPORT /
-# COMPARATOR_NANODA overrides. This PATH-based setup also works: landrun is
-# Linux-only (Landlock LSM), so on macOS put a no-sandbox `landrun` shim on PATH
-# that strips the sandbox flags and execs the real command:
-mkdir -p /tmp/shim && cat > /tmp/shim/landrun <<'SH'
-#!/usr/bin/env bash
-# Drop landrun flags (arg shape: --best-effort --ro/--rw/--rwx/--rox/--env VAL,
-# -ldd -add-exec, then the real command); exec the command unsandboxed.
-while [[ $# -gt 0 ]]; do case "$1" in
-  --best-effort|-ldd|-add-exec) shift ;;
-  --ro|--rw|--rwx|--rox|--env)  shift 2 ;;
-  --) shift; break ;;
-  -*) shift ;;
-  *)  break ;;
-esac; done
-exec "$@"
-SH
-chmod +x /tmp/shim/landrun
-LE=/tmp/cmp/.lake/packages/lean4export/.lake/build/bin
-
-PATH="/tmp/shim:$LE:$PATH" \
-  lake env /tmp/cmp/.lake/build/bin/comparator comparator/config.json
-# Success ends with "Your solution is okay!".
+lake exe cache get
+prefix="$(lean --print-prefix)"
+jq --arg prefix "$prefix" \
+  'del(.enable_nanoda)
+   | .external_kernels = {
+       "nanoda": [($prefix + "/bin/nanoda_bin")],
+       "con-ron": [($prefix + "/bin/con-ron")]
+     }' \
+  comparator/config.json > /tmp/comparator-config.json
+lake comparator --config /tmp/comparator-config.json
+# Exit 0 is acceptance; the log ends with "Your solution is okay!".
 ```
 
-The shim drops only the sandbox (which exists to contain a *malicious*
-Solution author — not the point for a self-audit of our own Solution), not any
-verification leg. Linux CI uses the real `landrun` sandbox.
-
-The committed [`config.json`](config.json) sets `enable_nanoda: true`; the nanoda
-leg invokes `nanoda_bin` from PATH and runs in Linux CI. To run locally without
-it, pass a config with nanoda off
-(`jq '.enable_nanoda=false' comparator/config.json > /tmp/cfg.json` then point the
-comparator at `/tmp/cfg.json`), or build
-[`ammkrn/nanoda_lib`](https://github.com/ammkrn/nanoda_lib) and put `nanoda_bin`
-on PATH. The statement-identity + Lean default-kernel legs run either way.
+`bubblewrap` is Linux-only, so the comparator runs in Linux CI.
+`lake comparator --inadvisably-no-sandbox` disables the sandbox; this
+repository does not use it.
 
 The conformance workflow has a separate project-layer step that runs
 `lake build ModularSchur.PublicAxiomAudit`:

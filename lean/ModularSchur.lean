@@ -1,33 +1,35 @@
-import ModularSchur.Basic
-import ModularSchur.SingletonSafety
-import ModularSchur.UniversalBound
-import ModularSchur.UnifiedValue
-import ModularSchur.UnifiedTheorem
-import ModularSchur.StableRange
-import ModularSchur.Partition
-import ModularSchur.IntegerBridge
-import ModularSchur.K1Theorem
-import ModularSchur.K1IntegerTheorem
-import ModularSchur.SigmaInfty
-import ModularSchur.TauClosure
-import ModularSchur.CoordinateUnion
-import ModularSchur.SameSupportFiber
-import ModularSchur.ResidueAxis
-import ModularSchur.PairSupportGraph
-import ModularSchur.AxisLabelledCover
-import ModularSchur.CanonicalBlocks
-import ModularSchur.CanonicalBlockMonotonicity
-import ModularSchur.CanonicalSeedCount
-import ModularSchur.CanonicalSeedTransport
-import ModularSchur.CanonicalResidualCoverTransport
-import ModularSchur.CanonicalCriticalCore
-import ModularSchur.AllButOneAxisCover
-import ModularSchur.AxisBlockCount
-import ModularSchur.AllButOneAxisCount
-import ModularSchur.AnchoredExactTransversal
-import ModularSchur.TwoAxisStructural
-import ModularSchur.TwoAxisAnchoredExactTransversal
-import ModularSchur.WholeAxisPID
-import ModularSchur.DeficitGrowthInvariant
-import ModularSchur.DeficitGrowthRestrictedAET
-import ModularSchur.DeficitGrowthCertificateShape
+module
+
+public import ModularSchur.Basic
+public import ModularSchur.SingletonSafety
+public import ModularSchur.UniversalBound
+public import ModularSchur.UnifiedValue
+public import ModularSchur.UnifiedTheorem
+public import ModularSchur.StableRange
+public import ModularSchur.Partition
+public import ModularSchur.IntegerBridge
+public import ModularSchur.K1Theorem
+public import ModularSchur.K1IntegerTheorem
+public import ModularSchur.SigmaInfty
+public import ModularSchur.TauClosure
+public import ModularSchur.CoordinateUnion
+public import ModularSchur.SameSupportFiber
+public import ModularSchur.ResidueAxis
+public import ModularSchur.PairSupportGraph
+public import ModularSchur.AxisLabelledCover
+public import ModularSchur.CanonicalBlocks
+public import ModularSchur.CanonicalBlockMonotonicity
+public import ModularSchur.CanonicalSeedCount
+public import ModularSchur.CanonicalSeedTransport
+public import ModularSchur.CanonicalResidualCoverTransport
+public import ModularSchur.CanonicalCriticalCore
+public import ModularSchur.AllButOneAxisCover
+public import ModularSchur.AxisBlockCount
+public import ModularSchur.AllButOneAxisCount
+public import ModularSchur.AnchoredExactTransversal
+public import ModularSchur.TwoAxisStructural
+public import ModularSchur.TwoAxisAnchoredExactTransversal
+public import ModularSchur.WholeAxisPID
+public import ModularSchur.DeficitGrowthInvariant
+public import ModularSchur.DeficitGrowthRestrictedAET
+public import ModularSchur.DeficitGrowthCertificateShape

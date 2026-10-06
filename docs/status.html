@@ -45,7 +45,7 @@
   <h1>Research status</h1>
   <p class="subtitle">What is proven, what the kernel checks, what a solver only saw, and what is still open</p>
   <div class="dateline">
-    <p class="kicker">Status as of 2026-09-14</p>
+    <p class="kicker">Status as of 2026-10-05</p>
     <p class="kicker"><a href="index.html">The paper</a></p>
   </div>
 </header>
@@ -114,11 +114,11 @@ The hatched residues are the ones <span class="math inline">\ell - 1</span> anni
 </section>
 <section id="formalization-status" class="level2">
 <h2>Formalization status</h2>
-<p>Thirteen structural results are configured for the Comparator gate in Lean 4, on toolchain <code>leanprover/lean4:v4.33.0</code> with Mathlib pinned at <code>db584cd6</code>.</p>
+<p>Thirteen structural results are configured for the Comparator gate in Lean 4, on toolchain <code>leanprover/lean4:v4.35.0-rc3</code> with Mathlib pinned at <code>c55e6e78</code> (the Mathlib tag <code>v4.35.0-rc3</code>).</p>
 <p>They are checked through a <strong>comparator gate</strong>, which exists to stop a formalization from proving something weaker than it appears to. Each theorem is stated twice: once in <code>comparator/Challenge.lean</code> using only Mathlib definitions, with the proof left as <code>sorry</code>, and once in <code>comparator/Solution.lean</code> where it is proved from this project’s development. The comparator checks that the two elaborated declarations carry the same statement, so the Lean statement cannot quietly drift toward the project’s own convenient definitions. It then checks the permitted declaration and axiom boundary and replays the proof exports through the configured kernels. The source files are not byte-identical, and nothing compares them as bytes. The <code>sorry</code>s in <code>Challenge.lean</code> are the design: they are the thirteen holes the gate fills.</p>
 <p>The conformance workflow also runs <code>lake build ModularSchur.PublicAxiomAudit</code>, which builds <code>ModularSchur.PublicAxiomAudit</code>, a <code>#print axioms</code> module for the broader project-only layer. That build elaborates the named declarations and surfaces their transitive axiom closures in the CI log for review; it does not automatically enforce a whitelist or fail merely because a custom axiom appears. This is independent of the Comparator/<code>nanoda</code> gate, whose scope remains exactly the thirteen <code>ComparatorClaims</code> declarations.</p>
-<p><span class="st st-proven">Verified</span> The preceding 12-declaration gate most recently passed on public commit <a href="https://github.com/mysticflounder/modular-schur/commit/315337d6a318a4465cf272073bf54d9f0ed233bb"><code>315337d</code></a> (<a href="https://github.com/mysticflounder/modular-schur/actions/runs/33447037510">run 33447037510</a>, 2026-08-31 UTC). That run exercised the then-current 12-declaration comparator package, Lean 4.33 toolchain, pinned workflow, and both configured kernels. The thirteen-declaration Comparator job passed in <a href="https://github.com/mysticflounder/modular-schur/actions/runs/33534800665">run 33534800665</a> at public commit <code>5ca1063ec835e7f65d937395e7c227833f0a89ce</code>, but the companion conformance job failed while building <code>ModularSchur.PublicAxiomAudit</code>. That failure must be repaired and the complete workflow rerun before public release. The build stamp in the page footer is the commit of the private source tree the public tree is synced from, not a public-repository SHA. The gate fails the build on any of: a <code>sorryAx</code> in the closure, an axiom outside <code>{propext, Classical.choice, Quot.sound}</code>, a generated native-evaluation axiom such as <code>declaration._native.native_decide.ax_*</code>, or a Challenge/Solution statement mismatch. A second job replays the proofs through the independent <code>nanoda</code> kernel.</p>
-<p>The comparator runs at its tag <code>v4.33.0</code> (commit <code>3927ad383f208ae977c340a91c48ac9b497d2097</code>), matched to the Lean toolchain and pinned by commit in CI. The gate here is a self-audit of the project’s own trusted source, not a hostile-submission contest: CI hands the comparator a fully pre-built <code>.lake</code>, so the guarantee rests on the statement-identity, axiom-boundary, and kernel-replay checks rather than on the sandbox that exists to contain a malicious solution author. One open upstream issue questions that sandbox’s process containment (<a href="https://github.com/leanprover/comparator/issues/77">leanprover/comparator#77</a>); it does not touch the checks this gate relies on.</p>
+<p><span class="st st-proven">Verified</span> The preceding 12-declaration gate most recently passed on public commit <a href="https://github.com/mysticflounder/modular-schur/commit/315337d6a318a4465cf272073bf54d9f0ed233bb"><code>315337d</code></a> (<a href="https://github.com/mysticflounder/modular-schur/actions/runs/33447037510">run 33447037510</a>, 2026-08-31 UTC). That run exercised the then-current 12-declaration comparator package, Lean 4.33 toolchain, pinned workflow, and both configured kernels. The thirteen-declaration Comparator job passed in <a href="https://github.com/mysticflounder/modular-schur/actions/runs/33534800665">run 33534800665</a> at public commit <code>5ca1063ec835e7f65d937395e7c227833f0a89ce</code>, but the companion conformance job failed while building <code>ModularSchur.PublicAxiomAudit</code>. That failure must be repaired and the complete workflow rerun before public release. The build stamp in the page footer is the commit of the private source tree the public tree is synced from, not a public-repository SHA. The gate fails the build on any of: a <code>sorryAx</code> in the closure, an axiom outside <code>{propext, Classical.choice, Quot.sound}</code>, a generated native-evaluation axiom such as <code>declaration._native.native_decide.ax_*</code>, or a Challenge/Solution statement mismatch. A second job replays the proofs through Lean’s kernel and the independent <code>nanoda</code> and <code>con-ron</code> kernels.</p>
+<p>The runs cited above used leanprover/comparator at its tag <code>v4.33.0</code> (commit <code>3927ad383f208ae977c340a91c48ac9b497d2097</code>), pinned by commit in CI. Since 2026-10-05 the comparator job instead runs <code>lake comparator</code>, which ships with the pinned Lean toolchain together with the exporter and the <code>nanoda</code> and <code>con-ron</code> kernels, so no part of the judge is built from a separate pin. It builds and exports Challenge and Solution inside its own bubblewrap sandbox. No run of this job is recorded here yet.</p>
 <figure>
 <div class="fig-head">
 <p class="kicker">
@@ -171,10 +171,10 @@ Axiom closure inspected.
 </div>
 <div class="fig-box pass">
 <h4>
-nanoda
+nanoda + con-ron
 </h4>
 <p>
-An independent kernel replays every proof.
+Two independent kernels replay every proof.
 </p>
 </div>
 </div>
@@ -599,7 +599,7 @@ Six atoms in a <span class="math inline">|P| = 2</span> fiber. The first axis co
 </section>
 <section id="reproduction" class="level2">
 <h2>Reproduction</h2>
-<p><strong>Lean.</strong> Toolchain <code>leanprover/lean4:v4.33.0</code>, Mathlib pinned at <code>db584cd6</code> in <code>lean/lake-manifest.json</code>.</p>
+<p><strong>Lean.</strong> Toolchain <code>leanprover/lean4:v4.35.0-rc3</code>, Mathlib pinned at <code>c55e6e78</code> (tag <code>v4.35.0-rc3</code>) in <code>lean/lake-manifest.json</code>.</p>
 <pre><code>cd lean
 lake build
 lake build ModularSchur.PublicAxiomAudit</code></pre>
@@ -649,7 +649,7 @@ lake build ModularSchur.PublicAxiomAudit</code></pre>
 <footer class="page-footer">
   <p class="kicker">A. McKenna &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; Apache-2.0</p>
   <p class="kicker"><a href="https://github.com/mysticflounder/modular-schur">https://github.com/mysticflounder/modular-schur</a></p>
-  <p class="kicker">Built 2026-09-20 from c3dc6b3</p>
+  <p class="kicker">Built 2026-10-06 from 0a8bda2d</p>
 </footer>
 
 </div>

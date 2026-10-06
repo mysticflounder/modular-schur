@@ -1,6 +1,8 @@
-import ModularSchur.DeficitGrowthInvariant
-import ModularSchur.DeficitGrowthRestrictedAET
-import ModularSchur.TwoAxisAnchoredExactTransversal
+module
+
+public import ModularSchur.DeficitGrowthInvariant
+public import ModularSchur.DeficitGrowthRestrictedAET
+public import ModularSchur.TwoAxisAnchoredExactTransversal
 
 /-!
 # Deficit-growth certificate-shape conjecture
@@ -20,6 +22,8 @@ See `docs/proofs/dyadic-aet-failure-n880-2026-06-21.md`.
 What survives, and is fully proved in this file, is the *shape ⇒ exactness*
 implication for each branch.  That is unaffected by the refutation.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.DeficitGrowth
 

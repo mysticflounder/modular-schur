@@ -3,8 +3,11 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.AxisLabelledCover
-import Mathlib.Data.Nat.Factorization.Basic
+
+module
+
+public import ModularSchur.AxisLabelledCover
+public import Mathlib.Data.Nat.Factorization.Basic
 
 /-!
 # Arithmetic canonical blocks
@@ -19,6 +22,8 @@ The file also identifies private labels with points supported on exactly one
 prime axis.  The separate `CanonicalSeedCount` module proves the closed
 cardinality formula for that seed family.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.CanonicalBlocks
 

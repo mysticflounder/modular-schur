@@ -1,5 +1,7 @@
-import ModularSchur.Basic
-import ModularSchur.SingletonSafety
+module
+
+public import ModularSchur.Basic
+public import ModularSchur.SingletonSafety
 
 /-!
 # Phase 7 Unified Theorem (key step)
@@ -10,6 +12,8 @@ because `(ℓ - 1) * n ≡ 0 (mod m)`.
 This is the core of the upper bound in the Phase 7 theorem:
 `S_m(k, ℓ) ≤ m/gcd(m, ℓ-1) - 1`.
 -/
+
+@[expose] public section
 
 namespace ModularSchur
 

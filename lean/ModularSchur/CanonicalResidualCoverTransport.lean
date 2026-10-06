@@ -3,7 +3,10 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.CanonicalSeedTransport
+
+module
+
+public import ModularSchur.CanonicalSeedTransport
 
 /-!
 # Prime multiplication for canonical residual covers
@@ -14,6 +17,8 @@ enlarged residual neighbourhoods require old representatives; no global map on
 all represented labels is needed.  The final recurrence includes both active
 exponent layers and the first layer of a depth-zero inactive prime.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.CanonicalBlocks
 

@@ -83,6 +83,9 @@ The renamed 13-declaration Comparator job subsequently passed in
 at public commit `5ca1063ec835e7f65d937395e7c227833f0a89ce`, but its companion
 conformance job failed while building `ModularSchur.PublicAxiomAudit`. That
 failure must be repaired and the complete workflow rerun before release.
+These runs used leanprover/comparator built from a pinned tag. The workflow now
+runs the `lake comparator` that ships with the pinned Lean toolchain, with the
+Lean, `nanoda` and `con-ron` kernels; no public run of it is recorded here yet.
 
 The conformance workflow also runs
 `lake build ModularSchur.PublicAxiomAudit`, which builds
@@ -304,7 +307,7 @@ flowchart LR
     S["Solution.lean — project proofs"] --> G
     G --> I["Statement identity"]
     G --> A["Permitted axiom closure"]
-    G --> K["NanoDa + Lean kernel replay"]
+    G --> K["Lean kernel + nanoda + con-ron replay"]
     I --> V["13 ComparatorClaims declarations verified"]
     A --> V
     K --> V
@@ -423,9 +426,9 @@ statements, rather than this summary, are authoritative.
 The Lean build requires [`elan`](https://leanprover-community.github.io/install/)
 and Git. The scan commands later in this section also require `uv`; certified
 scans require CaDiCaL and `drat-trim`. The pinned toolchain is
-`leanprover/lean4:v4.33.0`. `lake-manifest.json` pins the full dependency graph,
-including Mathlib at revision
-`db584cd6d46c92f209a44c0f1c829460d327499d`.
+`leanprover/lean4:v4.35.0-rc3`. `lake-manifest.json` pins the full dependency
+graph, including Mathlib at revision
+`c55e6e786f49471c72fbddbec5415808896aec1e` (the Mathlib tag `v4.35.0-rc3`).
 
 ```bash
 git clone https://github.com/mysticflounder/modular-schur.git
@@ -458,8 +461,10 @@ The cheap offline Comparator preflight is:
 ```
 
 It builds Challenge and Solution and checks the configured Solution axiom
-closures. The real Comparator run in CI additionally checks export-level
-statement identity and replays through `nanoda` and the Lean kernel.
+closures. The real Comparator run in CI is the `lake comparator` of the pinned
+toolchain. It builds and exports both modules in its bubblewrap sandbox,
+additionally checks export-level statement identity, and replays through the
+Lean kernel and the toolchain's bundled `nanoda` and `con-ron` kernels.
 
 ### Python and scan tooling
 

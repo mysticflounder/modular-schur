@@ -3,9 +3,12 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.IntegerBridge
-import ModularSchur.K1Theorem
-import ModularSchur.SigmaInfty
+
+module
+
+public import ModularSchur.IntegerBridge
+public import ModularSchur.K1Theorem
+public import ModularSchur.SigmaInfty
 
 /-!
 # Solution.lean — comparator solution module
@@ -25,6 +28,8 @@ equal (structure ↔ its fields), so the `Nat.findGreatest` values coincide. Eve
 `ComparatorClaims.*` theorem's `#print axioms` closure is `{propext, Classical.choice,
 Quot.sound}` — see `comparator/axiom-audit.lean`.
 -/
+
+@[expose] public section
 
 open scoped Classical
 

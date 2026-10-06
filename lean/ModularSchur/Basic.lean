@@ -1,4 +1,6 @@
-import Mathlib
+module
+
+public import Mathlib
 
 /-!
 # Modular Schur numbers — basic definitions
@@ -17,6 +19,8 @@ In this formalization we work residue-by-residue in `ZMod m` — Lemma 2.1
 (residue reduction) shows the partition problem on `[1,N]` for `N ≤ m-1`
 reduces to the same problem on residues `{1,…,N} ⊆ ZMod m`.
 -/
+
+@[expose] public section
 
 namespace ModularSchur
 

@@ -1,5 +1,7 @@
-import ModularSchur.ResidueAxis
-import ModularSchur.TauClosure
+module
+
+public import ModularSchur.ResidueAxis
+public import ModularSchur.TauClosure
 
 /-!
 # Two-axis structural certificate
@@ -9,6 +11,8 @@ structural theorem. It does not mention any generated row. Instead, it packages
 the abstract cover/packing data that the row descriptors expose and routes the
 conclusion through the generic exact-duality theorem in `ResidueAxis`.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.TwoAxisStructural
 

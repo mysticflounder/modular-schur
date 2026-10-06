@@ -3,8 +3,11 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.CanonicalBlocks
-import Mathlib.Data.Nat.Totient
+
+module
+
+public import ModularSchur.CanonicalBlocks
+public import Mathlib.Data.Nat.Totient
 
 /-!
 # Cardinality of arithmetic support-one seeds
@@ -20,6 +23,8 @@ the layers and reflecting their order gives `seedCountFormula`.
 - `axisCover_canonicalExtensionalFamily_eq_seedCountFormula_add_residual`: the exact
   canonical cover decomposition with its seed term in closed form.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.CanonicalBlocks
 

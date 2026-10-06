@@ -1,4 +1,8 @@
-import ModularSchur.Partition
+module
+
+public import ModularSchur.Partition
+
+@[expose] public section
 
 namespace ModularSchur
 
@@ -317,9 +321,9 @@ theorem schurModResidue_k1_all (m ℓ : ℕ) (hm : 2 ≤ m) (hℓ : 2 ≤ ℓ) :
     schurModResidue m 1 ℓ =
       if ℓ ≤ m then min (ℓ - 1) (m / ℓ) else if ℓ % m = 1 then 0 else 1 := by
   by_cases hlm : ℓ ≤ m
-  · rw [if_pos hlm]
+  · rw [ite_eq_left hlm]
     exact schurModResidue_k1 m ℓ hm hℓ hlm
-  · rw [if_neg hlm]
+  · rw [ite_eq_right hlm]
     exact schurModResidue_k1_of_modulus_lt m ℓ hm (by omega)
 
 end ModularSchur

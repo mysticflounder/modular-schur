@@ -1,4 +1,6 @@
-import ModularSchur.CoordinateUnion
+module
+
+public import ModularSchur.CoordinateUnion
 
 /-!
 # Same-support fibers
@@ -10,6 +12,8 @@ It now constructs the canonical `rho_g` quotient lift from abstract residue
 data. The scanner-side `rho_respects` hypothesis is materialized by generated
 normalized-cell bridge files built from concrete scanner data.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.SameSupportFiber
 

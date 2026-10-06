@@ -15,8 +15,12 @@ configuration. The renamed thirteen-declaration Comparator job passed in run
 `33534800665` at commit `5ca1063ec835e7f65d937395e7c227833f0a89ce`, but
 the companion conformance job failed while building
 `ModularSchur.PublicAxiomAudit`. That failure must be repaired and the complete
-workflow rerun before release. The exact module allowlist is
-[`lean/PUBLIC_MODULES.txt`](lean/PUBLIC_MODULES.txt).
+workflow rerun before release. Those runs used leanprover/comparator built from
+a pinned tag on Lean 4.33. The Lean tree is now on
+`leanprover/lean4:v4.35.0-rc3` with Mathlib `v4.35.0-rc3`, and the Comparator
+job runs that toolchain's `lake comparator` with the Lean, `nanoda` and
+`con-ron` kernels; no run of it is recorded here yet. The exact module
+allowlist is [`lean/PUBLIC_MODULES.txt`](lean/PUBLIC_MODULES.txt).
 
 ## Status terms
 

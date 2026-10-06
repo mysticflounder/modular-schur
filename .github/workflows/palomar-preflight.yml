@@ -1,0 +1,31 @@
+name: Palomar predictive preflight
+
+# Runs Palomar's own mechanical verification on the pushed commit. Start it by
+# hand before a submission; submit only when the artifact
+# mechanical-report-<request_id> says `status: pass`.
+#
+# Source of truth: flound1129/schur-numbers site/public-palomar-preflight.yml.
+# scripts/publish-public.sh copies it to .github/workflows/palomar-preflight.yml
+# in the public repository mysticflounder/modular-schur; it is not an active
+# workflow in the private repository. The options name the public layout: the
+# Lake project in lean/, the comparator config lean/comparator/config.json and
+# the metadata formalization.yaml at the repository root (all
+# repository-relative).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  palomar-preflight:
+    uses: PalomarRegistry/PalomarSubmission/.github/workflows/submission.yml@65f0154ed776cd26c224254aa57b379137f28b0d
+    with:
+      repository: ${{ github.repository }}
+      commit: ${{ github.sha }}
+      pipeline_commit: 65f0154ed776cd26c224254aa57b379137f28b0d
+      request_id: preflight001
+      mode: full
+      execution_profile: palomar-standard-v1
+      options: '{"project_path":"lean","comparator_config_path":"lean/comparator/config.json","formalization_metadata_path":"formalization.yaml","authorization_relationship":"I am a responsible author or maintainer"}'

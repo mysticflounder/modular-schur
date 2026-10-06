@@ -1,5 +1,7 @@
-import ModularSchur.SingletonSafety
-import ModularSchur.UnifiedValue
+module
+
+public import ModularSchur.SingletonSafety
+public import ModularSchur.UnifiedValue
 
 /-!
 # Phase 7 lower-bound witness
@@ -14,6 +16,8 @@ Let `d = gcd(m, ℓ-1)`, `n = m/d`. Write `ℓ-1 = d·u` with `gcd(u, n) = 1`.
 Then `m | (ℓ-1)·r ↔ m | d·u·r ↔ n | u·r ↔ n | r` (using `gcd(u,n) = 1`).
 But `1 ≤ r < n` implies `n ∤ r`.
 -/
+
+@[expose] public section
 
 namespace ModularSchur
 

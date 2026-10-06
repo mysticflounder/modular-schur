@@ -1,5 +1,7 @@
-import ModularSchur.ResidueAxis
-import ModularSchur.SameSupportFiber
+module
+
+public import ModularSchur.ResidueAxis
+public import ModularSchur.SameSupportFiber
 
 /-!
 # Anchored Exact Transversal
@@ -14,6 +16,8 @@ certified dyadic PID-failing fiber `n = 880, d₀ = 35200, P = (121, 125, 256)`
 This file packages only the Theorem-A direction (AET witness ⇒ exactness) used by
 the dyadic residue-coordinate program, which is unaffected.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.AnchoredExactTransversal
 

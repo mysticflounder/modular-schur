@@ -3,7 +3,10 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.ResidueAxis
+
+module
+
+public import ModularSchur.ResidueAxis
 
 /-!
 # Conflict graphs for finite fragment families
@@ -17,6 +20,8 @@ The construction is valid for fragments of arbitrary size. When every
 fragment has cardinality two, the fragments themselves are the graph edges,
 so the corresponding cover problem is the ordinary edge-cover problem.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.PairSupportGraph
 

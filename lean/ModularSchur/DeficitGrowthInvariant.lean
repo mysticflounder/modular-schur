@@ -1,4 +1,6 @@
-import ModularSchur.ResidueAxis
+module
+
+public import ModularSchur.ResidueAxis
 
 /-!
 # Deficit-growth invariant carrier
@@ -19,6 +21,8 @@ quantity can separate AET-holding from AET-failing cells, since the same
 `docs/proofs/dyadic-aet-failure-n880-2026-06-21.md`.  Read this file as a support
 predicate, not as a carrier for a separating invariant.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.DeficitGrowth
 

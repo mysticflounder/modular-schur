@@ -1,5 +1,7 @@
-import ModularSchur.DeficitGrowthInvariant
-import ModularSchur.AnchoredExactTransversal
+module
+
+public import ModularSchur.DeficitGrowthInvariant
+public import ModularSchur.AnchoredExactTransversal
 
 /-!
 # Deficit-growth restricted AET candidate
@@ -21,6 +23,8 @@ itself contradict the shell below, whose `CornerClusterSkeleton` hypothesis need
 general.  The exactness consequences below are fully proved and reusable once a
 generated row supplies the carrier data.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.DeficitGrowth
 

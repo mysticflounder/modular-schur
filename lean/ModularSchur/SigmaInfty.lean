@@ -1,5 +1,7 @@
-import ModularSchur.Basic
-import ModularSchur.SingletonSafety
+module
+
+public import ModularSchur.Basic
+public import ModularSchur.SingletonSafety
 
 /-!
 # Phase 9.1: σ∞(m,c) = m/p(m) when gcd(m, c-1) = 1 — upper bound
@@ -17,6 +19,8 @@ some `g | m` with `g ≥ 2` (the "coset step" `g_C`). So the purely
 geometric bound `|C| ≤ m/g` applies, and `g ≥ p(m)` gives `|C| ≤ m/p(m)`.
 Formalizing Theorem 8.1 itself is deferred.
 -/
+
+@[expose] public section
 
 namespace ModularSchur
 

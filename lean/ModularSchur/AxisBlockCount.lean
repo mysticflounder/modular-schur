@@ -3,9 +3,12 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.CanonicalResidualCoverTransport
-import ModularSchur.CanonicalSeedCount
-import Mathlib.Data.Nat.Totient
+
+module
+
+public import ModularSchur.CanonicalResidualCoverTransport
+public import ModularSchur.CanonicalSeedCount
+public import Mathlib.Data.Nat.Totient
 
 /-!
 # Arithmetic organization of canonical labels by prime axis
@@ -15,6 +18,8 @@ It counts every valuation layer by a truncated reduced-residue enumeration,
 sums those layer counts on each prime axis, and subtracts the closed seed
 count used by the residual cover.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.CanonicalBlocks
 

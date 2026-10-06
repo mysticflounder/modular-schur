@@ -1,4 +1,6 @@
-import ModularSchur.Basic
+module
+
+public import ModularSchur.Basic
 
 /-!
 # Lemma 2.3: singleton safety
@@ -7,6 +9,8 @@ A singleton `{r} ⊆ ZMod m` is `ℓ`-sum-free iff `(ℓ - 1) * r ≠ 0` in `ZMo
 
 This is a direct reformulation of `ℓ * r ≠ r`.
 -/
+
+@[expose] public section
 
 namespace ModularSchur
 

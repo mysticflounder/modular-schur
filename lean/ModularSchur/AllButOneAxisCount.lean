@@ -3,8 +3,11 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.AllButOneAxisCover
-import ModularSchur.AxisBlockCount
+
+module
+
+public import ModularSchur.AllButOneAxisCover
+public import ModularSchur.AxisBlockCount
 
 /-!
 # Closed numerical all-but-one-axis cover
@@ -13,6 +16,8 @@ The all-but-one-axis cover can be counted by partitioning its residual labels
 according to their prime axes.  Each axis count is then the explicit valuation-
 layer total with the closed support-one seed count removed.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.CanonicalBlocks
 

@@ -1,5 +1,7 @@
-import ModularSchur.Basic
-import ModularSchur.Partition
+module
+
+public import ModularSchur.Basic
+public import ModularSchur.Partition
 
 /-!
 # Lemma 2.1: Residue reduction (integer ↔ residue bridge)
@@ -17,6 +19,8 @@ The identification rests on the elementary fact that for `N ≤ m-1` the map
 is preserved under this identification.  This is Lemma 2.1 (residue reduction)
 of the paper.
 -/
+
+@[expose] public section
 
 namespace ModularSchur
 
@@ -58,9 +62,9 @@ lemma Nat.findGreatest_congr_aux {P Q : ℕ → Prop}
     simp only [Nat.findGreatest_succ]
     by_cases hP : P (k + 1)
     · have hQ : Q (k + 1) := (h (k + 1) le_rfl).mp hP
-      rw [if_pos hP, if_pos hQ]
+      rw [ite_eq_left hP, ite_eq_left hQ]
     · have hQ : ¬ Q (k + 1) := fun hQ => hP ((h (k + 1) le_rfl).mpr hQ)
-      rw [if_neg hP, if_neg hQ, hih]
+      rw [ite_eq_right hP, ite_eq_right hQ, hih]
 
 /-- The cast `ℕ → ZMod m` is injective on `Ioc 0 (m-1)`. -/
 lemma natCast_injOn_Ioc (hm : 2 ≤ m) :

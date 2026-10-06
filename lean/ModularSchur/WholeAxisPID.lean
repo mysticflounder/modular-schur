@@ -1,6 +1,8 @@
-import ModularSchur.SameSupportFiber
-import ModularSchur.ResidueAxis
-import ModularSchur.AnchoredExactTransversal
+module
+
+public import ModularSchur.SameSupportFiber
+public import ModularSchur.ResidueAxis
+public import ModularSchur.AnchoredExactTransversal
 
 /-!
 # Whole-axis PID theorems
@@ -22,6 +24,8 @@ Coordinate-Union Edge Rule has no atom-graph edges) the axis cover of
 `axis_cover_coordCliques_eq_card_of_singleton_pattern` specializes to
 `|P| = 1`, where NF2 provides the injectivity (`PID_of_singleton_pattern`).
 -/
+
+@[expose] public section
 
 namespace ModularSchur.WholeAxisPID
 

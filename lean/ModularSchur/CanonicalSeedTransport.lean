@@ -3,8 +3,11 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.CanonicalSeedCount
-import Mathlib.Data.Nat.ModEq
+
+module
+
+public import ModularSchur.CanonicalSeedCount
+public import Mathlib.Data.Nat.ModEq
 
 /-!
 # Prime multiplication for canonical seed residuals
@@ -15,6 +18,8 @@ applies both above a positive active depth and when a depth-zero prime is
 inserted for the first time: supported axes, seed coverage, and the residual
 point set all transport exactly.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.CanonicalBlocks
 
@@ -149,7 +154,7 @@ theorem pointLabel_mul_prime
           p * p ^ (a p + x.factorization p + 1) := by
       rw [show a p + (x.factorization p + 1) + 1 =
         (a p + x.factorization p + 1) + 1 by omega, pow_succ']
-    simp only [pointLabel, primeMultiplicationLabelMap, if_pos, hfactor]
+    simp only [pointLabel, primeMultiplicationLabelMap, ite_eq_left, hfactor]
     rw [hmodulus, Nat.mul_mod_mul_left]
   · have hfactor : (p * x).factorization q = x.factorization q := by
       rw [Nat.factorization_mul hpPrime.ne_zero hx0, Finsupp.add_apply]

@@ -1,4 +1,6 @@
-import ModularSchur.TauClosure
+module
+
+public import ModularSchur.TauClosure
 
 /-!
 # Coordinate-union edge rule
@@ -12,6 +14,8 @@ quotient lift is now in place via the atom-class restatement below and the
 same-support fiber API in `SameSupportFiber.lean`; the PID use-site theorem is
 formalized separately in `WholeAxisPID.lean`.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.CoordinateUnion
 

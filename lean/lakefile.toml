@@ -10,7 +10,7 @@ weakLeanArgs = ["-M", "16384"]
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-rev = "db584cd6d46c92f209a44c0f1c829460d327499d"
+rev = "c55e6e786f49471c72fbddbec5415808896aec1e"
 
 [[lean_lib]]
 name = "ModularSchur"
@@ -22,7 +22,7 @@ name = "ModularSchur"
 # Challenge imports Mathlib only and states the 13 currently configured
 # structural results as `sorry` stubs; Solution imports the project and
 # discharges them under identical top-level (`ComparatorClaims.`) names. The
-# leanprover/comparator run checks statement identity and axiom cleanliness
+# `lake comparator` run checks statement identity and axiom cleanliness
 # across the two exports. StrategySketch is a mathlib-only, declaration-free
 # Paper II planning module and is not part of the Comparator configuration.
 # Pending project-wide packages are documented in comparator/README.md and are

@@ -242,9 +242,12 @@ review:
     It is a blocklist, not a whitelist; a project-defined axiom would pass it.
     lean/comparator/axiom-audit.lean prints the #print axioms closure for all 13
     without asserting anything about it. The authoritative external check is a
-    leanprover/comparator run that verifies statement identity and axiom compliance and
-    re-runs the nanoda + Lean default kernels (CI:
-    .github/workflows/comparator.yml). The expanded public release passed both
+    `lake comparator` run (the comparator bundled with the pinned Lean toolchain,
+    leanprover/lean4:v4.35.0-rc3) that verifies statement identity and axiom
+    compliance and replays the proofs through the Lean kernel and the toolchain's
+    nanoda and con-ron kernels (CI: .github/workflows/comparator.yml). The runs
+    cited next used the earlier standalone leanprover/comparator setup on Lean
+    4.33. The expanded public release passed both
     jobs in run 33447037510 at commit
     315337d6a318a4465cf272073bf54d9f0ed233bb on 2026-08-31, covering
     statement identity for the then-current 12-claim configuration, axiom-closure compliance, and replay through

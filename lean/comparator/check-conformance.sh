@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Offline pre-flight for the comparator auditability gate. This does NOT replace
-# a real leanprover/comparator run (which re-exports the closure through the
-# nanoda and Lean default kernels and checks statement identity between the two
-# modules — see comparator/README.md and .github/workflows/comparator.yml). It
+# a real `lake comparator` run (which exports both modules, checks statement
+# identity between them, and replays the solution through the Lean kernel and
+# the toolchain's nanoda and con-ron kernels — see comparator/README.md and
+# .github/workflows/comparator.yml). It
 # is the cheap check every commit can run:
 #
 #   1. Build the two comparator modules:
@@ -64,4 +65,4 @@ fi
 
 echo "OK: $NAMES comparator theorems build and are axiom-clean"
 echo "    (subset of {propext, Classical.choice, Quot.sound}; no sorryAx, no native_decide)."
-echo "    Statement identity (Challenge ≡ Solution) is verified by the leanprover/comparator run."
+echo "    Statement identity (Challenge ≡ Solution) is verified by the lake comparator run."

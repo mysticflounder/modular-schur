@@ -1,4 +1,6 @@
-import ModularSchur.Basic
+module
+
+public import ModularSchur.Basic
 
 /-!
 # Tau Closure — Ingredient 1: Canonical Atomization
@@ -26,6 +28,8 @@ We work in a type-agnostic setting: `α` is the type of residual points,
 `ι` indexes the fragments, and `F : ι → Finset α` gives the fragment family.
 -/
 
+@[expose] public section
+
 namespace ModularSchur.TauClosure
 
 open Finset
@@ -47,7 +51,7 @@ def atomEquiv (F : ι → Finset α) (x y : α) : Prop :=
   signature F x = signature F y
 
 -- `abbrev` makes this setoid transparent so `Quotient.sound`/`exact` see through it.
-private abbrev atomSetoid (F : ι → Finset α) : Setoid α where
+abbrev atomSetoid (F : ι → Finset α) : Setoid α where
   r     := atomEquiv F
   iseqv := ⟨fun _ => rfl, fun h => h.symm, fun h₁ h₂ => h₁.trans h₂⟩
 
@@ -215,23 +219,23 @@ theorem SigRefines_left (p q : PartialSig ι) : SigRefines p (sigLCA p q) := by
   intro i b h
   unfold sigLCA at h
   by_cases heq : p i = q i
-  · rwa [if_pos heq] at h
-  · simp [if_neg heq] at h
+  · rwa [ite_eq_left heq] at h
+  · simp [ite_eq_right heq] at h
 
 /-- `q` refines its LCA with `p` (the LCA is coarser than `q`). -/
 theorem SigRefines_right (p q : PartialSig ι) : SigRefines q (sigLCA p q) := by
   intro i b h
   unfold sigLCA at h
   by_cases heq : p i = q i
-  · rw [if_pos heq] at h; rwa [← heq]
-  · simp [if_neg heq] at h
+  · rw [ite_eq_left heq] at h; rwa [← heq]
+  · simp [ite_eq_right heq] at h
 
 /-- `sigLCA` is commutative. -/
 theorem sigLCA_comm (p q : PartialSig ι) : sigLCA p q = sigLCA q p := by
   funext i; unfold sigLCA
   by_cases h : p i = q i
-  · rw [if_pos h, if_pos h.symm]; exact h
-  · rw [if_neg h, if_neg (Ne.symm h)]
+  · rw [ite_eq_left h, ite_eq_left h.symm]; exact h
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]
 
 /-- If atom `x` lies in bag `p`, it also lies in the LCA of `p` with any other
     partial signature (bags only grow as we go to a coarser node). -/

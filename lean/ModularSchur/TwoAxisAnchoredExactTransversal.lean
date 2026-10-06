@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
 
-import ModularSchur.AnchoredExactTransversal
-import ModularSchur.TwoAxisStructural
+module
+
+
+public import ModularSchur.AnchoredExactTransversal
+public import ModularSchur.TwoAxisStructural
 
 /-!
 # Two-axis anchored exact transversals
@@ -15,6 +18,8 @@ to the project `AETWitness` structure. The support is required to be nonempty:
 only then does the coordinate-clique family necessarily cover the whole
 same-support fiber.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.TwoAxisAnchoredExactTransversal
 

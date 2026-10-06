@@ -3,7 +3,10 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.CanonicalBlocks
+
+module
+
+public import ModularSchur.CanonicalBlocks
 
 /-!
 # Canonical block monotonicity
@@ -13,6 +16,8 @@ This module projects fine labels to coarse labels and transfers covers along
 that projection.  The result applies after restriction to any finite point
 set, so in particular it controls every canonical prefix cover.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.CanonicalBlocks
 

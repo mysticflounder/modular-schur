@@ -3,7 +3,10 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.CanonicalResidualCoverTransport
+
+module
+
+public import ModularSchur.CanonicalResidualCoverTransport
 
 /-!
 # Exponent truncation for canonical axes
@@ -13,6 +16,8 @@ reduces every prime exponent to its prescribed depth and records the removed
 layers in a closed sum.  Prescribed depth zero is included: the prime is absent
 from the truncated core and all of its exponent layers contribute to the sum.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.CanonicalBlocks
 

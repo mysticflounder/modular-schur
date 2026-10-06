@@ -3,7 +3,10 @@ Copyright (c) 2026 Adam McKenna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam McKenna
 -/
-import ModularSchur.ResidueAxis
+
+module
+
+public import ModularSchur.ResidueAxis
 
 /-!
 # Axis-labelled finite covers
@@ -17,6 +20,8 @@ It also isolates labels with a private point.  Such labels occur in every labell
 and deleting all points covered by them gives an exact additive decomposition of the cover
 number.  This is seed deletion, not exhaustive forced peeling after repeated restriction.
 -/
+
+@[expose] public section
 
 namespace ModularSchur.AxisLabelledCover
 
